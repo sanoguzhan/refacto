@@ -5,7 +5,7 @@ FROM debian:buster
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
         ca-certificates \
-        autoconf automake cmake dpkg-dev file git make patch \
+        autoconf automake cmake dpkg-dev file git make patch python3 \
         libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev  \
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5; \
     rm -rf /var/lib/apt/lists/*
@@ -28,10 +28,10 @@ COPY install.sh .
 RUN chmod +x install.sh 
 RUN ./install.sh
 
-#Install Gtest and Gmocl
-COPY install_gtest.sh .
-RUN chmod +x install_gtest.sh 
-RUN ./install_gtest.sh
+#Install Required packages
+COPY requires.sh .
+RUN chmod +x requires.sh 
+RUN ./requires.sh
 
 
 RUN mkdir /code && mkdir /data
