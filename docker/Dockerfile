@@ -4,7 +4,7 @@ FROM debian:buster
 # Install dependencies
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
-        ca-certificates \
+        ca-certificates  pkg-config libyaml-cpp-dev\
         autoconf automake cmake dpkg-dev file git make patch python3 \
         libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev  \
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5; \
