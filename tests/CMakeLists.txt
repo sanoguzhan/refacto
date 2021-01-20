@@ -2,8 +2,16 @@ cmake_minimum_required(VERSION 2.6)
 set (CMAKE_CXX_STANDARD 11)
 
 project(test_dtables)
-add_executable(${PROJECT_NAME} "test_dtables.cpp")
-find_package(yaml-cpp)
+find_package(refacto)
 
-include_directories(${CMAKE_SOURCE_DIR}/yaml-cpp/include)
-target_link_libraries(${PROJECT_NAME} yaml-cpp)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+if(refacto_FOUND)
+  add_executable(${PROJECT_NAME} test_dtables.cpp)
+  target_link_libraries(test_dtables refacto)
+  target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+else()
+  message(FATAL_ERROR "refacto library not found")
+endif()
+

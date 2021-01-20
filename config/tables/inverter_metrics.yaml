@@ -1,9 +1,8 @@
 TABLE:
   COLUMN:
     - date: datetime
-    - inverter_id: int
+    - id: int
     - power_alternate_current: double
     - power_direct_current: double
 
-  RELATION:
-    - 
+

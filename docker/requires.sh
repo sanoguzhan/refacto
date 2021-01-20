@@ -11,8 +11,8 @@ make -j8
 make install
 ldconfig
 
-cd ~
-git clone https://github.com/jbeder/yaml-cpp.git
-cd yaml-cpp 
-mkdir build && cd build
-cmake .. -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr
+# cd ~
+# git clone https://github.com/jbeder/yaml-cpp.git
+# cd yaml-cpp 
+# mkdir build && cd build
+# cmake .. -DBUILD_SHARED_LIBS=ON -DINSTALL_GTEST=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr
