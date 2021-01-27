@@ -37,6 +37,7 @@ RUN ./requires.sh
 
 
 RUN mkdir /code && mkdir /data
+COPY conanfile.txt .
+RUN conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default  && conan install . --build=missing
 WORKDIR /code
-
 

@@ -13,6 +13,7 @@ services:
         volumes:
             - ../:/code
             - ../data:/data
+        
         healthcheck:
             interval: 30s
             timeout: 30s

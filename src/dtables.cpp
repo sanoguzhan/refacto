@@ -1,13 +1,19 @@
 #include "dtables.hpp"
-#include <string>
-
+#include <vector>
+#include <nlohmann/json.hpp>
 #include <yaml-cpp/yaml.h>
 
-// void print_keys(std::string path){
-//         YAML::Node test = YAML::LoadFile(path);
-//         std::cout << test["TABLE"] << "\n";
+using json = nlohmann::json;
 
-// }
+void keys(std::string path){
+        std::vector<std::string> vec;
+        YAML::Node file = YAML::LoadFile(path);
+        for(const auto& kv: file){
+            // vec.push_back(kv.first.as<std::string>());
+            std::cout << kv.first << "\n";
+        }
+
+}
 
 
 void print(){

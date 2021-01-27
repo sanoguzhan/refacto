@@ -1,23 +1,31 @@
 
 cmake_minimum_required(VERSION 3.4)
-set(CMAKE_CXX_STANDARD 11)
-
+set(CMAKE_CXX_STANDARD 17)
+add_compile_options("-std=gnu++17")
+link_libraries(stdc++fs)
 
 project(refacto VERSION 0.0.1 LANGUAGES CXX)
-
 include(CMakePackageConfigHelpers)
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 include(CTest)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+
+
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+else()
+    message(FATAL_ERROR "First, Run \"conan install ..\" !!!")
+endif()
+
 
 file(GLOB SOURCES src/*.cpp)
 include_directories(include)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
+enable_testing()
 
 target_include_directories(
     ${PROJECT_NAME} PUBLIC
