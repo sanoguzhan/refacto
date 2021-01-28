@@ -4,6 +4,8 @@ pushd build
 make install
 popd
 pushd tests/build
-make 
-./bin/test_dtables
+make
+#ctest
 popd
+ 
+./tests/build/bin/test_dtables
