@@ -1,7 +1,7 @@
 COLUMNS:
   - date: datetime
   - inverter_id: int
-  - power_alternate_current: double
+  - power_alternate_current: float
   - power_direct_current: double
 
     

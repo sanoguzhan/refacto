@@ -11,7 +11,7 @@ using namespace dtable;
 namespace fs = std::filesystem;
 
 TEST(TableClass, WrongPathConstructor){
-    std::string p("tess/test_data/inverter_metrics.yaml");    
+    std::string p("wrong_path");    
     try {      
         Table table = Table(p);
       } catch (std::exception& ex) {
@@ -19,6 +19,14 @@ TEST(TableClass, WrongPathConstructor){
       }
 }
 
+// TEST(TableClass, ){
+//     Table table = Table("tests/test_data/test_wrong_columns.yaml");
+    
+//     std::vector<std::string> key{table.columns()};
+//     for(auto& k: key){
+//       std::cout<< k << "\n";
+//     }
+// }
 TEST(TableClass, GetterMethods){
     Table table = Table("tests/test_data/inverter_metrics.yaml");
     
@@ -26,7 +34,6 @@ TEST(TableClass, GetterMethods){
     for(auto& k: key){
       std::cout<< k << "\n";
     }
-
 }
 int main(int argc, char* argv[]) {
     namespace fs = std::filesystem;
