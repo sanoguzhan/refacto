@@ -33,8 +33,7 @@ using string = std::string;
 
 namespace dtable{
 
-//    template<class T>
-//    using Var = std::variant<string, long, double>;
+    using Type = std::variant<string, long, double>;
 
     namespace fs = std::filesystem;
 
@@ -44,15 +43,10 @@ namespace dtable{
      *      
      *      Data holder for Table class
      */
-    
-    
-
     struct DataRow{
         string Dtype;
         string name;
-        std::vector<std::variant<string, long, double>> row;
-                    
-        // bool insert(string, std::vector<T>);
+        std::vector<Type> row;
                  
     };
 
@@ -72,6 +66,26 @@ namespace dtable{
             std::vector<std::shared_ptr<DataRow>> data;
 
         
+
+
+            /*COMMENT*/
+            void info();
+            /*COMMENT*/
+            std::vector<Type> operator[](const string) const;
+            // bool insert(string, std::vector<std::variant<string, long, double>>);        
+
+            /*COMMENT*/
+            template<typename T>
+            bool insert(string key, std::vector<T> vec){
+                for(auto column:data){            
+                    if(column->name == key){
+                        column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             /**
              * @brief Constructor
              *
@@ -91,20 +105,6 @@ namespace dtable{
              * @return Vector of column's names.
              */
             std::vector<std::string> columns();
-
-
-            /****/
-            void info();
-            /****/
-            
-            std::vector<std::variant<string, long, double>> operator[](const string key) const{
-                for(const auto col: data){
-                    if(key == col->name){
-                        return col->row; 
-                    }
-                }
-                throw std::runtime_error("Column not exist");                
-            }
   
 
         private:
@@ -117,6 +117,8 @@ namespace dtable{
              * Throws runtime_error if file not exists
              * 
              * @param path Path to yaml file.
+             * 
+             * @return YML::Node of opened yml file
             */
             YAML::Node open_yaml(std::string);
 

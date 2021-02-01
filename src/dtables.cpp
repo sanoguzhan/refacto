@@ -113,3 +113,23 @@ void Table::validate(){
     
 }
 }
+
+std::vector<Type> Table::operator[](const string key) const{
+    for(const auto col: data){
+        if(key == col->name){
+            return col->row; 
+        }
+    }
+    throw std::runtime_error("Column not exist");                
+}
+
+// template<typename T>
+// bool Table::insert(string key, std::vector<T> vec){
+//     for(auto column:data){            
+//         if(column->name == key){
+//             std::copy(std::begin(vec), std::end(vec), std::end(column->row));
+//             return true;
+//         }
+//     }
+//     return false;
+// }

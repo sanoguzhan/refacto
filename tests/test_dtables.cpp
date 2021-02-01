@@ -24,19 +24,30 @@ TEST(DtableTests, InvalidConfigFileError){
 
 TEST(DtableTests, DataAttributes){
    Table table = Table("tests/test_data/inverter_metrics.yaml");
-  //   // EXPECT_EQ(table.data[0]->Dtype, "datetime");
-  //   // EXPECT_EQ(table.data[1]->Dtype, "int");
-  //   // EXPECT_EQ(table.data[2]->Dtype, "double");
-  //  table["power_alternate_current"]; 
+   EXPECT_EQ(table.data[0]->Dtype, "datetime");
+   EXPECT_EQ(table.data[1]->Dtype, "int");
+   EXPECT_EQ(table.data[2]->Dtype, "float");
+   
+   ASSERT_EQ(table["power_alternate_current"].size(), 0) << "Vectors are unequal length"; 
     try {
         table["date_col"];
-        // table["power_alternate_current"];
+        table["power_alternate_current"];
         FAIL() << "Expected std::runtime_error";
     }
     catch(std::runtime_error const & err) {
         EXPECT_EQ(err.what(),std::string("Column not exist"));
     }
 }
+
+
+TEST(DtableTests, TableMethods){
+   Table table = Table("tests/test_data/inverter_metrics.yaml");
+
+  ASSERT_TRUE(table.insert("power_alternate_current", std::vector<double>{1.0, 2.0,3.0}));  
+   ASSERT_EQ(table["power_alternate_current"].size(), 3) << "Vectors are unequal length"; 
+
+}
+
 
 TEST(DtableTests, GetterMethods){
     Table table = Table("tests/test_data/inverter_metrics.yaml");
@@ -46,8 +57,9 @@ TEST(DtableTests, GetterMethods){
     EXPECT_EQ(key[1], "inverter_id");
     EXPECT_EQ(key[2], "power_alternate_current");
     EXPECT_EQ(key[3], "power_direct_current");
-    table.info();
 }
+
+
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();    
