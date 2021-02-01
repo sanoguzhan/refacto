@@ -8,4 +8,4 @@ make
 #ctest
 popd
  
-# ./tests/build/bin/test_dtables
+./tests/build/bin/test_dtables

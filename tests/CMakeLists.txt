@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 set (CMAKE_CXX_STANDARD 17)
+
 add_compile_options("-std=gnu++17")
 project(test_dtables)
 enable_testing()

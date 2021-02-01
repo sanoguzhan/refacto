@@ -1,16 +1,8 @@
-#include <iostream>
-#include<vector>
-#include<string>
+#include "test_header.hpp"
+class DtableTests: public TestTimer{
+};
 
-#include <filesystem>
-#include "gtest/gtest.h"
-#include "refacto/dtables.hpp"
-
-using namespace std;
-using namespace dtable;
-namespace fs = std::filesystem;
-
-TEST(TableClass, WrongPathConstructor){
+TEST(DtableTests, WrongPathConstructor){
     std::string p("wrong_path");    
     try {      
         Table table = Table(p);
@@ -19,26 +11,45 @@ TEST(TableClass, WrongPathConstructor){
       }
 }
 
-// TEST(TableClass, ){
-//     Table table = Table("tests/test_data/test_wrong_columns.yaml");
+TEST(DtableTests, InvalidConfigFileError){
+       try {      
+          Table table = Table("tests/test_data/test_wrong_columns.yaml");
+   
+      } catch (std::exception& ex) {
+          EXPECT_EQ("Configuration missing COLUMNS ", (std::string)ex.what());
+      } 
     
-//     std::vector<std::string> key{table.columns()};
-//     for(auto& k: key){
-//       std::cout<< k << "\n";
-//     }
-// }
-TEST(TableClass, GetterMethods){
+}
+
+
+TEST(DtableTests, DataAttributes){
+   Table table = Table("tests/test_data/inverter_metrics.yaml");
+  //   // EXPECT_EQ(table.data[0]->Dtype, "datetime");
+  //   // EXPECT_EQ(table.data[1]->Dtype, "int");
+  //   // EXPECT_EQ(table.data[2]->Dtype, "double");
+  //  table["power_alternate_current"]; 
+    try {
+        table["date_col"];
+        // table["power_alternate_current"];
+        FAIL() << "Expected std::runtime_error";
+    }
+    catch(std::runtime_error const & err) {
+        EXPECT_EQ(err.what(),std::string("Column not exist"));
+    }
+}
+
+TEST(DtableTests, GetterMethods){
     Table table = Table("tests/test_data/inverter_metrics.yaml");
     
     std::vector<std::string> key{table.columns()};
-    for(auto& k: key){
-      std::cout<< k << "\n";
-    }
+    EXPECT_EQ(key[0], "date");
+    EXPECT_EQ(key[1], "inverter_id");
+    EXPECT_EQ(key[2], "power_alternate_current");
+    EXPECT_EQ(key[3], "power_direct_current");
+    table.info();
 }
 int main(int argc, char* argv[]) {
-    namespace fs = std::filesystem;
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();    
 
-    // return 0;
 }

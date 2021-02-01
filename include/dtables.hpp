@@ -22,13 +22,19 @@
 #include <utility>  
 #include<memory>
 #include <cctype>
+#include <any>
 
 #include "nlohmann/json.hpp"
 #include "yaml-cpp/yaml.h"
 
-std::variant<int, float, std::string> v;
+using json = nlohmann::json;
+using string = std::string;
+
 
 namespace dtable{
+
+//    template<class T>
+//    using Var = std::variant<string, long, double>;
 
     namespace fs = std::filesystem;
 
@@ -38,11 +44,16 @@ namespace dtable{
      *      
      *      Data holder for Table class
      */
+    
+    
+
     struct DataRow{
-        std::string Dtype;
-        std::pair<std::string, std::vector<std::string>> String;  /**< pair for string type. */  
-        std::pair<std::string, std::vector<double>> Float;  /**< pair for float type. */
-        std::pair<std::string, std::vector<long>> Int;   /**< pair for int type. */   
+        string Dtype;
+        string name;
+        std::vector<std::variant<string, long, double>> row;
+                    
+        // bool insert(string, std::vector<T>);
+                 
     };
 
     
@@ -54,33 +65,50 @@ namespace dtable{
      */
     class Table{
 
+
         public:
-            std::string path;
+            string path;
             YAML::Node file;
             std::vector<std::shared_ptr<DataRow>> data;
 
         
-        /**
-         * @brief Constructor
-         *
-         * Reads Yaml file from given path 
-         * Valdiates if keys exists and correct 
-         * Initilize DataRow for each column name and data Type 
-         * 
-         * @param path Path to yaml file.
-         */
-        Table(std::string);
+            /**
+             * @brief Constructor
+             *
+             * Reads Yaml file from given path 
+             * Valdiates if keys exists and correct 
+             * Initilize DataRow for each column name and data Type 
+             * 
+             * @param path Path to yaml file.
+             */
+            Table(std::string);
 
-        /**
-         * @brief Returns column names of Table as vector<string>.
-         *
-         * Iterate over YML::Node get the first element of columns in given config file
-         *
-         * @return Vector of column's names.
-         */
-        std::vector<std::string> columns();
-        
+            /**
+             * @brief Returns column names of Table as vector<string>.
+             *
+             * Iterate over YML::Node get the first element of columns in given config file
+             *
+             * @return Vector of column's names.
+             */
+            std::vector<std::string> columns();
+
+
+            /****/
+            void info();
+            /****/
+            
+            std::vector<std::variant<string, long, double>> operator[](const string key) const{
+                for(const auto col: data){
+                    if(key == col->name){
+                        return col->row; 
+                    }
+                }
+                throw std::runtime_error("Column not exist");                
+            }
+  
+
         private:
+
             /**
              * @brief Opens file and returns YML::Node
              *
@@ -110,7 +138,7 @@ namespace dtable{
              * Insert DataRow objects to data vector
              * 
             */
-            void insert();
+            void insert_column();
 
             /**
              * @brief Compares given two strings

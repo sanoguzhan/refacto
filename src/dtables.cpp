@@ -1,31 +1,31 @@
 #include "dtables.hpp"
 
 
-using json = nlohmann::json;
 using namespace dtable;
 
 
-std::vector<std::string> Table::columns(){
-        std::vector<std::string> vec;
+
+std::vector<string> Table::columns(){
+        std::vector<string> vec;
         
         const YAML::Node& columns = file["COLUMNS"];
          
         for(YAML::const_iterator it = columns.begin(); it != columns.end(); it++ ){
             for(auto& kv:*it){
-                vec.push_back(kv.first.as<std::string>());
+                vec.push_back(kv.first.as<string>());
             }
         }
     return vec;
 }
 
-dtable::Table::Table(std::string path): 
+dtable::Table::Table(string path): 
     path{path},file{open_yaml(path)}{
     validate();
-    insert();
+    insert_column();
 }
 
 
-YAML::Node Table::open_yaml(std::string file_path){
+YAML::Node Table::open_yaml(string file_path){
     fs::path p(file_path);
     if(fs::exists(p)){
         return YAML::LoadFile(p);
@@ -33,42 +33,62 @@ YAML::Node Table::open_yaml(std::string file_path){
     throw std::runtime_error("File not exist at " +  file_path);
 }
 
-void Table::insert(){
+
+
+// template<typename T>
+// bool Table::insert(string column, std::vector<T>){
+//     for(auto column: data){             
+//         column.
+//     }
+
+
+
+//     vector1.insert( vector1.end(), vector2.begin(), vector2.end() );    
+// }
+
+void Table::insert_column(){
    const YAML::Node& columns = file["COLUMNS"];
-    std::string column;
+    string column;
     for(YAML::const_iterator it = columns.begin(); it != columns.end(); it++ ){
         for(auto& kv:*it){
-            column = kv.second.as<std::string>();
-            if(compare_column(column, "datetime")){
+            column = kv.second.as<string>();
+            
+            if(compare_column(column, "datetime")
+               || compare_column(column, "float") 
+               || compare_column(column, "int")){
+               std::transform(column.begin()+1,
+                                        column.end(), 
+                                        column.begin()+1, ::tolower);
                 auto row = std::make_shared<DataRow>();
-                row->Dtype = "datetime";                
-                row->String.first = kv.first.as<std::string>();                // std::vector<std::string> vec;
+
+                
+                row->Dtype = column;                
+                row->name = kv.first.as<string>(); // std::vector<string>
                 data.push_back(std::move(row));
-            }
-            else if(compare_column(column, "float")){
-                        auto row = std::make_shared<DataRow>();
-                        row->Dtype = "double";                
-                        row->Float.first = kv.first.as<std::string>();                // std::vector<std::string> vec;
-                        data.push_back(std::move(row));
-                        
-                    }
-            else if(compare_column(column, "int")){
-                        auto row = std::make_shared<DataRow>();
-                        row->Dtype = "int";                
-                        row->Int.first = kv.first.as<std::string>();                // std::vector<std::string> vec;
-                        data.push_back(std::move(row));
-                        
-                    }
-        
+                }        
         }
 
     } 
 
 }
 
-bool Table::compare_column(const std::string f, std::string s){
-    std::string capitalized_s = s;
-    std::string upper_s = s;    
+
+void Table::info(){
+    std::cout << "Columns\n";
+    for(const auto row: data){
+            std::cout<< "\tname: " << row->name<< "\n"
+            << "\tdtype: " << row->Dtype << "\n"<< "\tsize: " << row->row.size() <<"\n";
+        std::cout<< "\t" << string(20, '.') << "\n";
+    }
+
+    std::cout<< "Number of Columns: " << data.size() << "\n";
+}
+
+
+
+bool Table::compare_column(const string f, string s){
+    string capitalized_s = s;
+    string upper_s = s;    
     capitalized_s[0] = std::toupper(capitalized_s[0]);
 
     std::transform(capitalized_s.begin()+1,
@@ -90,6 +110,6 @@ void Table::validate(){
     
     if(!file["COLUMNS"]){
         throw std::runtime_error("Configuration missing COLUMNS ");
-    }
+    
 }
-
+}
