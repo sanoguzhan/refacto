@@ -43,7 +43,10 @@ TEST(DtableTests, DataAttributes){
 TEST(DtableTests, TableMethods){
    Table table = Table("tests/test_data/inverter_metrics.yaml");
 
-  ASSERT_TRUE(table.insert("power_alternate_current", std::vector<double>{1.0, 2.0,3.0}));  
+ ASSERT_TRUE(!table.insert("power_alternate_current", std::vector<int>{1, 2,3}));  
+ ASSERT_TRUE(table.insert("power_alternate_current", std::vector<double>{1.0, 2.0,3.0}));  
+  
+  
    ASSERT_EQ(table["power_alternate_current"].size(), 3) << "Vectors are unequal length"; 
 
 }

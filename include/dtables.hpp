@@ -23,6 +23,8 @@
 #include<memory>
 #include <cctype>
 #include <any>
+#include <typeinfo> 
+#include <type_traits>
 
 #include "nlohmann/json.hpp"
 #include "yaml-cpp/yaml.h"
@@ -47,6 +49,8 @@ namespace dtable{
         string Dtype;
         string name;
         std::vector<Type> row;
+
+        
                  
     };
 
@@ -61,30 +65,49 @@ namespace dtable{
 
 
         public:
-            string path;
-            YAML::Node file;
-            std::vector<std::shared_ptr<DataRow>> data;
+            string path; // path to file
+            YAML::Node file; // opened file as YML::Node
+            std::vector<std::shared_ptr<DataRow>> data; // Data contains each column as DataRow Obj
 
         
 
-
-            /*COMMENT*/
+            /**
+             * @brief Returns Column names, dtype and size for column in data
+             *
+             * Prints column information of data
+             *
+            */
             void info();
-            /*COMMENT*/
-            std::vector<Type> operator[](const string) const;
-            // bool insert(string, std::vector<std::variant<string, long, double>>);        
 
-            /*COMMENT*/
-            template<typename T>
-            bool insert(string key, std::vector<T> vec){
-                for(auto column:data){            
-                    if(column->name == key){
-                        column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
-                        return true;
-                    }
-                }
-                return false;
-            }
+            /**
+             * @brief Column access operator
+             * 
+             * Overloaded operator[]
+             * Gets given column name vector
+             * 
+             *  @param key (string) column name
+             * 
+             * @return vector<T> column
+             */
+            std::vector<Type> operator[](const string) const;
+
+            /**
+             * @brief Inserts given vector to given column name vector
+             * 
+             * Overloaded function
+             * Inserts only when key matches with column
+             * Copy each element of given vector to column
+             * Overl
+             *  @param key (string) column name
+             *  @param vec vector<T> inserted to column
+             * 
+             * @return bool true on success
+             */
+            bool insert(std::string, std::vector<double>);
+            bool insert(std::string, std::vector<long>);
+            bool insert(std::string, std::vector<int>);
+            bool insert(std::string, std::vector<string>);
+       
 
             /**
              * @brief Constructor
@@ -93,7 +116,7 @@ namespace dtable{
              * Valdiates if keys exists and correct 
              * Initilize DataRow for each column name and data Type 
              * 
-             * @param path Path to yaml file.
+             * @param path (string) Path to yaml file.
              */
             Table(std::string);
 

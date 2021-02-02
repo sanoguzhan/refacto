@@ -34,18 +34,6 @@ YAML::Node Table::open_yaml(string file_path){
 }
 
 
-
-// template<typename T>
-// bool Table::insert(string column, std::vector<T>){
-//     for(auto column: data){             
-//         column.
-//     }
-
-
-
-//     vector1.insert( vector1.end(), vector2.begin(), vector2.end() );    
-// }
-
 void Table::insert_column(){
    const YAML::Node& columns = file["COLUMNS"];
     string column;
@@ -123,13 +111,44 @@ std::vector<Type> Table::operator[](const string key) const{
     throw std::runtime_error("Column not exist");                
 }
 
-// template<typename T>
-// bool Table::insert(string key, std::vector<T> vec){
-//     for(auto column:data){            
-//         if(column->name == key){
-//             std::copy(std::begin(vec), std::end(vec), std::end(column->row));
-//             return true;
-//         }
-//     }
-//     return false;
-// }
+bool Table::insert(std::string key, std::vector<double> vec){
+    for(auto column:data){            
+        if(column->name == key && column->Dtype == "float"){
+            column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Table::insert(std::string key, std::vector<long> vec){
+    for(auto column:data){            
+        if(column->name == key && column->Dtype == "int"){
+        column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
+        return true;
+        }
+    }
+    return false;
+}
+
+
+bool Table::insert(std::string key, std::vector<int> vec){
+    for(auto column:data){            
+        if(column->name == key && column->Dtype == "int"){
+            std::vector<long> vec(begin(vec), end(vec));
+            column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
+            return true;
+        }
+    }
+    return false;
+    }
+
+bool Table::insert(std::string key, std::vector<string>vec){
+    for(auto column:data){            
+        if(column->name == key && column->Dtype == "datetime"){
+            column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
+            return true;
+        }
+    }
+    return false;
+}
