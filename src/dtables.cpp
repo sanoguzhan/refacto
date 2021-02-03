@@ -55,9 +55,7 @@ void Table::insert_column(){
                 data.push_back(std::move(row));
                 }        
         }
-
     } 
-
 }
 
 

@@ -12,7 +12,7 @@
 
 #include "gtest/gtest.h"
 #include "refacto/dtables.hpp"
-
+#include "refacto/csvparser.hpp"
 using namespace std;
 using namespace dtable;
 namespace fs = std::filesystem;

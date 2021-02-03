@@ -9,3 +9,4 @@ make
 popd
  
 ./tests/build/bin/test_dtables
+./tests/build/bin/test_csvparser
