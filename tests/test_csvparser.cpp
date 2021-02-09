@@ -1,12 +1,40 @@
 #include "test_header.hpp"
 
 
-class CSVParser: public TestTimer{
+class CSVParserTest: public TestTimer{
 };
 
-TEST(CSVParser, ReadFile){
+TEST(CSVParser, WrongPath){
+    string p("tests/test_data/test.csv");
+    try{
+        CSVParser csv = CSVParser(p);
+    } catch (std::exception& ex) {
+          EXPECT_EQ("CSV not exist at "+p, (std::string)ex.what());
+      }    
 
-    read_file("tests/test_data/2018-07-05.csv");
+}
+
+
+TEST(CSVParser, ReadEachRow){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv");
+    ASSERT_EQ(p.data.size(), 81);   
+}
+
+
+TEST(CSVParser, ReadAll){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
+    ASSERT_EQ(p.data.size(), 79);
+}
+
+TEST(CSVParser, GetValTest){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
+    Loc loc{
+        .name="WR09",
+        .orient="row",
+        .row=0
+    };    
+    p.get_val(loc);
+
 
 }
 

@@ -18,6 +18,7 @@ TEST(DtableTests, InvalidConfigFileError){
       } catch (std::exception& ex) {
           EXPECT_EQ("Configuration missing COLUMNS ", (std::string)ex.what());
       } 
+      
     
 }
 
