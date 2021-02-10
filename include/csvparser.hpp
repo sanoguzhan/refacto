@@ -24,7 +24,7 @@ struct Loc{
     int row;
     int column;
 };
-
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,const Loc& );
 class CSVParser{
     private:
         string file_path;
@@ -37,6 +37,7 @@ class CSVParser{
     public:
         std::vector<std::vector<string>> data;
 
+       
         CSVParser(string path, string delim, int skip_rows): 
             file_path{path}, f(validate_f(path)),
             parser{f}, delim{delim}, 
@@ -57,50 +58,16 @@ class CSVParser{
 
     
     
-        string validate_f(string);
     
-        std::vector<string> read_line(){
-            long unsigned end, start = 0U;
-            std::vector<string> vec;
-            for(;;){
-                auto field = parser.next_field();
-                string s;
-                if(field.type == csv::FieldType::ROW_END
-                    || field.type == csv::FieldType::CSV_END) continue;
-                
-                s = *field.data;                
-                end = s.find(delim);
-
-                while (end != std::string::npos){
-                    vec.push_back(static_cast<string>(s.substr(start, end - start)));
-                    start = end + delim.length();
-                    end = s.find(delim, start);
-                }
-                vec.push_back(static_cast<string>(s.substr(start, end)));
-                break;
-            }
-            return vec;
-        }    
+        std::vector<string> read_line();
 
 
-        
-        std::vector<std::vector<string>> read(int skip){
-            std::vector<std::vector<string>> vec;
-            auto field = parser.next_field();
-            
-            move_iter(field, skip);
-            
-            while(field.type != csv::FieldType::CSV_END){
-                if(field.type == csv::FieldType::ROW_END){
-                    field = parser.next_field();
-                    continue;
-                }
-                vec.push_back(row_vector(static_cast<string>(*field.data)));
-                field = parser.next_field();
-            }
-            return vec;
-        }    
+    private:        
+        string validate_f(string);
 
+        std::vector<std::vector<string>> read(int); 
+
+        void move_iter(csv::Field &, int);
 
         inline std::vector<string> row_vector(std::string s){
             long unsigned end=0U,  start;
@@ -126,7 +93,7 @@ class CSVParser{
             
    
             if(token.orient == "row"){
-                row_search(token);
+                row_search(data, token);
             }else if(token.orient == "column"){
                 //
 
@@ -135,31 +102,10 @@ class CSVParser{
             return temp;            
         }
 
-        void row_search(Loc& token){
-            string lookup;
-            for(size_t r=0; r < data.size(); r++){
-                lookup = data.at(token.row).at(r);
-                if(lookup.find(token.name) != string::npos)
-                    std::cout << lookup << "\n";
-                }
-        }
 
         void column_search(){
             // Search item column-wise
         }
-
-        void move_iter(csv::Field &field, int skip){
-            int counter = 0;
-             while(counter < skip-1){
-                    if(field.type == csv::FieldType::ROW_END){
-                        counter++;
-                        field = parser.next_field();
-                        continue;
-                    } 
-                    field = parser.next_field();
-                    continue;
-                }
-    }
 
 };
 
