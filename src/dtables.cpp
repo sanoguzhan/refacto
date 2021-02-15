@@ -61,7 +61,7 @@ void Table::insert_column(){
 
 void Table::info(){
     std::cout << "Columns\n";
-    for(const auto row: data){
+    for(const auto& row: data){
             std::cout<< "\tname: " << row->name<< "\n"
             << "\tdtype: " << row->Dtype << "\n"<< "\tsize: " << row->row.size() <<"\n";
         std::cout<< "\t" << string(20, '.') << "\n";
@@ -92,16 +92,24 @@ bool Table::compare_column(const string f, string s){
         return false;
 }
 
+bool Table::is_column(string token){
+    bool contains = false;
+    for(const auto& col:data){
+        contains = compare_column(col->name, token);
+    }
+    return contains;
+}
+
+
 void Table::validate(){
-    
     if(!file["COLUMNS"]){
         throw std::runtime_error("Configuration missing COLUMNS ");
     
 }
 }
 
-std::vector<Type> Table::operator[](const string key) const{
-    for(const auto col: data){
+std::vector<string> Table::operator[](const string key) const{
+    for(const auto& col: data){
         if(key == col->name){
             return col->row; 
         }
@@ -109,41 +117,72 @@ std::vector<Type> Table::operator[](const string key) const{
     throw std::runtime_error("Column not exist");                
 }
 
-bool Table::insert(std::string key, std::vector<double> vec){
-    for(auto column:data){            
-        if(column->name == key && column->Dtype == "float"){
-            column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
-            return true;
-        }
-    }
-    return false;
-}
 
-bool Table::insert(std::string key, std::vector<long> vec){
-    for(auto column:data){            
-        if(column->name == key && column->Dtype == "int"){
-        column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
-        return true;
-        }
+std::shared_ptr<DataRow> Table::get_column(const string& name){
+    for(const auto& row:data){
+        if(row->name == name) return row;        
     }
-    return false;
+throw std::runtime_error("Column not exist"); 
 }
 
 
-bool Table::insert(std::string key, std::vector<int> vec){
-    for(auto column:data){            
-        if(column->name == key && column->Dtype == "int"){
-            std::vector<long> vec(begin(vec), end(vec));
-            column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
-            return true;
+
+void Table::save(){
+    std::ofstream csv_file;
+    csv_file.open("test.csv");
+    size_t i = 0;
+    for(;i<data.size()-1;i++){
+        csv_file << data.at(i)->name << ";";
+    }
+    csv_file << data.at(i)->name <<std::endl;
+    i = 0;
+    size_t counter;
+    for(;i<get_size();i++){
+        counter=0;
+        for(const auto& item: data){
+            counter++;
+            if(item->row.empty()){
+                csv_file << ";";    
+                if(counter == data.size())
+                  csv_file << item->row.at(i) << std::endl;  
+                  continue;
+            }
+        
+            if(counter == data.size()){
+                  csv_file << item->row.at(i) << std::endl; 
+                  continue;
+            }
+            csv_file << item->row.at(i) << ";";
         }
     }
-    return false;
+    csv_file.close();
+ }
+
+bool Table::insert(std::string target_column, std::string id_column, Series series){
+    if(is_column(id_column)
+        && is_column(series.name)){
+            return false;
+            }
+    auto id_col = get_column(id_column);
+    auto val_col = get_column(target_column);
+    std::vector<string>::iterator iter;
+    for(const auto& p: series.values){
+        iter = std::find(std::begin(id_col->row), std::end(id_col->row), p.first);
+        val_col->row.insert(std::end(val_col->row), std::begin(p.second), std::end(p.second));
+        if(iter == id_col->row.end())
+            id_col->row.insert(std::end(id_col->row),p.second.size(), p.first);
     }
+    return true;
+}
+
+
+
+
+
 
 bool Table::insert(std::string key, std::vector<string>vec){
     for(auto column:data){            
-        if(column->name == key && column->Dtype == "datetime"){
+        if(column->name == key){
             column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
             return true;
         }

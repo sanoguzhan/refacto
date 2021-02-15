@@ -1,4 +1,5 @@
 #include "test_header.hpp"
+
 class DtableTests: public TestTimer{
 };
 
@@ -44,13 +45,18 @@ TEST(DtableTests, DataAttributes){
 TEST(DtableTests, TableMethods){
     Table table = Table("tests/test_data/inverter_metrics.yaml");
 
-    ASSERT_TRUE(!table.insert("power_alternate_current", std::vector<int>{1, 2,3}));  
-    ASSERT_TRUE(table.insert("power_alternate_current", std::vector<double>{1.0, 2.0,3.0}));  
-  
-  
+    ASSERT_TRUE(table.insert("power_alternate_current", std::vector<string>{"1", "2","3"}));  
     ASSERT_EQ(table["power_alternate_current"].size(), 3) << "Vectors are unequal length"; 
 
 }
+
+
+TEST(DtableTests, GetterMethodsColumn){
+    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    ASSERT_TRUE(table.get_column("inverter_id")->name == "inverter_id");
+
+}
+
 
 
 TEST(DtableTests, GetterMethods){
@@ -62,6 +68,58 @@ TEST(DtableTests, GetterMethods){
     EXPECT_EQ(key[2], "power_alternate_current");
     EXPECT_EQ(key[3], "power_direct_current");
 }
+
+
+TEST(DtableTests, InsertSeries){
+    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    
+
+    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
+    
+    Loc targets{
+        .name="2001",
+        .orient="row",
+        .row=1
+    };
+    
+    Loc cond1{
+        .name="Pac",
+        .orient="row",
+        .row=2
+    };
+
+    Loc targets2{
+        .name="2001",
+        .orient="row",
+        .row=1
+    };
+    
+    Loc cond2{
+        .name="Uac",
+        .orient="row",
+        .row=2
+    };
+
+    auto cols{p.values("row", 4, targets, cond1)};
+    auto cols2{p.values("row", 4, targets2, cond2)};
+     
+    for(auto& p:cols.values){
+        ASSERT_EQ(75, p.second.size());
+    }
+    table.insert("power_direct_current", "inverter_id", cols);
+    table.insert("power_alternate_current", "inverter_id", cols2);
+
+    std::vector<std::string> id_vec{table["inverter_id"]};
+    std::vector<std::string> col_vec{table["power_direct_current"]};
+
+    ASSERT_EQ(id_vec.size(),1800);
+    ASSERT_EQ(col_vec.size(),1800);
+    table.info();
+    table.save();
+
+}
+
+
 
 
 int main(int argc, char* argv[]) {

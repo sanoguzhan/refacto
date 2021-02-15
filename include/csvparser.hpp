@@ -5,11 +5,12 @@
 #include<iostream>
 #include<string>
 #include<filesystem>
-#include <fstream>
+#include<fstream>
 #include<map>
+#include <utility>
+
 #include "parser.hpp"
-
-
+#include "dtables.hpp"
 #include "boost/tokenizer.hpp"
 
 using namespace std;
@@ -24,7 +25,14 @@ struct Loc{
     int row;
     int column;
 };
-std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,const Loc& );
+
+
+
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,
+                                const Loc&, const Loc&);
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,
+                                const Loc&);
+
 class CSVParser{
     private:
         string file_path;
@@ -38,29 +46,27 @@ class CSVParser{
         std::vector<std::vector<string>> data;
 
        
-        CSVParser(string path, string delim, int skip_rows): 
-            file_path{path}, f(validate_f(path)),
-            parser{f}, delim{delim}, 
-            skip_rows{skip_rows},data{read(skip_rows)}{}
+        CSVParser(string path, string delim, int skip_rows); 
 
-        CSVParser(string path, string delim): 
-            file_path{path}, f(validate_f(path)),
-            parser{f}, delim{delim},data{read(skip_rows)}{}
+        CSVParser(string path, string delim); 
 
-        CSVParser(string path, int skip_rows): 
-            file_path{path}, f(validate_f(path)), 
-            skip_rows{skip_rows}, parser{f}, 
-            data{read(skip_rows)}{}
+        CSVParser(string path, int skip_rows); 
 
-        CSVParser(string path): 
-            file_path{path}, f(validate_f(path)), 
-            parser{f}, data{read(skip_rows)}{}
-
-    
-    
+        CSVParser(string path); 
     
         std::vector<string> read_line();
 
+
+        Series values(string orient,
+                        u_int32_t idx,
+                        const Loc& target,
+                        const Loc& cond1,
+                        const Loc& cond2);
+        
+        Series values(string orient,
+                        u_int32_t idx,
+                        const Loc& target,
+                        const Loc& cond1);
 
     private:        
         string validate_f(string);
@@ -85,23 +91,6 @@ class CSVParser{
             
             return row_vec;
         }
-
-
-        std::map<string, std::vector<string>> get_val(Loc& token){
-            
-           std::map<string, std::vector<string>> temp; 
-            
-   
-            if(token.orient == "row"){
-                row_search(data, token);
-            }else if(token.orient == "column"){
-                //
-
-            }
-
-            return temp;            
-        }
-
 
         void column_search(){
             // Search item column-wise

@@ -19,19 +19,23 @@
 #include<vector>
 #include<variant>
 #include<filesystem>
-#include <utility>  
+#include<utility>  
 #include<memory>
-#include <cctype>
-#include <any>
-#include <typeinfo> 
-#include <type_traits>
-
+#include<cctype>
+#include<any>
+#include<typeinfo> 
+#include<type_traits>
+#include<fstream>
 #include "nlohmann/json.hpp"
 #include "yaml-cpp/yaml.h"
 
 using json = nlohmann::json;
 using string = std::string;
 
+struct Series{
+    string name;
+    std::map<string, std::vector<string>> values;
+};
 
 namespace dtable{
 
@@ -48,11 +52,9 @@ namespace dtable{
     struct DataRow{
         string Dtype;
         string name;
-        std::vector<Type> row;
-
-        
-                 
+        std::vector<string> row;
     };
+
 
     
     /**
@@ -69,7 +71,13 @@ namespace dtable{
             YAML::Node file; // opened file as YML::Node
             std::vector<std::shared_ptr<DataRow>> data; // Data contains each column as DataRow Obj
 
-        
+
+
+            ////////
+            void save();
+            std::shared_ptr<DataRow> get_column(const string&);
+            ////////
+
 
             /**
              * @brief Returns Column names, dtype and size for column in data
@@ -89,7 +97,7 @@ namespace dtable{
              * 
              * @return vector<T> column
              */
-            std::vector<Type> operator[](const string) const;
+            std::vector<string> operator[](const string) const;
 
             /**
              * @brief Inserts given vector to given column name vector
@@ -103,11 +111,8 @@ namespace dtable{
              * 
              * @return bool true on success
              */
-            bool insert(std::string, std::vector<double>);
-            bool insert(std::string, std::vector<long>);
-            bool insert(std::string, std::vector<int>);
             bool insert(std::string, std::vector<string>);
-       
+            bool insert(std::string, std::string, Series);       
 
             /**
              * @brief Constructor
@@ -131,6 +136,19 @@ namespace dtable{
   
 
         private:
+
+            //////////////
+            bool is_column(string);
+            inline size_t get_size(){
+                size_t size{0};
+                for(const auto& c:data){
+                    if(c->row.size() > size)
+                        size = c->row.size();
+                }
+            return --size;
+            }
+
+            //////////////
 
             /**
              * @brief Opens file and returns YML::Node
@@ -177,6 +195,7 @@ namespace dtable{
              * @return bool, true if matches with any 
             */
             bool compare_column(const std::string,std::string);
+
 
         };
 

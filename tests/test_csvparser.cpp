@@ -26,24 +26,77 @@ TEST(CSVParser, ReadAll){
     ASSERT_EQ(p.data.size(), 79);
 }
 
-TEST(CSVParser, GetValTest){
+TEST(CSVParser, RowSearch){
     CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
-    Loc loc{
-        .name="WR09",
+    Loc loc1{
+        .name="WR",
         .orient="row",
         .row=0
     };
-    std::vector<u_int32_t> expected{7,8,9,10,11,12,13,14,15,16,17,
-                                    18,19,20,21,22,23,24,25,26,27,
-                                    28,29,30,31,32,33,34,35,36,37,
-                                    38,39,40,41,42,43,44,45,46,47,
-                                    48,49,50,51,52,53,54,55,56,57,
-                                    58,59,60,61,62,63,64,65,66,67,
-                                    68,69,70,71,72,73,74,75,76,77, 
-                                    78};
-    std::vector<u_int32_t> actual{row_search(p.data, loc)};
-    ASSERT_EQ(actual, expected);
 
+    Loc loc2{
+    .name="Pac",
+    .orient="row",
+    .row=2
+    };
+    std::vector<u_int32_t> expected{17,34,51,68,85,102,119,
+                                    136,153,170,187,204,221,
+                                    238,255,272,289,306,323,
+                                    340,357,374,391,408};
+
+    std::vector<u_int32_t> actual{row_search(p.data, loc1, loc2)};
+
+    ASSERT_EQ(actual, expected);
+}
+
+
+
+TEST(CSVParser, GetValsTwoCond){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
+    
+    Loc targets{
+        .name="2001",
+        .orient="row",
+        .row=1
+    };
+    
+    Loc cond1{
+        .name="WR",
+        .orient="row",
+        .row=0
+    };
+
+    Loc cond2{
+        .name="Pac",
+        .orient="row",
+        .row=2
+    };
+
+    auto cols{p.values("row", 4, targets, cond1, cond2)};
+    for(auto& p:cols.values){
+        ASSERT_EQ(75, p.second.size());
+    }
+}
+
+TEST(CSVParser, GetValsOneCond){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
+    
+    Loc targets{
+        .name="2001",
+        .orient="row",
+        .row=1
+    };
+    
+    Loc cond1{
+        .name="Pac",
+        .orient="row",
+        .row=2
+    };
+
+    auto cols{p.values("row", 4, targets, cond1)};
+    for(auto& p:cols.values){
+        ASSERT_EQ(75, p.second.size());
+}
 }
 
 
