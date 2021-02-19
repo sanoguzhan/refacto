@@ -6,7 +6,7 @@ class DtableTests: public TestTimer{
 TEST(DtableTests, WrongPathConstructor){
     std::string p("wrong_path");    
     try {      
-        Table table = Table(p);
+        Tables table = Tables(p);
       } catch (std::exception& ex) {
           EXPECT_EQ("File not exist at " + p, ex.what());
       }
@@ -14,7 +14,7 @@ TEST(DtableTests, WrongPathConstructor){
 
 TEST(DtableTests, InvalidConfigFileError){
        try {      
-          Table table = Table("tests/test_data/test_wrong_columns.yaml");
+          Tables table = Tables("tests/test_data/test_wrong_columns.yaml");
    
       } catch (std::exception& ex) {
           EXPECT_EQ("Configuration missing COLUMNS ", (std::string)ex.what());
@@ -25,7 +25,7 @@ TEST(DtableTests, InvalidConfigFileError){
 
 
 TEST(DtableTests, DataAttributes){
-   Table table = Table("tests/test_data/inverter_metrics.yaml");
+   Tables table = Tables("tests/test_data/inverter_metrics.yaml");
    EXPECT_EQ(table.data[0]->Dtype, "datetime");
    EXPECT_EQ(table.data[1]->Dtype, "int");
    EXPECT_EQ(table.data[2]->Dtype, "float");
@@ -43,7 +43,7 @@ TEST(DtableTests, DataAttributes){
 
 
 TEST(DtableTests, TableMethods){
-    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    Tables table = Tables("tests/test_data/inverter_metrics.yaml");
 
     ASSERT_TRUE(table.insert("power_alternate_current", std::vector<string>{"1", "2","3"}));  
     ASSERT_EQ(table["power_alternate_current"].size(), 3) << "Vectors are unequal length"; 
@@ -52,7 +52,7 @@ TEST(DtableTests, TableMethods){
 
 
 TEST(DtableTests, GetterMethodsColumn){
-    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    Tables table = Tables("tests/test_data/inverter_metrics.yaml");
     ASSERT_TRUE(table.get_column("inverter_id")->name == "inverter_id");
 
 }
@@ -60,7 +60,7 @@ TEST(DtableTests, GetterMethodsColumn){
 
 
 TEST(DtableTests, GetterMethods){
-    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    Tables table = Tables("tests/test_data/inverter_metrics.yaml");
     
     std::vector<std::string> key{table.columns()};
     EXPECT_EQ(key[0], "date");
@@ -71,7 +71,7 @@ TEST(DtableTests, GetterMethods){
 
 
 TEST(DtableTests, InsertSeries){
-    Table table = Table("tests/test_data/inverter_metrics.yaml");
+    Tables table = Tables("tests/test_data/inverter_metrics.yaml");
     
 
     CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
@@ -114,9 +114,6 @@ TEST(DtableTests, InsertSeries){
 
     ASSERT_EQ(id_vec.size(),1800);
     ASSERT_EQ(col_vec.size(),1800);
-    table.info();
-    table.save();
-
 }
 
 

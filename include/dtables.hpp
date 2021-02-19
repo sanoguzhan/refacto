@@ -3,8 +3,13 @@
  *  @brief data table class and methods for insertion
  *
  *  This file contains the refacto's
- *  data holders
+ *  data holders for multi tables
  *  
+ * 
+ *  @todo Completation Table parsing for configuration files
+ *  @todo Column-wise token search and parsing
+ *  @todo type casting and arithmetic operations within rows
+ * 
  *  @author Oguzhan San
  *  @bug No known bugs.
  * 
@@ -14,28 +19,13 @@
 
 
 
-#include<iostream>
-#include<string>
-#include<vector>
-#include<variant>
-#include<filesystem>
-#include<utility>  
-#include<memory>
-#include<cctype>
-#include<any>
-#include<typeinfo> 
-#include<type_traits>
-#include<fstream>
 #include "nlohmann/json.hpp"
 #include "yaml-cpp/yaml.h"
+#include "table.hpp"
 
 using json = nlohmann::json;
 using string = std::string;
-
-struct Series{
-    string name;
-    std::map<string, std::vector<string>> values;
-};
+using namespace table;
 
 namespace dtable{
 
@@ -47,7 +37,7 @@ namespace dtable{
      * @brief DataRow Struct for row data container
      *  DataRow Struct 
      *      
-     *      Data holder for Table class
+     *      Data holder for Tables class
      */
     struct DataRow{
         string Dtype;
@@ -58,12 +48,13 @@ namespace dtable{
 
     
     /**
-     * @brief Table class for given configur
-     *  Table Class
+     * @brief Tables class for given configur
+     *  Table sClass
      *      Creates data tables
      *      Validates configuration and data types
      */
-    class Table{
+   
+    class [[deprecated]] Tables{
 
 
         public:
@@ -72,11 +63,23 @@ namespace dtable{
             std::vector<std::shared_ptr<DataRow>> data; // Data contains each column as DataRow Obj
 
 
-
-            ////////
+            /**
+             * @brief Saves file to running directory
+             *
+             * @todo take input where to save the file
+             *
+            */
             void save();
+
+
+            /**
+             * @brief Getter method for column
+             * 
+             *  @param key (string) column name
+             * 
+             * @return shared_ptr<DataRow> to column data
+             */ 
             std::shared_ptr<DataRow> get_column(const string&);
-            ////////
 
 
             /**
@@ -123,7 +126,7 @@ namespace dtable{
              * 
              * @param path (string) Path to yaml file.
              */
-            Table(std::string);
+            Tables(std::string);
 
             /**
              * @brief Returns column names of Table as vector<string>.

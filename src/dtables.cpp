@@ -1,11 +1,10 @@
 #include "dtables.hpp"
 
-
 using namespace dtable;
 
 
 
-std::vector<string> Table::columns(){
+std::vector<string> Tables::columns(){
         std::vector<string> vec;
         
         const YAML::Node& columns = file["COLUMNS"];
@@ -18,14 +17,14 @@ std::vector<string> Table::columns(){
     return vec;
 }
 
-dtable::Table::Table(string path): 
+dtable::Tables::Tables(string path): 
     path{path},file{open_yaml(path)}{
     validate();
     insert_column();
 }
 
 
-YAML::Node Table::open_yaml(string file_path){
+YAML::Node Tables::open_yaml(string file_path){
     fs::path p(file_path);
     if(fs::exists(p)){
         return YAML::LoadFile(p);
@@ -34,7 +33,7 @@ YAML::Node Table::open_yaml(string file_path){
 }
 
 
-void Table::insert_column(){
+void Tables::insert_column(){
    const YAML::Node& columns = file["COLUMNS"];
     string column;
     for(YAML::const_iterator it = columns.begin(); it != columns.end(); it++ ){
@@ -49,7 +48,6 @@ void Table::insert_column(){
                                         column.begin()+1, ::tolower);
                 auto row = std::make_shared<DataRow>();
 
-                
                 row->Dtype = column;                
                 row->name = kv.first.as<string>(); // std::vector<string>
                 data.push_back(std::move(row));
@@ -59,7 +57,7 @@ void Table::insert_column(){
 }
 
 
-void Table::info(){
+void Tables::info(){
     std::cout << "Columns\n";
     for(const auto& row: data){
             std::cout<< "\tname: " << row->name<< "\n"
@@ -72,7 +70,7 @@ void Table::info(){
 
 
 
-bool Table::compare_column(const string f, string s){
+bool Tables::compare_column(const string f, string s){
     string capitalized_s = s;
     string upper_s = s;    
     capitalized_s[0] = std::toupper(capitalized_s[0]);
@@ -92,7 +90,7 @@ bool Table::compare_column(const string f, string s){
         return false;
 }
 
-bool Table::is_column(string token){
+bool Tables::is_column(string token){
     bool contains = false;
     for(const auto& col:data){
         contains = compare_column(col->name, token);
@@ -101,14 +99,14 @@ bool Table::is_column(string token){
 }
 
 
-void Table::validate(){
+void Tables::validate(){
     if(!file["COLUMNS"]){
         throw std::runtime_error("Configuration missing COLUMNS ");
     
 }
 }
 
-std::vector<string> Table::operator[](const string key) const{
+std::vector<string> Tables::operator[](const string key) const{
     for(const auto& col: data){
         if(key == col->name){
             return col->row; 
@@ -118,7 +116,7 @@ std::vector<string> Table::operator[](const string key) const{
 }
 
 
-std::shared_ptr<DataRow> Table::get_column(const string& name){
+std::shared_ptr<DataRow> Tables::get_column(const string& name){
     for(const auto& row:data){
         if(row->name == name) return row;        
     }
@@ -127,7 +125,7 @@ throw std::runtime_error("Column not exist");
 
 
 
-void Table::save(){
+void Tables::save(){
     std::ofstream csv_file;
     csv_file.open("test.csv");
     size_t i = 0;
@@ -145,7 +143,7 @@ void Table::save(){
                 csv_file << ";";    
                 if(counter == data.size())
                   csv_file << item->row.at(i) << std::endl;  
-                  continue;
+                continue;
             }
         
             if(counter == data.size()){
@@ -158,7 +156,8 @@ void Table::save(){
     csv_file.close();
  }
 
-bool Table::insert(std::string target_column, std::string id_column, Series series){
+
+bool Tables::insert(std::string target_column, std::string id_column, Series series){
     if(is_column(id_column)
         && is_column(series.name)){
             return false;
@@ -180,7 +179,7 @@ bool Table::insert(std::string target_column, std::string id_column, Series seri
 
 
 
-bool Table::insert(std::string key, std::vector<string>vec){
+bool Tables::insert(std::string key, std::vector<string>vec){
     for(auto column:data){            
         if(column->name == key){
             column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));

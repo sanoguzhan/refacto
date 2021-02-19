@@ -3,6 +3,7 @@ set (CMAKE_CXX_STANDARD 17)
 
 add_compile_options("-std=gnu++17")
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
+add_compile_options("-Wno-error=deprecated-declarations")
 project(test_dtables)
 enable_testing()
 
@@ -23,6 +24,10 @@ add_executable(test_dtables
 add_executable(test_csvparser 
 test_csvparser.cpp)
 
+add_executable(test_table 
+test_table.cpp)
+
+
 if(refacto_FOUND)
 
   #Fix this, Make it generic for eache executable
@@ -33,6 +38,10 @@ if(refacto_FOUND)
   target_link_libraries(test_csvparser refacto)
   target_link_libraries(test_csvparser ${CONAN_LIBS})
   target_link_libraries(test_csvparser GTest::GTest GTest::Main)
+
+  target_link_libraries(test_table refacto)
+  target_link_libraries(test_table ${CONAN_LIBS})
+  target_link_libraries(test_table GTest::GTest GTest::Main)
 
 else()
   message(FATAL_ERROR "refacto library not found")

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.4)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
 add_compile_options("-std=gnu++17")
+add_compile_options("-Wno-error=deprecated-declarations")
 link_libraries(stdc++fs)
 
 project(refacto VERSION 0.0.1 LANGUAGES CXX)

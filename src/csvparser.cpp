@@ -3,7 +3,6 @@
 
 
 
- 
 CSVParser::CSVParser(string path, string delim, int skip_rows): 
     file_path{path}, f(validate_f(path)),
     parser{f}, delim{delim}, 
@@ -87,10 +86,10 @@ std::vector<string> CSVParser::read_line(){
 }    
 
 Series CSVParser::values(string orient,
-                                        u_int32_t idx,
-                                            const Loc& target,
-                                            const Loc& cond1,
-                                            const Loc& cond2){
+                        u_int32_t idx,
+                        const Loc& target,
+                        const Loc& cond1,
+                        const Loc& cond2){
 
     std::vector<string> rows;
     Series series{
