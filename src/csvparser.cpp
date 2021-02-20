@@ -93,7 +93,7 @@ Series CSVParser::values(string orient,
 
     std::vector<string> rows;
     Series series{
-        .name = target.name
+        .name = cond1.name
     }; 
 
 
@@ -121,7 +121,7 @@ Series CSVParser::values(string orient,
 
     std::vector<string> rows;
     Series series{
-        .name = target.name
+        .name = cond1.name
     }; 
 
 
@@ -131,6 +131,7 @@ Series CSVParser::values(string orient,
             for(size_t i=idx;i<data.size(); i++){                        
                 rows.push_back(data.at(i).at(col));                        
             }
+
             series.values.insert({data.at(target.row).at(col), rows});
             rows.resize(0);
         }

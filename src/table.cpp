@@ -1,191 +1,40 @@
-// #include "dtables.hpp"
+#include "dtables.hpp"
 
 
-// using namespace dtable;
+using namespace table;
 
 
+typedef std::map<std::string, std::vector<std::string>>::iterator map_iter;
+typedef std::vector<std::pair<string, std::vector<string>>> pair_vector;
 
-// std::vector<string> Table::columns(){
-//         std::vector<string> vec;
+bool Table::insert(Series series){
+
+    // std::map<std::string, std::pair<std::string, std::vector<string>>>data; // Data contains each column as DataRow Obj
+
+
+    std::pair<string, std::vector<std::string>> row;
+    for(const auto& p: series.values){
+        if(data.find(p.first) == data.end()){
+            data.insert({
+            p.first, pair_vector{make_pair(series.name, p.second)}
+        });
+        }else if(column_exist(p.first, series.name)){
+           // Insert colum 
+        }
+
         
-//         const YAML::Node& columns = file["COLUMNS"];
-         
-//         for(YAML::const_iterator it = columns.begin(); it != columns.end(); it++ ){
-//             for(auto& kv:*it){
-//                 vec.push_back(kv.first.as<string>());
-//             }
-//         }
-//     return vec;
-// }
+    }
 
-// dtable::Table::Table(string path): 
-//     path{path},file{open_yaml(path)}{
-//     validate();
-//     insert_column();
-// }
+    return true;
+
+}
 
 
-// YAML::Node Table::open_yaml(string file_path){
-//     fs::path p(file_path);
-//     if(fs::exists(p)){
-//         return YAML::LoadFile(p);
-//     }
-//     throw std::runtime_error("File not exist at " +  file_path);
-// }
-
-
-// void Table::insert_column(){
-//    const YAML::Node& columns = file["COLUMNS"];
-//     string column;
-//     for(YAML::const_iterator it = columns.begin(); it != columns.end(); it++ ){
-//         for(auto& kv:*it){
-//             column = kv.second.as<string>();
-            
-//             if(compare_column(column, "datetime")
-//                || compare_column(column, "float") 
-//                || compare_column(column, "int")){
-//                std::transform(column.begin()+1,
-//                                         column.end(), 
-//                                         column.begin()+1, ::tolower);
-//                 auto row = std::make_shared<DataRow>();
-
-//                 row->Dtype = column;                
-//                 row->name = kv.first.as<string>(); // std::vector<string>
-//                 data.push_back(std::move(row));
-//                 }        
-//         }
-//     } 
-// }
-
-
-// void Table::info(){
-//     std::cout << "Columns\n";
-//     for(const auto& row: data){
-//             std::cout<< "\tname: " << row->name<< "\n"
-//             << "\tdtype: " << row->Dtype << "\n"<< "\tsize: " << row->row.size() <<"\n";
-//         std::cout<< "\t" << string(20, '.') << "\n";
-//     }
-
-//     std::cout<< "Number of Columns: " << data.size() << "\n";
-// }
-
-
-
-// bool Table::compare_column(const string f, string s){
-//     string capitalized_s = s;
-//     string upper_s = s;    
-//     capitalized_s[0] = std::toupper(capitalized_s[0]);
-
-//     std::transform(capitalized_s.begin()+1,
-//                     capitalized_s.end(), 
-//                     capitalized_s.begin()+1, ::tolower);
-//     std::transform(upper_s.begin()+1,
-//                     upper_s.end(), 
-//                     upper_s.begin()+1, ::toupper);
-    
-//     if(f == s 
-//         || f == upper_s 
-//         || f == capitalized_s){
-//             return true;
-//         }
-//         return false;
-// }
-
-// bool Table::is_column(string token){
-//     bool contains = false;
-//     for(const auto& col:data){
-//         contains = compare_column(col->name, token);
-//     }
-//     return contains;
-// }
-
-
-// void Table::validate(){
-//     if(!file["COLUMNS"]){
-//         throw std::runtime_error("Configuration missing COLUMNS ");
-    
-// }
-// }
-
-// std::vector<string> Table::operator[](const string key) const{
-//     for(const auto& col: data){
-//         if(key == col->name){
-//             return col->row; 
-//         }
-//     }
-//     throw std::runtime_error("Column not exist");                
-// }
-
-
-// std::shared_ptr<DataRow> Table::get_column(const string& name){
-//     for(const auto& row:data){
-//         if(row->name == name) return row;        
-//     }
-// throw std::runtime_error("Column not exist"); 
-// }
-
-
-
-// void Table::save(){
-//     std::ofstream csv_file;
-//     csv_file.open("test.csv");
-//     size_t i = 0;
-//     for(;i<data.size()-1;i++){
-//         csv_file << data.at(i)->name << ";";
-//     }
-//     csv_file << data.at(i)->name <<std::endl;
-//     i = 0;
-//     size_t counter;
-//     for(;i<get_size();i++){
-//         counter=0;
-//         for(const auto& item: data){
-//             counter++;
-//             if(item->row.empty()){
-//                 csv_file << ";";    
-//                 if(counter == data.size())
-//                   csv_file << item->row.at(i) << std::endl;  
-//                   continue;
-//             }
-        
-//             if(counter == data.size()){
-//                   csv_file << item->row.at(i) << std::endl; 
-//                   continue;
-//             }
-//             csv_file << item->row.at(i) << ";";
-//         }
-//     }
-//     csv_file.close();
-//  }
-
-
-// bool Table::insert(std::string target_column, std::string id_column, Series series){
-//     if(is_column(id_column)
-//         && is_column(series.name)){
-//             return false;
-//             }
-//     auto id_col = get_column(id_column);
-//     auto val_col = get_column(target_column);
-//     std::vector<string>::iterator iter;
-//     for(const auto& p: series.values){
-//         iter = std::find(std::begin(id_col->row), std::end(id_col->row), p.first);
-//         val_col->row.insert(std::end(val_col->row), std::begin(p.second), std::end(p.second));
-//         if(iter == id_col->row.end())
-//             id_col->row.insert(std::end(id_col->row),p.second.size(), p.first);
-//     }
-//     return true;
-// }
-
-
-
-
-
-
-// bool Table::insert(std::string key, std::vector<string>vec){
-//     for(auto column:data){            
-//         if(column->name == key){
-//             column->row.insert(std::end(column->row), std::begin(vec), std::end(vec));
-//             return true;
-//         }
-//     }
-//     return false;
-// }
+bool Table::column_exist(const string& id,const string& col_name)const{
+    for(const auto& p: data.at(id)){
+        if(col_name == p.first){
+            return true;
+        }
+    }
+    return false;
+}

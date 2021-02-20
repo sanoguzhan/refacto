@@ -34,7 +34,6 @@ using string = std::string;
 
 namespace table{
 
-
     /**
      * @brief 
      *           
@@ -58,11 +57,11 @@ namespace table{
     class Table{
 
 
-    //     public:
-    //         string path; // path to file
-    //         std::vector<std::shared_ptr<Series>> data; // Data contains each column as DataRow Obj
+        public:
+            string path; // path to file
+            std::map<std::string, std::vector<std::pair<std::string, std::vector<string>>>> data; // Data contains each column as DataRow Obj
 
-
+            bool column_exist(const string&, const string&) const;
 
             ////////
             void save();
@@ -101,7 +100,7 @@ namespace table{
              * 
              * @return bool true on success
              */
-            bool insert(std::string, std::string, Series);       
+            bool insert(Series);       
 
 
             /**
@@ -114,9 +113,7 @@ namespace table{
             std::vector<std::string> columns();
   
 
-
         };
-
 
 }
 #endif
