@@ -61,10 +61,8 @@ namespace table{
             string path; // path to file
             std::map<std::string, std::vector<std::pair<std::string, std::vector<string>>>> data; // Data contains each column as DataRow Obj
 
-            bool column_exist(const string&, const string&) const;
-
             ////////
-            void save();
+            bool save(std::string);
             ////////
 
 
@@ -100,8 +98,9 @@ namespace table{
              * 
              * @return bool true on success
              */
-            bool insert(Series);       
-
+            bool insert(Series);
+            bool insert(string name, string insert_name);       
+            bool insert(string name, std::vector<string> vec);
 
             /**
              * @brief Returns column names of Table as vector<string>.
@@ -111,7 +110,11 @@ namespace table{
              * @return Vector of column's names.
              */
             std::vector<std::string> columns();
-  
+
+        private:
+            bool column_exist(const string&, const string&) const;
+            size_t get_size() const;
+
 
         };
 

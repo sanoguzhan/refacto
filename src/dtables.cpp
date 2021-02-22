@@ -103,7 +103,7 @@ void Tables::validate(){
     if(!file["COLUMNS"]){
         throw std::runtime_error("Configuration missing COLUMNS ");
     
-}
+    }
 }
 
 std::vector<string> Tables::operator[](const string key) const{
