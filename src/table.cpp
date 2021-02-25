@@ -30,10 +30,10 @@ bool Table::save(std::string path){
     size_t i = 0, loc=0;
     size_t size = get_size();
     bool header = true;
+    bool id_col = true;
 
     csv_file << "id;";
     for(const auto& c: data){
-        std::cout << c.first << std::endl;
         if(header){
             for(; i < c.second.size()-1; i++){
                 csv_file << c.second.at(i).first << ";";
@@ -42,13 +42,16 @@ bool Table::save(std::string path){
             header = false;
         }
         for(;loc < size; loc++, i=0){
-            std::cout << "loc " << loc << i << std::endl;
-            for(i=0; i < c.second.size()-1; i++)
-                csv_file << c.first << ";"<< c.second.at(i).second.at(loc) << ";";
-    
+            for(i=0; i < c.second.size()-1; i++){
+                if(id_col) csv_file << c.first << ";"<< c.second.at(i).second.at(loc) << ";";
+                else csv_file << c.second.at(i).second.at(loc) << ";";
+                id_col = false;
+            }
+            id_col=true;
             csv_file << c.second.at(i).second.at(loc) <<std::endl;
-        }
-        loc = 0;
+            }
+        loc =0;
+       
     }
     csv_file.close();   
     return true;

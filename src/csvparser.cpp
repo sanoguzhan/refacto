@@ -3,23 +3,33 @@
 
 
 
+using s_vector = const std::vector<std::vector<string>>;
+
 CSVParser::CSVParser(string path, string delim, int skip_rows): 
     file_path{path}, f(validate_f(path)),
     parser{f}, delim{delim}, 
-    skip_rows{skip_rows},data{read(skip_rows)}{}
+    skip_rows{skip_rows},data{read(skip_rows)}{
+        file_name = get_substring("/", ".", path);
+    }
 
 CSVParser::CSVParser(string path, string delim): 
     file_path{path}, f(validate_f(path)),
-    parser{f}, delim{delim},data{read(skip_rows)}{}
+    parser{f}, delim{delim},data{read(skip_rows)}{
+         file_name = get_substring("/", ".", path);
+    }
 
 CSVParser::CSVParser(string path, int skip_rows): 
     file_path{path}, f(validate_f(path)), 
     skip_rows{skip_rows}, parser{f}, 
-    data{read(skip_rows)}{}
+    data{read(skip_rows)}{
+         file_name = get_substring("/", ".", path);
+    }
 
 CSVParser::CSVParser(string path): 
     file_path{path}, f(validate_f(path)), 
-    parser{f}, data{read(skip_rows)}{}
+    parser{f}, data{read(skip_rows)}{
+         file_name = get_substring("/", ".", path);
+    }
 
 
 
@@ -30,6 +40,8 @@ string CSVParser::validate_f(string path){
     }
     throw std::runtime_error("CSV not exist at " +  file_path);
 }
+
+
 
 std::vector<std::vector<string>> CSVParser::read(int skip){
     std::vector<std::vector<string>> vec;
@@ -127,11 +139,11 @@ Series CSVParser::values(string orient,
 
     if(orient == "row"){
         std::vector<u_int32_t> data_idx{row_search(data, cond1)};
+        
         for(const u_int32_t col: data_idx){
             for(size_t i=idx;i<data.size(); i++){                        
                 rows.push_back(data.at(i).at(col));                        
             }
-
             series.values.insert({data.at(target.row).at(col), rows});
             rows.resize(0);
         }
@@ -142,32 +154,124 @@ Series CSVParser::values(string orient,
     }
     return series;            
 }
-std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>& data, 
-                                   const Loc& cond1,const Loc& cond2){
-            
-            string lookup1, lookup2;
-            std::vector<u_int32_t> indexes;
-            for(size_t c=0; c < data.at(0).size(); c++){
-                lookup1 = data.at(cond1.row).at(c);
-                lookup2 = data.at(cond2.row).at(c);
-                if(lookup1.find(cond1.name) != string::npos
-                    && lookup2.find(cond2.name) != string::npos){
-                    indexes.push_back(c);
-                    }
+
+
+Series CSVParser::values(string orient,
+                        const Loc& target,
+                        u_int32_t idx){
+    std::vector<string> rows;
+    Series series{
+        .name = target.name
+    }; 
+    u_int32_t id_counter =1;
+
+        if(orient == "row"){
+            std::vector<u_int32_t> data_idx{row_search(data, target)};
+            for(const u_int32_t col: data_idx){
+                for(size_t i=idx;i<data.size(); i++){                        
+                    rows.push_back(data.at(i).at(col));                        
+                }
+                series.values.insert({to_string(id_counter), rows});
+                rows.resize(0);
+                id_counter++;
             }
-            return indexes;
+
+            }else if(orient == "column"){
+                //
+            }
+
+    return series;            
+}
+
+Series CSVParser::values(string orient,
+                        const Loc& target,
+                        u_int32_t idx){
+    std::vector<string> rows;
+    Series series{
+        .name = target.name
+    }; 
+    u_int32_t id_counter =1;
+
+    if(orient == "row"){
+        std::vector<u_int32_t> data_idx{row_search(data, target)};
+        for(const u_int32_t col: data_idx){
+            for(size_t i=idx;i<data.size(); i++){                        
+                rows.push_back(data.at(i).at(col));                        
+            }
+            series.values.insert({to_string(id_counter), rows});
+            rows.resize(0);
+            id_counter++;
         }
 
-std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>& data, 
+        }else if(orient == "column"){
+            //
+        }
+
+    return series;            
+}
+
+std::vector<std::string> CSVParser::values(std::string orient,
+                        u_int32_t from,
+                        u_int32_t to){
+    std::vector<string 
+    if(orient == "row"){
+        return data.at(target.row).at(target.column); 
+    }else if(orient == "column"){
+        
+    }else{
+        throw std::runtime_error("Orient is missing!"); 
+    }
+}
+std::string CSVParser::value(const Loc& target){
+    return data.at(target.row).at(target.column);
+}
+
+std::vector<u_int32_t> row_search(s_vector& data, 
+                                    const Loc& cond1,
+                                    const Loc& cond2){
+            
+    string lookup1, lookup2;
+    std::vector<u_int32_t> indexes;
+    
+    for(size_t c=0; c < data.at(0).size(); c++){
+        lookup1 = data.at(cond1.row).at(c);
+        lookup2 = data.at(cond2.row).at(c);
+        if(lookup1.find(cond1.name) != string::npos
+            && lookup2.find(cond2.name) != string::npos){
+    
+
+            indexes.push_back(c);
+            }
+    }
+    return indexes;
+}
+
+std::vector<u_int32_t> row_search(s_vector& data, 
                                    const Loc& cond1){
             
-            string lookup1;
-            std::vector<u_int32_t> indexes;
-            for(size_t c=0; c < data.at(0).size(); c++){
-                lookup1 = data.at(cond1.row).at(c);
-                if(lookup1.find(cond1.name) != string::npos){
-                    indexes.push_back(c);
-                    }
+    string lookup1;
+    std::vector<u_int32_t> indexes;
+    for(size_t c=0; c < data.at(0).size(); c++){
+        lookup1 = data.at(cond1.row).at(c);
+        if(lookup1.find(cond1.name) != string::npos){
+            indexes.push_back(c);
             }
-            return indexes;
-        }
+    }
+    return indexes;
+}
+
+
+std::string CSVParser::get_substring(std::string delimiter, std::string extention, std::string s){
+    std::string token;
+    size_t pos = 0;
+    while ((pos = s.find(delimiter)) != std::string::npos) {
+        token = s.substr(0, pos);
+        s.erase(0, pos + delimiter.length());
+    }
+    pos = 0;
+    while ((pos = s.find(extention)) != std::string::npos) {
+        token = s.substr(0, pos);
+        s.erase(pos, token.length() + delimiter.length());
+    }
+    return s;
+}

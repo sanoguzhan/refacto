@@ -40,10 +40,11 @@ class CSVParser{
         int skip_rows = 0;
         csv::CsvParser parser;
         std::string delim = ";";
-
+  
 
     public:
         std::vector<std::vector<string>> data;
+        std::string file_name; 
 
        
         CSVParser(string path, string delim, int skip_rows); 
@@ -67,12 +68,16 @@ class CSVParser{
                         u_int32_t idx,
                         const Loc& target,
                         const Loc& cond1);
+        Series values(string orient,
+                        const Loc& target,
+                        u_int32_t idx=0);
 
+        std::string value(const Loc&);
     private:        
         string validate_f(string);
 
         std::vector<std::vector<string>> read(int); 
-
+        std::string get_substring(std::string, std::string, std::string);
         void move_iter(csv::Field &, int);
 
         inline std::vector<string> row_vector(std::string s){

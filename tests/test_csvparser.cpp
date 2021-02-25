@@ -4,6 +4,11 @@
 class CSVParserTest: public TestTimer{
 };
 
+TEST(CSVParser, TestFreeFunctions){
+    CSVParser p("tests/test_data/csv/2018-07-05.csv");
+    ASSERT_EQ(p.file_name, "2018-07-05");   
+}
+
 TEST(CSVParser, WrongPath){
     string p("tests/test_data/test.csv");
     try{
@@ -98,7 +103,22 @@ TEST(CSVParser, GetValsOneCond){
         ASSERT_EQ(75, p.second.size());
 }
 }
+TEST(CSVParser, OneItemCapture){
+    CSVParser p("tests/test_data/csv/min200611.csv", 0);
+    Loc date{
+        .name="date",
+        .row=1,
+        .column=0
+    };
+    auto date_value{p.value(date)};
+    ASSERT_EQ(date_value, "11/06/20");
+}
 
+TEST(CSVParser, SliceSelection){
+    CSVParser p("tests/test_data/csv/min200611.csv", 0);
+    
+    auto date_value{p.value(date)};
+}
 
 
 int main(int argc, char* argv[]) {

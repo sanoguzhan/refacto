@@ -43,6 +43,7 @@ namespace table{
     struct Series{
         string name;
         std::map<string, std::vector<string>> values;
+
     };
 
     namespace fs = std::filesystem;
