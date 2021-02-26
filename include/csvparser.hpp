@@ -72,7 +72,12 @@ class CSVParser{
                         const Loc& target,
                         u_int32_t idx=0);
 
+        std::vector<string> values(std::string orient,
+                                        u_int32_t idx,
+                                        u_int32_t from,
+                                        u_int32_t to);
         std::string value(const Loc&);
+
     private:        
         string validate_f(string);
 

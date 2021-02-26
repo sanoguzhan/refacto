@@ -183,48 +183,32 @@ Series CSVParser::values(string orient,
     return series;            
 }
 
-Series CSVParser::values(string orient,
-                        const Loc& target,
-                        u_int32_t idx){
-    std::vector<string> rows;
-    Series series{
-        .name = target.name
-    }; 
-    u_int32_t id_counter =1;
 
-    if(orient == "row"){
-        std::vector<u_int32_t> data_idx{row_search(data, target)};
-        for(const u_int32_t col: data_idx){
-            for(size_t i=idx;i<data.size(); i++){                        
-                rows.push_back(data.at(i).at(col));                        
-            }
-            series.values.insert({to_string(id_counter), rows});
-            rows.resize(0);
-            id_counter++;
-        }
-
-        }else if(orient == "column"){
-            //
-        }
-
-    return series;            
-}
 
 std::vector<std::string> CSVParser::values(std::string orient,
-                        u_int32_t from,
-                        u_int32_t to){
-    std::vector<string 
+                                            u_int32_t idx,
+                                            u_int32_t from,
+                                            u_int32_t to){
+    std::vector<string> rows;
     if(orient == "row"){
-        return data.at(target.row).at(target.column); 
+        if(to == 0 ) to = data.at(idx).size();
+        std::vector<string>cols(data.at(idx).begin() +from, data.at(idx).begin() +to);
+        return cols;
+        // for(;from<to;from++){
+        //     rows.push_back(data.at(idx).at(from))
+        // }
     }else if(orient == "column"){
         
     }else{
         throw std::runtime_error("Orient is missing!"); 
     }
+    return rows;
 }
 std::string CSVParser::value(const Loc& target){
     return data.at(target.row).at(target.column);
 }
+
+
 
 std::vector<u_int32_t> row_search(s_vector& data, 
                                     const Loc& cond1,

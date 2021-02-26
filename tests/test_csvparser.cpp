@@ -117,7 +117,8 @@ TEST(CSVParser, OneItemCapture){
 TEST(CSVParser, SliceSelection){
     CSVParser p("tests/test_data/csv/min200611.csv", 0);
     
-    auto date_value{p.value(date)};
+    auto date_value{p.values("row", 0,0,20)};
+    ASSERT_EQ(date_value.size(), 20);
 }
 
 
