@@ -117,8 +117,43 @@ TEST(CSVParser, OneItemCapture){
 TEST(CSVParser, SliceSelection){
     CSVParser p("tests/test_data/csv/min200611.csv", 0);
     
-    auto date_value{p.values("row", 0,0,20)};
-    ASSERT_EQ(date_value.size(), 20);
+    auto columns{p.values("row", 0,0,20)};
+    ASSERT_EQ(columns.size(), 20);
+
+    auto date_value{p.values("column", 0,1,3)};
+
+    for(auto i:date_value){
+        ASSERT_EQ("11/06/20", i);
+    }
+}
+
+TEST(CSVParser, ParseData){
+   CSVParser p("tests/test_data/csv/min200611.csv", 0);
+    Table table;
+    auto date{p.values("column", 0,1,-1)};
+    auto time{p.values("column", 1,1,-1)};
+    
+
+    Loc  pac{
+        .name="Pac",
+        .orient="row",
+        .row=0
+    };
+    Loc pdc{
+        .name="Pdc",
+        .orient="row",
+        .row=0
+    };
+
+    auto pac_cols{p.values("row",pac,1)};
+    auto pdc_cols{p.values("row",pdc,1)}; 
+ 
+    table.insert(pac_cols);
+    table.insert(pdc_cols); 
+    table.insert("date",date);
+    table.insert("time",time);
+    table.save("inverter.csv");
+
 }
 
 

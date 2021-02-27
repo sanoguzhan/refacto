@@ -186,27 +186,30 @@ Series CSVParser::values(string orient,
 
 
 std::vector<std::string> CSVParser::values(std::string orient,
-                                            u_int32_t idx,
-                                            u_int32_t from,
-                                            u_int32_t to){
-    std::vector<string> rows;
+                                            int32_t idx,
+                                            int32_t from,
+                                            int32_t to){
+    std::vector<string> row;
+    int32_t counter = 0;
     if(orient == "row"){
-        if(to == 0 ) to = data.at(idx).size();
+        if(to == -1 ) to = data.at(idx).size();
         std::vector<string>cols(data.at(idx).begin() +from, data.at(idx).begin() +to);
         return cols;
-        // for(;from<to;from++){
-        //     rows.push_back(data.at(idx).at(from))
-        // }
+
     }else if(orient == "column"){
-        
+        if(to == -1 ) to = data.size();
+        for(const auto& col: data){
+            if(counter == to) break;
+            if(counter >= from) row.push_back(col.at(idx));
+            counter++;
+        }
     }else{
         throw std::runtime_error("Orient is missing!"); 
     }
-    return rows;
+    return row;
 }
-std::string CSVParser::value(const Loc& target){
-    return data.at(target.row).at(target.column);
-}
+
+
 
 
 

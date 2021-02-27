@@ -58,25 +58,34 @@ class CSVParser{
         std::vector<string> read_line();
 
 
+        // !Comment
         Series values(string orient,
                         u_int32_t idx,
                         const Loc& target,
                         const Loc& cond1,
                         const Loc& cond2);
         
+        // !Comment
         Series values(string orient,
                         u_int32_t idx,
                         const Loc& target,
                         const Loc& cond1);
+        
+        // !Comment
         Series values(string orient,
                         const Loc& target,
                         u_int32_t idx=0);
 
+        // !Comment
         std::vector<string> values(std::string orient,
-                                        u_int32_t idx,
-                                        u_int32_t from,
-                                        u_int32_t to);
-        std::string value(const Loc&);
+                                    int32_t idx,
+                                    int32_t from,
+                                    int32_t to);
+        
+        // !Comment
+        inline std::string value(const Loc& target){
+             return data.at(target.row).at(target.column);
+        }
 
     private:        
         string validate_f(string);
