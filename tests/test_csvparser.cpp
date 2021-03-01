@@ -4,12 +4,21 @@
 class CSVParserTest: public TestTimer{
 };
 
+/* Test for CSVParser
+    - Test for openning file
+    - Test for reading file and 2-d vector construction
+    _ Test for CSVParser values methods
+*/  
+
 TEST(CSVParser, TestFreeFunctions){
     CSVParser p("tests/test_data/csv/2018-07-05.csv");
     ASSERT_EQ(p.file_name, "2018-07-05");   
 }
 
 TEST(CSVParser, WrongPath){
+    /* Test for CSV reader 
+    - wrong path should rise error
+    */  
     string p("tests/test_data/test.csv");
     try{
         CSVParser csv = CSVParser(p);
@@ -21,17 +30,22 @@ TEST(CSVParser, WrongPath){
 
 
 TEST(CSVParser, ReadEachRow){
+    /* Test for CSV row reader
+    - Read value must match with row size
+    */  
     CSVParser p("tests/test_data/csv/2018-07-05.csv");
+    CSVParser p2("tests/test_data/csv/2018-07-05.csv", 3);
+
     ASSERT_EQ(p.data.size(), 81);   
+    ASSERT_EQ(p2.data.size(), 79);
 }
 
 
-TEST(CSVParser, ReadAll){
-    CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
-    ASSERT_EQ(p.data.size(), 79);
-}
 
 TEST(CSVParser, RowSearch){
+    /* Test for CSV row search
+        - Found index of the search variables should match 
+    */  
     CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
     Loc loc1{
         .name="WR",
@@ -83,7 +97,11 @@ TEST(CSVParser, GetValsTwoCond){
     }
 }
 
+
 TEST(CSVParser, GetValsOneCond){
+    /* Test for CSV value searc with one condition
+        - Found index of the search variables should match 
+    */  
     CSVParser p("tests/test_data/csv/2018-07-05.csv", 3);
     
     Loc targets{
@@ -104,6 +122,9 @@ TEST(CSVParser, GetValsOneCond){
 }
 }
 TEST(CSVParser, OneItemCapture){
+    /* Test for CSV row search with only name
+        - Found index of the search variables should match 
+    */  
     CSVParser p("tests/test_data/csv/min200611.csv", 0);
     Loc date{
         .name="date",
@@ -115,6 +136,9 @@ TEST(CSVParser, OneItemCapture){
 }
 
 TEST(CSVParser, SliceSelection){
+    /* Test for CSV  row slice
+        - Found index of the search variables should match 
+    */  
     CSVParser p("tests/test_data/csv/min200611.csv", 0);
     
     auto columns{p.values("row", 0,0,20)};
@@ -128,6 +152,9 @@ TEST(CSVParser, SliceSelection){
 }
 
 TEST(CSVParser, ParseData){
+    /* Test for CSV Parser pipeline
+        - Full pipeline for parser
+    */  
    CSVParser p("tests/test_data/csv/min200611.csv", 0);
     Table table;
     auto date{p.values("column", 0,1,-1)};

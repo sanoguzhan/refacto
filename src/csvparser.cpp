@@ -1,34 +1,33 @@
 #include "csvparser.hpp"
 
 
-
-
 using s_vector = const std::vector<std::vector<string>>;
+
 
 CSVParser::CSVParser(string path, string delim, int skip_rows): 
     file_path{path}, f(validate_f(path)),
     parser{f}, delim{delim}, 
     skip_rows{skip_rows},data{read(skip_rows)}{
-        file_name = get_substring("/", ".", path);
+        file_name = get_substring(NAV, ".", path);
     }
 
 CSVParser::CSVParser(string path, string delim): 
     file_path{path}, f(validate_f(path)),
     parser{f}, delim{delim},data{read(skip_rows)}{
-         file_name = get_substring("/", ".", path);
+         file_name = get_substring(NAV, ".", path);
     }
 
 CSVParser::CSVParser(string path, int skip_rows): 
     file_path{path}, f(validate_f(path)), 
     skip_rows{skip_rows}, parser{f}, 
     data{read(skip_rows)}{
-         file_name = get_substring("/", ".", path);
+         file_name = get_substring(NAV, ".", path);
     }
 
 CSVParser::CSVParser(string path): 
     file_path{path}, f(validate_f(path)), 
     parser{f}, data{read(skip_rows)}{
-         file_name = get_substring("/", ".", path);
+         file_name = get_substring(NAV, ".", path);
     }
 
 
@@ -213,7 +212,7 @@ std::vector<std::string> CSVParser::values(std::string orient,
 
 
 
-std::vector<u_int32_t> row_search(s_vector& data, 
+u_vector row_search(s_vector& data, 
                                     const Loc& cond1,
                                     const Loc& cond2){
             
@@ -225,15 +224,13 @@ std::vector<u_int32_t> row_search(s_vector& data,
         lookup2 = data.at(cond2.row).at(c);
         if(lookup1.find(cond1.name) != string::npos
             && lookup2.find(cond2.name) != string::npos){
-    
-
             indexes.push_back(c);
             }
     }
     return indexes;
 }
 
-std::vector<u_int32_t> row_search(s_vector& data, 
+u_vector row_search(s_vector& data, 
                                    const Loc& cond1){
             
     string lookup1;

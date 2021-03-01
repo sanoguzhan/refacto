@@ -3,13 +3,17 @@
 class DtableTests: public TestTimer{
 };
 
-TEST(TableTests, TableConstructor){
-
-/* Same element should not be inserted twice
-   Same column of an id should not be inserted twice
+/* Test for Table Class
+    - Test with CSV Parser
+    - Test for Table methods
+    _ Test for Table variables
 */  
 
-
+TEST(TableTests, TableConstructor){
+/* Test for Table Insertion 
+    - All values should be insterted per id
+    - All values should be inserted as variable-leghth vector
+*/  
     Table table = Table();
     
 
@@ -47,7 +51,7 @@ TEST(TableTests, TableConstructor){
     }
     table.insert(cols);
     table.insert(cols2);
-    for(auto& p:table.data){
+    for(auto& p:table.values()){
         for(auto r:p.second){
             ASSERT_EQ(75, r.second.size());
         }
@@ -103,7 +107,7 @@ TEST(TableTests, TableSave){
     table.insert(cols2);
     table.insert("date",p.file_name);
     table.save("test.csv");
-    for(const auto& p:table.data){
+    for(const auto& p:table.values()){
         ASSERT_EQ(p.second.size(),3);
     }
 
@@ -111,17 +115,13 @@ TEST(TableTests, TableSave){
 
 TEST(TableTests, TableSaveRowWise){
 
-/* Same element should not be inserted twice
-   Same column of an id should not be inserted twice
+/* Test for Table Save with Correct ordering
+    - id column should be first column
+    - Each variable should be as a column
+    - Missing values should be empty in CSV
 */  
-
-
     Table table = Table();
-    
-
     CSVParser p("tests/test_data/csv/min200611.csv", 0);
-    
-    
     Loc  pac{
         .name="Pac",
         .orient="row",
@@ -140,7 +140,7 @@ TEST(TableTests, TableSaveRowWise){
     table.insert(pdc_cols); 
     table.insert("date",p.file_name);
     table.save("test2.csv");
-    for(const auto& p:table.data){
+    for(const auto& p:table.values()){
         ASSERT_EQ(p.second.size(),3);
     }
 

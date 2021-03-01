@@ -1,3 +1,16 @@
+/** @file csvparser.hpp
+ *  @brief CSVParser operator for data accessing and structring
+ *
+ *  This file contains the refacto's csvparser
+ *  
+ * 
+ *  @todo Column-wise token search and parsing
+ * 
+ *  @author Oguzhan San
+ *  @bug No known bugs.
+ * 
+ */ 
+
 #ifndef __CSVPARSER_HPP
 #define __CSVPARSER_HPP
 
@@ -8,17 +21,37 @@
 #include<fstream>
 #include<map>
 #include <utility>
-
+#include "table.hpp"
 #include "parser.hpp"
-#include "dtables.hpp"
-#include "boost/tokenizer.hpp"
+
+#if _WIN32 || _WIN64
+    #define NAV "\"
+#else
+    #define NAV "/"
+#endif
+
 
 using namespace std;
-using namespace boost;
 using namespace aria;
+using namespace table;
 namespace fs = std::filesystem;
 
 
+using u_vector = const std::vector<u_int32_t>;
+
+
+/**
+ * @brief Loc struct for paramaterization of variables
+ * 
+ * Loc Struct
+ * 
+ *  Variable search object, used to locate variables
+ *  
+ *  name: (string) name of variable which is searched
+ *  orient: (string) row or column
+ *  row: (int) row location
+ *  column: (int) column location
+ */
 struct Loc{
     string name;
     string orient;
@@ -27,12 +60,31 @@ struct Loc{
 };
 
 
-
-std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,
+/**
+ * @brief Search Methods (Internal)
+ * 
+ * Searches given Loc constions on the csv file
+ * 
+ *  Takes one or two loc object as condition
+ *  
+ *  @param vector: (vector<vector<string&>>) opened csv file data
+ *  @param loc: initilized and constructed Loc objects
+ * 
+ * @return found indexes
+ */
+u_vector row_search(const std::vector<std::vector<string>>&,
                                 const Loc&, const Loc&);
-std::vector<u_int32_t> row_search(const std::vector<std::vector<string>>&,
+u_vector row_search(const std::vector<std::vector<string>>&,
                                 const Loc&);
 
+
+    
+/**
+ * @brief CSVParser Class for CSV Data Search
+ *  CSVParser Class
+ *      Opens file
+ *      Search given data
+ */
 class CSVParser{
     private:
         string file_path;

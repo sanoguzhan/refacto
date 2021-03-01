@@ -19,7 +19,6 @@
 
 
 
-#include "nlohmann/json.hpp"
 #include "yaml-cpp/yaml.h"
 #include "table.hpp"
 
@@ -49,12 +48,12 @@ namespace dtable{
     
     /**
      * @brief Tables class for given configur
-     *  Table sClass
+     *  Tables Class
      *      Creates data tables
      *      Validates configuration and data types
      */
    
-    class [[deprecated]] Tables{
+    class [[deprecated("Use Table Class, configuration files will be removed")]]Tables{
 
 
         public:
