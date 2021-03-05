@@ -33,3 +33,6 @@
 build
 .DS_Store
 .vscode/
+
+# Test execution
+tests/test_data/csv/output/*.csv

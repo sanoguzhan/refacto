@@ -21,8 +21,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include "table.hpp"
-
-using json = nlohmann::json;
+#include <algorithm>
 using string = std::string;
 using namespace table;
 

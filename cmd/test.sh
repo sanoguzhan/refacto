@@ -8,16 +8,13 @@ make install
 cd $CODE_DIR/tests/build
 make
 #ctest
-popd
  
-<<<<<<< HEAD
-./tests/build/bin/test_dtables
-./tests/build/bin/test_csvparser
-./tests/build/bin/test_table
-=======
+cd $CODE_DIR
+for script in tests/build/bin/*; do $script; done
 
-$CODE_DIR/tests/build/bin/test_dtables
-$CODE_DIR/tests/build/bin/test_csvparser
-$CODE_DIR/tests/build/bin/test_table
-$CODE_DIR/tests/build/bin/test_csv_cases
->>>>>>> e8132b0... Refactor cmd scripts to be independent of running directory
+# tests/build/bin/test_csvparser
+
+rm tests/test_data/csv/output/*.csv
+
+popd
+

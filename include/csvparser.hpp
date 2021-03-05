@@ -139,6 +139,12 @@ class CSVParser{
              return data.at(target.row).at(target.column);
         }
 
+        // Erase multiple row or columns to clean irrelevant data
+        void erase_data(string orient, int32_t start, int32_t end);
+
+        // Save the data as it is in a csv file
+        bool save_value_in_file(fs::path path);
+
     private:        
         string validate_f(string);
 
@@ -151,12 +157,15 @@ class CSVParser{
             std::vector<string> row_vec;
             end = s.find(delim);
             start = 0U;
+            // std::cout << "--------" << std::endl;
+            // std::cout << s << std::endl;
 
             while (end != std::string::npos){
                 row_vec.push_back(static_cast<string>(s.substr(start, end - start)));
+                // std::cout << static_cast<string>(s.substr(start, end - start)) << std::endl;
                 start = end + delim.length();
-                    end = s.find(delim, start);
-                }
+                end = s.find(delim, start);
+            }
 
             row_vec.push_back(static_cast<string>(s.substr(start, end)));
             

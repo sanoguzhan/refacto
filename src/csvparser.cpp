@@ -1,5 +1,5 @@
-#include "csvparser.hpp"
-
+#include "../include/csvparser.hpp"
+#include <numeric>
 
 using s_vector = const std::vector<std::vector<string>>;
 
@@ -53,6 +53,8 @@ std::vector<std::vector<string>> CSVParser::read(int skip){
             field = parser.next_field();
             continue;
         }
+        // std::cout << "--------" << std::endl;
+        // std::cout << static_cast<string>(*field.data) << std::endl;
         vec.push_back(row_vector(static_cast<string>(*field.data)));
         field = parser.next_field();
     }
@@ -95,6 +97,17 @@ std::vector<string> CSVParser::read_line(){
     }
     return vec;
 }    
+
+void CSVParser::erase_data(string orient, int32_t start, int32_t end){
+    if(orient == "row"){
+        data.erase(data.begin() + start, data.begin() + end);
+    }
+    else if(orient == "column"){
+        for(auto& col: data){
+            col.erase(col.begin() + start, col.begin() + end);
+        }
+    }
+}
 
 Series CSVParser::values(string orient,
                         u_int32_t idx,
@@ -258,4 +271,14 @@ std::string CSVParser::get_substring(std::string delimiter, std::string extentio
         s.erase(pos, token.length() + delimiter.length());
     }
     return s;
+}
+
+bool CSVParser::save_value_in_file(fs::path path){
+    std::ofstream ofs(path, std::ofstream::out);
+    for(const auto& row_data : data){
+        // std::cout << row_data[0] << std::endl;
+        ofs << std::accumulate(row_data.begin(), row_data.end(), std::string(""), [](auto a, auto&& b) { return a+";"+b; }) << std::endl;
+    }
+    ofs.close();
+    return true;
 }
