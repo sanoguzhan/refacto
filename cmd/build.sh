@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
-pushd build
-rm -rf *
-conan install .. 
-cmake ..
-make install
-popd
+# Set reference directory to make path relative to this
+SCRIPT_DIR=`dirname "$(realpath $0)"`
+CODE_DIR="$(realpath $SCRIPT_DIR/..)"
+pushd $SCRIPT_DIR
 
-pushd tests/build
+# Compile project
+mkdir -p build
+cd build
 rm -rf *
-conan install ../..
-cmake ..
+conan install $CODE_DIR
+cmake $CODE_DIR
+make install
+
+# Compile tests
+mkdir -p $CODE_DIR/tests/build
+cd $CODE_DIR/tests/build
+rm -rf *
+conan install $CODE_DIR
+cmake $CODE_DIR/tests
+
 popd
