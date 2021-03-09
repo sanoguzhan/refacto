@@ -7,24 +7,22 @@
  *  @author Oguzhan San
  *  @bug No known bugs.
  * 
- */ 
+ */
 #ifndef __TABLE_HPP
 #define __TABLE_HPP
 
-
-
-#include<iostream>
-#include<string>
-#include<vector>
-#include<variant>
-#include<filesystem>
-#include<utility>  
-#include<memory>
-#include<cctype>
-#include<any>
-#include<typeinfo> 
-#include<type_traits>
-#include<fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <variant>
+#include <filesystem>
+#include <utility>
+#include <memory>
+#include <cctype>
+#include <any>
+#include <typeinfo>
+#include <type_traits>
+#include <fstream>
 
 using string = std::string;
 namespace fs = std::filesystem;
@@ -35,8 +33,8 @@ namespace fs = std::filesystem;
  *  Includes Series Struct
  *  
  */
-namespace table{
-
+namespace table
+{
 
     /**
      * @brief Series of each Table variable, used for insertion
@@ -51,26 +49,25 @@ namespace table{
      *  values: key value pairs as id and each data of each id
      *  
      */
-    struct Series{
+    struct Series
+    {
         string name;
         std::map<string, std::vector<string>> values;
-
     };
 
-    
     /**
      * @brief Table Class (data container)
      *  Table Class
      *      Stores Series as key value pairs
      *      Export to csv file
      */
-    class Table{
+    class Table
+    {
 
         std::map<std::string, std::vector<std::pair<std::string, std::vector<string>>>> data; // Data contains each column as DataRow Obj
 
-        public:
-
-            /**
+    public:
+        /**
              * @brief Saves the table to given path
              *            
              *  Writes table to given absolute path
@@ -78,11 +75,9 @@ namespace table{
              * 
              * @return bool: true on success
             */
-            bool save(std::string);
+        bool save(std::string);
 
-
-
-            /**
+        /**
              * @brief Inserts given series to table
              * 
              * Copies each value of key from series to data
@@ -90,10 +85,9 @@ namespace table{
              * 
              * @return bool true on success
              */
-            bool insert(Series);
-            
-    
-            /**
+        bool insert(Series);
+
+        /**
              * @brief Inserts given value to each id
              * 
              * !Data should be initilized first with a series
@@ -104,10 +98,9 @@ namespace table{
              * 
              * @return bool true on success
              */
-            bool insert(string name, string insert_name);  
-            
+        bool insert(string name, string insert_name);
 
-            /**
+        /**
              * @brief Inserts given vector to table
              * 
              *  Copy vector value to each id
@@ -117,42 +110,37 @@ namespace table{
              *  @param vector (vector<string>) values to be inserted
              * 
              * @return bool true on success
-             */     
-            bool insert(string name, std::vector<string> vec);
+             */
+        bool insert(string name, std::vector<string> vec);
 
-            
-
-            /**
+        /**
              * @brief Getter Method of object data
              * 
              * @return data
-             */    
-            inline auto values(){
-                return data;
-            }
+             */
+        inline auto values()
+        {
+            return data;
+        }
 
-
-        private:
-        
-            /**
+    private:
+        /**
              * @brief Checks if column exists
              * 
              *  @param name: (string) column name
              *  @param target (string) token to be checked
              * 
              * @return bool true if exists
-             */    
-            bool column_exist(const string&, const string&) const;
+             */
+        bool column_exist(const string &, const string &) const;
 
-                /**
+        /**
              * @brief Getter for maximum vector size among ids
              * 
              * @return size: (size_t) max. size 
-             */     
-            size_t get_size() const;
-
-
-        };
+             */
+        size_t get_size() const;
+    };
 
 }
 #endif
