@@ -44,18 +44,21 @@ string CSVParser::validate_f(string path){
 
 std::vector<std::vector<string>> CSVParser::read(int skip){
     std::vector<std::vector<string>> vec;
+    std::vector<string> row;
+    parser.delimiter(delim[0]);
+
     auto field = parser.next_field();
     
     move_iter(field, skip);
     
     while(field.type != csv::FieldType::CSV_END){
         if(field.type == csv::FieldType::ROW_END){
+            vec.push_back(row);
+            row.resize(0);
             field = parser.next_field();
             continue;
         }
-        // std::cout << "--------" << std::endl;
-        // std::cout << static_cast<string>(*field.data) << std::endl;
-        vec.push_back(row_vector(static_cast<string>(*field.data)));
+        row.push_back(static_cast<string>(*field.data));
         field = parser.next_field();
     }
     return vec;
@@ -276,7 +279,6 @@ std::string CSVParser::get_substring(std::string delimiter, std::string extentio
 bool CSVParser::save_value_in_file(fs::path path){
     std::ofstream ofs(path, std::ofstream::out);
     for(const auto& row_data : data){
-        // std::cout << row_data[0] << std::endl;
         ofs << std::accumulate(row_data.begin(), row_data.end(), std::string(""), [](auto a, auto&& b) { return a+";"+b; }) << std::endl;
     }
     ofs.close();

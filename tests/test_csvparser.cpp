@@ -36,8 +36,8 @@ TEST(CSVParser, ReadEachRow){
     CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv");
     CSVParser p2(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 3);
 
-    ASSERT_EQ(p.data.size(), 81);   
-    ASSERT_EQ(p2.data.size(), 79);
+    ASSERT_EQ(p.data.size(), 80);   
+    ASSERT_EQ(p2.data.size(), 78);
 }
 
 
@@ -93,7 +93,7 @@ TEST(CSVParser, GetValsTwoCond){
 
     auto cols{p.values("row", 4, targets, cond1, cond2)};
     for(auto& p:cols.values){
-        ASSERT_EQ(75, p.second.size());
+        ASSERT_EQ(74, p.second.size());
     }
 }
 
@@ -118,8 +118,8 @@ TEST(CSVParser, GetValsOneCond){
 
     auto cols{p.values("row", 4, targets, cond1)};
     for(auto& p:cols.values){
-        ASSERT_EQ(75, p.second.size());
-}
+        ASSERT_EQ(74, p.second.size());
+    }
 }
 TEST(CSVParser, OneItemCapture){
     /* Test for CSV row search with only name
@@ -175,7 +175,6 @@ TEST(CSVParser, ParseData){
 
     auto pac_cols{p.values("row",pac,1)};
     auto pdc_cols{p.values("row",pdc,1)}; 
- 
     table.insert(pac_cols);
     table.insert(pdc_cols); 
     table.insert("date",date);
@@ -184,6 +183,14 @@ TEST(CSVParser, ParseData){
 
 }
 
+
+TEST(CSVParser, CleanData){
+    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv",",");
+    p.erase_data("row", 0, 4);
+    p.erase_data("column", 1, 4);
+    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "cleanData.csv");
+    ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "cleanData.csv"), readFile(TEST_CSV_OUTPUT_DIR + "cleanData.csv"));
+}
 
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
