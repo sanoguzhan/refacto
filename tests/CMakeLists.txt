@@ -21,8 +21,8 @@ conan_basic_setup()
 # add_executable(test_dtables 
 #       test_dtables.cpp)
 
-# add_executable(test_csvparser 
-# test_csvparser.cpp)
+add_executable(test_csvparser 
+  test_csvparser.cpp)
 
 # add_executable(test_table 
 # test_table.cpp)
@@ -37,9 +37,9 @@ if(refacto_FOUND)
   # target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
   # target_link_libraries(test_dtables GTest::GTest GTest::Main)
 
-  # target_link_libraries(test_csvparser refacto)
-  # target_link_libraries(test_csvparser ${CONAN_LIBS})
-  # target_link_libraries(test_csvparser GTest::GTest GTest::Main)
+  target_link_libraries(test_csvparser refacto)
+  target_link_libraries(test_csvparser ${CONAN_LIBS})
+  target_link_libraries(test_csvparser GTest::GTest GTest::Main)
 
   # target_link_libraries(test_table refacto)
   # target_link_libraries(test_table ${CONAN_LIBS})

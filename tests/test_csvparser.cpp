@@ -40,7 +40,7 @@ TEST(CSVParser, ReadEachRow)
     CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv");
     CSVParser p2(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 3);
 
-    ASSERT_EQ(p.data.size(), 80);
+    ASSERT_EQ(p.data.size(), 81);
     ASSERT_EQ(p2.data.size(), 78);
 }
 
@@ -49,7 +49,7 @@ TEST(CSVParser, RowSearch)
     /* Test for CSV row search
         - Found index of the search variables should match 
     */
-    CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 3);
+    CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 2);
     Loc loc1{
         .name = "WR",
         .orient = "row",
@@ -181,8 +181,7 @@ TEST(CSVParser, ParseData)
 
 TEST(CSVParser, CleanData)
 {
-    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",");
-    p.erase_data("row", 0, 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
     p.erase_data("column", 1, 4);
     p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "cleanData.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "cleanData.csv"), readFile(TEST_CSV_OUTPUT_DIR + "cleanData.csv"));

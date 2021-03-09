@@ -18,9 +18,11 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
+#include <regex>
 #include <fstream>
 #include <map>
 #include <utility>
+#include <vector>
 #include "table.hpp"
 #include "parser.hpp"
 
@@ -136,6 +138,9 @@ public:
     // Erase multiple row or columns to clean irrelevant data
     void erase_data(string orient, int32_t start, int32_t end);
 
+    // Erase multiple rows or columns to clean pattern
+    void erase_pattern(string orient, string pattern);
+
     // Save the data as it is in a csv file
     bool save_value_in_file(fs::path path);
 
@@ -152,8 +157,6 @@ private:
         std::vector<string> row_vec;
         end = s.find(delim);
         start = 0U;
-        // std::cout << "--------" << std::endl;
-        // std::cout << s << std::endl;
 
         while (end != std::string::npos)
         {

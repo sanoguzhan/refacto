@@ -1,5 +1,9 @@
 #include "../include/csvparser.hpp"
 #include <numeric>
+#include <regex>
+#include <vector>
+#include <algorithm>
+#include <boost/algorithm/string/join.hpp>
 
 using s_vector = const std::vector<std::vector<string>>;
 
@@ -42,25 +46,36 @@ string CSVParser::validate_f(string path)
 std::vector<std::vector<string>> CSVParser::read(int skip)
 {
     std::vector<std::vector<string>> vec;
-    std::vector<string> row;
+    // std::vector<string> row;
     parser.delimiter(delim[0]);
+    int to_skip = 0;
 
-    auto field = parser.next_field();
-
-    move_iter(field, skip);
-
-    while (field.type != csv::FieldType::CSV_END)
+    for (auto iter_row = parser.begin(); iter_row != parser.end(); iter_row++)
     {
-        if (field.type == csv::FieldType::ROW_END)
-        {
-            vec.push_back(row);
-            row.resize(0);
-            field = parser.next_field();
+        if (to_skip != skip)
+        {   
+            to_skip++;
             continue;
         }
-        row.push_back(static_cast<string>(*field.data));
-        field = parser.next_field();
+        vec.push_back(*iter_row);
     }
+    // auto field = parser.next_field();
+
+    // move_iter(field, skip);
+
+    // while (field.type != csv::FieldType::CSV_END)
+    // {
+    //     if (field.data != nullptr)
+    //     {
+    //         row.push_back(static_cast<string>(*field.data));
+    //     }
+    //     if (field.type == csv::FieldType::ROW_END)
+    //     {
+    //         vec.push_back(row);
+    //         row.resize(0);
+    //     }
+    //     field = parser.next_field();
+    // }
     return vec;
 }
 
@@ -117,6 +132,46 @@ void CSVParser::erase_data(string orient, int32_t start, int32_t end)
         for (auto &col : data)
         {
             col.erase(col.begin() + start, col.begin() + end);
+        }
+    }
+}
+
+void CSVParser::erase_pattern(string orient, string pattern)
+{
+    std::regex re(pattern);
+    std::smatch matches;
+    if (orient == "row")
+    {
+        std::remove_if(data.begin(),
+            data.end(),
+            [&matches, &re](auto x){
+                auto c = boost::algorithm::join(x, ";");
+                return std::regex_match(
+                    c,
+                    matches,
+                    re);
+            });
+    }
+    else if (orient == "column")
+    {
+        std::vector<short> indexesToRemove;
+        int indexToRemove = 0;
+        for (auto header = data[0].begin(); header != data[0].end(); header++) {
+            if (std::regex_match(*header, matches, re)) {
+                indexesToRemove.push_back(indexToRemove);
+            }
+            indexToRemove++;
+        }
+        for (auto &row: data) {
+            auto index_rIter = indexesToRemove.rbegin();
+            for(auto i = row.rbegin(); i != row.rend(); ++i){
+                cout << row.rend() - i - 1 << "\n";
+                if( row.rend() - i - 1 == *index_rIter && index_rIter != indexesToRemove.rend()) {
+                    cout << *i << "\n";
+                    row.erase((i + 1).base());
+                    index_rIter++;
+                }
+            }
         }
     }
 }
@@ -308,8 +363,9 @@ bool CSVParser::save_value_in_file(fs::path path)
     std::ofstream ofs(path, std::ofstream::out);
     for (const auto &row_data : data)
     {
-        ofs << std::accumulate(row_data.begin(), row_data.end(), std::string(""), [](auto a, auto &&b) { return a + ";" + b; }) << std::endl;
+        ofs << std::accumulate(row_data.begin(), row_data.end(), std::string(""), [](auto a, auto &&b) { return a != "" ? a + ";" + b : b; }) << std::endl;
     }
     ofs.close();
     return true;
 }
+
