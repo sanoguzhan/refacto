@@ -54,3 +54,5 @@ tests/test_data/csv/output/*.csv
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
 
 !.vscode/c_cpp_properties.json
+
+docker/.env
