@@ -135,11 +135,14 @@ public:
         return data.at(target.row).at(target.column);
     }
 
-    // Erase multiple row or columns to clean irrelevant data
+    // Erase multiple row or columns to clean irrelevant data [first,last)
     void erase_data(string orient, int32_t start, int32_t end);
 
     // Erase multiple rows or columns to clean pattern
     void erase_pattern(string orient, string pattern);
+
+    // Erase row with not the same number column as the header
+    void erase_diverge_row();
 
     // Save the data as it is in a csv file
     bool save_value_in_file(fs::path path);

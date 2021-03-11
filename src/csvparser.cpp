@@ -53,7 +53,7 @@ std::vector<std::vector<string>> CSVParser::read(int skip)
     for (auto iter_row = parser.begin(); iter_row != parser.end(); iter_row++)
     {
         if (to_skip != skip)
-        {   
+        {
             to_skip++;
             continue;
         }
@@ -136,42 +136,48 @@ void CSVParser::erase_data(string orient, int32_t start, int32_t end)
     }
 }
 
+void CSVParser::erase_diverge_row()
+{
+    size_t columns_number = data[0].size();
+    data.erase(std::remove_if(
+                   data.begin(),
+                   data.end(),
+                   [&columns_number](auto columns) { return (columns.size() != columns_number); }),
+               data.end());
+}
+
 void CSVParser::erase_pattern(string orient, string pattern)
 {
     std::regex re(pattern);
     std::smatch matches;
     if (orient == "row")
     {
-        std::remove_if(data.begin(),
-            data.end(),
-            [&matches, &re](auto x){
-                auto c = boost::algorithm::join(x, ";");
-                return std::regex_match(
-                    c,
-                    matches,
-                    re);
-            });
+        data.erase(
+            std::remove_if(data.begin(),
+                           data.end(),
+                           [&matches, &re](auto x) {
+                               auto c = boost::algorithm::join(x, ";");
+                               return std::regex_match(
+                                   c,
+                                   matches,
+                                   re);
+                           }),
+            data.end());
     }
     else if (orient == "column")
     {
-        std::vector<short> indexesToRemove;
-        int indexToRemove = 0;
-        for (auto header = data[0].begin(); header != data[0].end(); header++) {
-            if (std::regex_match(*header, matches, re)) {
-                indexesToRemove.push_back(indexToRemove);
-            }
-            indexToRemove++;
-        }
-        for (auto &row: data) {
-            auto index_rIter = indexesToRemove.rbegin();
-            for(auto i = row.rbegin(); i != row.rend(); ++i){
-                cout << row.rend() - i - 1 << "\n";
-                if( row.rend() - i - 1 == *index_rIter && index_rIter != indexesToRemove.rend()) {
-                    cout << *i << "\n";
-                    row.erase((i + 1).base());
-                    index_rIter++;
-                }
-            }
+        std::vector<bool> colToRemove;
+        for (auto header = data[0].begin(); header != data[0].end(); header++)
+            colToRemove.push_back(std::regex_match(*header, matches, re));
+
+        for (auto &row : data)
+        {
+            auto itrColToRm = colToRemove.begin();
+            row.erase(
+                std::remove_if(row.begin(),
+                               row.end(),
+                               [&itrColToRm](auto data) { bool res = *itrColToRm; itrColToRm++; return res; }),
+                row.end());
         }
     }
 }
@@ -363,9 +369,8 @@ bool CSVParser::save_value_in_file(fs::path path)
     std::ofstream ofs(path, std::ofstream::out);
     for (const auto &row_data : data)
     {
-        ofs << std::accumulate(row_data.begin(), row_data.end(), std::string(""), [](auto a, auto &&b) { return a != "" ? a + ";" + b : b; }) << std::endl;
+        ofs << std::accumulate(row_data.begin(), row_data.end(), std::string("START/FILE"), [](auto &a, auto &b) { return a != "START/FILE" ? a + ";" + b : b; }) << std::endl;
     }
     ofs.close();
     return true;
 }
-

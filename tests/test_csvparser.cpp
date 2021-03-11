@@ -181,10 +181,47 @@ TEST(CSVParser, ParseData)
 
 TEST(CSVParser, CleanData)
 {
+    /* Test for CSV Parser erase data function
+        - Load the file
+        - clear column 1 to 3
+        - save it 
+        - compare to the saved expected file
+    */
     CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
     p.erase_data("column", 1, 4);
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "cleanData.csv");
-    ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "cleanData.csv"), readFile(TEST_CSV_OUTPUT_DIR + "cleanData.csv"));
+    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "CleanData.csv");
+    ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "CleanData.csv"), readFile(TEST_CSV_OUTPUT_DIR + "CleanData.csv"));
+}
+
+TEST(CSVParser, ErasePattern)
+{
+    /* Test for CSV Parser erase pattern function
+        - Load the file
+        - clear row with specific pattern
+        - clean columns with specific pattern
+        - save it
+        - compare to the saved expected file
+    */
+    CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", ";", 4);
+    p.erase_data("row", 1, 3);
+    p.erase_pattern("row", "Info;Time");
+    p.erase_pattern("column", ".*C_0.*");
+    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "ErasePattern.csv");
+    ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "ErasePattern.csv"), readFile(TEST_CSV_OUTPUT_DIR + "ErasePattern.csv"));
+}
+
+TEST(CSVParser, EraseDiverge)
+{
+    /* Test for CSV Parser erase diverge function
+        - Load the file
+        - check size of loaded data
+        - clear diverged data 
+        - check if the cleaned has been performed
+    */
+    CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv", ",");
+    ASSERT_EQ(20558, p.data.size());
+    p.erase_diverge_row();
+    ASSERT_EQ(20557, p.data.size());
 }
 
 int main(int argc, char *argv[])
