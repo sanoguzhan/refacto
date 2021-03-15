@@ -1,4 +1,4 @@
-#include "../include/csvparser.hpp"
+#include "csvparser.hpp"
 #include <numeric>
 #include <regex>
 #include <vector>
@@ -8,8 +8,8 @@
 using s_vector = const std::vector<std::vector<string>>;
 
 CSVParser::CSVParser(string path, string delim, int skip_rows) : file_path{path}, f(validate_f(path)),
-                                                                 parser{f}, delim{delim},
-                                                                 skip_rows{skip_rows}, data{read(skip_rows)}
+                                                                 skip_rows{skip_rows}, parser{f}, delim{delim},
+                                                                 data{read(skip_rows)}
 {
     file_name = get_substring(NAV, ".", path);
 }

@@ -11,8 +11,8 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "../include/dtables.hpp"
-#include "../include/csvparser.hpp"
+#include "refacto/dtables.hpp"
+#include "refacto/csvparser.hpp"
 using namespace std;
 using namespace dtable;
 namespace fs = std::filesystem;
