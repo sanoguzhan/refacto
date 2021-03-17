@@ -18,30 +18,36 @@ link_libraries(stdc++fs)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-add_executable(test_dtables 
-      test_dtables.cpp)
+# add_executable(test_dtables 
+#       test_dtables.cpp)
 
 add_executable(test_csvparser 
-test_csvparser.cpp)
+  test_csvparser.cpp)
 
-add_executable(test_table 
-test_table.cpp)
+# add_executable(test_table 
+# test_table.cpp)
 
+add_executable(test_csv_cases 
+test_csv_cases.cpp)
 
 if(refacto_FOUND)
 
   #Fix this, Make it generic for eache executable
-  target_link_libraries(test_dtables refacto)
-  target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
-  target_link_libraries(test_dtables GTest::GTest GTest::Main)
+  # target_link_libraries(test_dtables refacto)
+  # target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+  # target_link_libraries(test_dtables GTest::GTest GTest::Main)
 
   target_link_libraries(test_csvparser refacto)
   target_link_libraries(test_csvparser ${CONAN_LIBS})
   target_link_libraries(test_csvparser GTest::GTest GTest::Main)
 
-  target_link_libraries(test_table refacto)
-  target_link_libraries(test_table ${CONAN_LIBS})
-  target_link_libraries(test_table GTest::GTest GTest::Main)
+  # target_link_libraries(test_table refacto)
+  # target_link_libraries(test_table ${CONAN_LIBS})
+  # target_link_libraries(test_table GTest::GTest GTest::Main)
+
+  target_link_libraries(test_csv_cases refacto)
+  target_link_libraries(test_csv_cases ${CONAN_LIBS})
+  target_link_libraries(test_csv_cases GTest::GTest GTest::Main)
 
 else()
   message(FATAL_ERROR "refacto library not found")

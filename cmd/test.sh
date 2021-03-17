@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 
-pushd build
+SCRIPT_DIR=`dirname "$(realpath $0)"`
+CODE_DIR="$(realpath $SCRIPT_DIR/..)"
+
+pushd $SCRIPT_DIR/build
 make install
-popd
-pushd tests/build
+cd $CODE_DIR/tests/build
 make
 #ctest
-popd
  
-./tests/build/bin/test_dtables
-./tests/build/bin/test_csvparser
-./tests/build/bin/test_table
+cd $CODE_DIR
+for script in tests/build/bin/*; do $script; done
+
+# tests/build/bin/test_csv_cases
+
+# rm tests/test_data/csv/output/*.csv
+
+popd
+
