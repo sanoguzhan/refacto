@@ -263,7 +263,7 @@ TEST(CSVParserCases, SolarMax__Inverter)
     CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
     p.erase_data("column", 1, 4);
     p.erase_data("column", 6, 8);
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "SolarMax__Inverter.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "SolarMax__Inverter.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "SolarMax__Inverter.csv"), readFile(TEST_CSV_OUTPUT_DIR + "SolarMax__Inverter.csv"));
 }
 
@@ -272,7 +272,7 @@ TEST(CSVParserCases, SolarMax__Mppt)
     CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
     p.erase_data("column", 1, 7);
     p.erase_data("column", 8, 9);
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "SolarMax__Mppt.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "SolarMax__Mppt.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "SolarMax__Mppt.csv"), readFile(TEST_CSV_OUTPUT_DIR + "SolarMax__Mppt.csv"));
 }
 
@@ -281,7 +281,7 @@ TEST(CSVParserCases, RCD_Inverter)
     CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", ";", 4);
     p.erase_data("row", 1, 3);
     p.erase_pattern("row", "Info;Time");
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "RCD_int_kwr_180223_inverter.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "RCD_int_kwr_180223_inverter.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "RCD_int_kwr_180223_inverter.csv"), readFile(TEST_CSV_OUTPUT_DIR + "RCD_int_kwr_180223_inverter.csv"));
 }
 
@@ -326,7 +326,7 @@ TEST(CSVParserCases, Maulevrier_Inverter)
     p.erase_data("row", 1, 5);
     p.erase_data("row", 2, 3);
     p.erase_diverge_row();
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "test.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "test.csv");
     auto datetime{p.values("column", 0, 2, -1)};
 
     Loc id{

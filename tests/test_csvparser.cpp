@@ -189,7 +189,7 @@ TEST(CSVParser, CleanData)
     */
     CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
     p.erase_data("column", 1, 4);
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "CleanData.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "CleanData.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "CleanData.csv"), readFile(TEST_CSV_OUTPUT_DIR + "CleanData.csv"));
 }
 
@@ -206,7 +206,7 @@ TEST(CSVParser, ErasePattern)
     p.erase_data("row", 1, 3);
     p.erase_pattern("row", "Info;Time");
     p.erase_pattern("column", ".*C_0.*");
-    p.save_value_in_file(TEST_CSV_OUTPUT_DIR + "ErasePattern.csv");
+    p.to_csv(TEST_CSV_OUTPUT_DIR + "ErasePattern.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "ErasePattern.csv"), readFile(TEST_CSV_OUTPUT_DIR + "ErasePattern.csv"));
 }
 

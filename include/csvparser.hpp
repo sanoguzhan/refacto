@@ -92,7 +92,15 @@ private:
     std::string delim = ";";
 
 public:
+    /**
+     * @brief resulting data of the parsing composed of 2D array with 1th axis as row and 2nd as column
+     * 
+     */
     std::vector<std::vector<string>> data;
+    /**
+     * @brief filename of the parsed csv file 
+     * 
+     */
     std::string file_name;
 
     CSVParser(string path, string delim, int skip_rows);
@@ -103,81 +111,130 @@ public:
 
     CSVParser(string path);
 
-    std::vector<string> read_line();
-
-    // !Comment
+    /**
+     * @brief Get a Serie of data
+     * 
+     * @param orient orientation to seach the data (row or column)
+     * @param idx start index to begin the search
+     * @param target searching target condition
+     * @param cond1 constraint target condition
+     * @param cond2 second constraint target condition
+     * @return Series 
+     */
     Series values(string orient,
                   u_int32_t idx,
                   const Loc &target,
                   const Loc &cond1,
                   const Loc &cond2);
 
-    // !Comment
+    /**
+     * @brief Get a Serie of data
+     * 
+     * @param orient orientation to seach the data (row or column)
+     * @param idx start index to begin the search
+     * @param target searching target condition
+     * @param cond1 constraint target condition
+     * @return Series 
+     */
     Series values(string orient,
                   u_int32_t idx,
                   const Loc &target,
                   const Loc &cond1);
 
-    // !Comment
+    /**
+     * @brief Get a Serie of data
+     * 
+     * @param orient orientation to seach the data (row or column)
+     * @param target searching target condition
+     * @param idx start index to begin the search
+     * @return Series 
+     */
     Series values(string orient,
                   const Loc &target,
                   u_int32_t idx = 0);
 
-    // !Comment
+    /**
+     * @brief Get a vector of range data
+     * 
+     * @param orient orientation to seach the data (row or column)
+     * @param idx index of the specified location
+     * @param from start index of the other axis 
+     * @param to end index of the other axis
+     * @return std::vector<string> 
+     */
     std::vector<string> values(std::string orient,
                                int32_t idx,
                                int32_t from,
                                int32_t to);
 
-    // !Comment
+    /**
+     * @brief Get value of at the precised location (row + column)
+     * 
+     * @param target location of the target (row + column)
+     * @return std::string 
+     */
     inline std::string value(const Loc &target)
     {
         return data.at(target.row).at(target.column);
     }
 
-    // Erase multiple row or columns to clean irrelevant data [first,last)
+    /**
+     * @brief Erase multiple row or columns to clean irrelevant data [first,last)
+     * 
+     * @param orient orientation [row or column] to erase the data
+     * @param start first index to erase (include)
+     * @param end  last index to erase (not include)
+     */
     void erase_data(string orient, int32_t start, int32_t end);
 
-    // Erase multiple rows or columns to clean pattern
+    /**
+     * @brief Erase multiple rows or columns to clean pattern
+     * 
+     * @param orient orientation [row or column] to erase the data
+     * @param pattern pattern to search and erase
+     */
     void erase_pattern(string orient, string pattern);
 
-    // Erase row with not the same number column as the header
+    /**
+     * @brief Erase row with not the same number column as the header
+     * 
+     */
     void erase_diverge_row();
 
-    // Save the data as it is in a csv file
-    bool save_value_in_file(fs::path path);
+    /**
+     * @brief Save the data as it is in a csv file
+     * 
+     * @param path filepath where to store the csv
+     * @return true 
+     * @return false 
+     */
+    bool to_csv(fs::path path);
 
 private:
+    /**
+     * @brief Check if the input csv file exist
+     * 
+     * @return string 
+     */
     string validate_f(string);
 
-    std::vector<std::vector<string>> read(int);
-    std::string get_substring(std::string, std::string, std::string);
-    void move_iter(csv::Field &, int);
+    /**
+     * @brief read a csv file and parse it to data attribute format
+     * 
+     * @param skip number of line from the beginning to exclude of the parsing
+     * @return std::vector<std::vector<string>> 
+     */
+    std::vector<std::vector<string>> read(int skip);
 
-    inline std::vector<string> row_vector(std::string s)
-    {
-        long unsigned end = 0U, start;
-        std::vector<string> row_vec;
-        end = s.find(delim);
-        start = 0U;
-
-        while (end != std::string::npos)
-        {
-            row_vec.push_back(static_cast<string>(s.substr(start, end - start)));
-            // std::cout << static_cast<string>(s.substr(start, end - start)) << std::endl;
-            start = end + delim.length();
-            end = s.find(delim, start);
-        }
-
-        row_vec.push_back(static_cast<string>(s.substr(start, end)));
-
-        return row_vec;
-    }
-
-    void column_search()
-    {
-        // Search item column-wise
-    }
+    /**
+     * @brief Get the substring object
+     * 
+     * @param delimiter 
+     * @param extention 
+     * @param s 
+     * @return std::string 
+     */
+    std::string get_substring(std::string delimiter, std::string extention, std::string s);
 };
 
 #endif

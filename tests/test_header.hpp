@@ -31,6 +31,12 @@ protected:
     time_t start_time_;
 };
 
+/**
+ * @brief Read a file and return it as string
+ * 
+ * @param path path of the file to read
+ * @return std::string 
+ */
 std::string readFile(fs::path path)
 {
     // Open the stream to 'lock' the file.
@@ -48,9 +54,25 @@ std::string readFile(fs::path path)
     return result;
 }
 
+/**
+ * @brief Constant with the csv test directory
+ * 
+ */
 const static string TEST_CSV_DIR = "tests/test_data/csv/";
+/**
+ * @brief Constant directory for test with input csv data
+ * 
+ */
 const static string TEST_CSV_INPUT_DIR = "tests/test_data/csv/input/";
+/**
+ * @brief Constant directory for outputs of csv tests
+ * 
+ */
 const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/output/";
+/**
+ * @brief Constant directory for expected results of csv tests
+ * 
+ */
 const static string TEST_CSV_EXPECTED_DIR = "tests/test_data/csv/expected/";
 
 #endif
