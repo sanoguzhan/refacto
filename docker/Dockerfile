@@ -5,6 +5,9 @@ FROM debian:buster
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
         ca-certificates  pkg-config \
+         libsasl2-dev python3-dev libldap2-dev libssl-dev \
+        llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim g++  cmake \
+         swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make \
         autoconf automake cmake dpkg-dev file git make patch python3 python3-pip\
         libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev \
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5; \
