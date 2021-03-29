@@ -5,7 +5,10 @@ FROM debian:buster
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
         ca-certificates  pkg-config \
-        autoconf automake cmake dpkg-dev file git make patch python3 python3-pip\
+         libsasl2-dev python3-dev libldap2-dev libssl-dev gcc libpq-dev python-dev  python-pip\
+        llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
+         swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\
+        autoconf automake dpkg-dev file git make patch python3 python3-pip\
         libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev \
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5; \
     rm -rf /var/lib/apt/lists/*
@@ -22,9 +25,9 @@ ENV LLVM_VERSION 10.0.0
 
 # Install Clang and LLVM
 RUN chmod -R 700 /bin/sh
-RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip && pip install wheel
 RUN pip3 install -U pip setuptools wheel
-RUN pip3 install conan
+RUN pip3 install conan 
 
 COPY install.sh .
 RUN chmod +x install.sh 
