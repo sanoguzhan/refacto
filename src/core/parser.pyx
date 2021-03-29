@@ -11,6 +11,7 @@ from cython.operator cimport dereference as deref
 
 cdef bint boolean_variable = True
 
+# Only extend the ones we use
 cdef extern from "include/controller.hpp":
     cdef cppclass CSVParserWrapper:
         string path;
@@ -23,7 +24,11 @@ cdef extern from "include/controller.hpp":
         void from_csv_vec(string, string, int, int, int); # Vector value
         void to_csv(string);
 
+
+
 cdef class CSVParser:
+    """ Python Interface for CSVParserWrapper
+        Overload operator() accepts dict"""
     cdef CSVParserWrapper* thisptr
     cdef dict kwargs
     cdef str parser_type 
@@ -35,32 +40,31 @@ cdef class CSVParser:
         self.thisptr =  new CSVParserWrapper(kwargs)
 
     def __call__(self,dict vars):
-        if self.parser_type == "csvparser":
-            self.csvparser(vars)
-
-    cdef csvparser(self, dict vars):
         cdef _Location target
+
+        if self.parser_type != "csvparser":
+            raise KeyError("wrong Key, Key must be csvparser")
+
         if vars.get("series"):
             for key in vars.get("series"):
                 self.csv_series_func(vars.get("series").get(key))
         
-        elif vars.get("vector_value"):
-           for key in vars.get("vector_value"):
-               self.thisptr.from_csv_vec(ops._string(key), 
-                                   vars.get("vector_value").get(key).get("orient"),
-                                   vars.get("vector_value").get(key).get("idx"),
-                                   vars.get("vector_value").get(key).get("from"),
-                                   vars.get("vector_value").get(key).get("to"))
-        elif vars.get("single_value"):
+        if vars.get("vector_value"):
+            for key in vars.get("vector_value"):
+                self.thisptr.from_csv_vec(ops._string(key), 
+                                    vars.get("vector_value").get(key).get("orient"),
+                                    vars.get("vector_value").get(key).get("index"),
+                                    vars.get("vector_value").get(key).get("from"),
+                                    vars.get("vector_value").get(key).get("to"))
+        if vars.get("single_value"):
             for key in vars.get("vector_value"):
                 target = self.init_loc(vars.get("single_value").get(key))
                 self.thisptr.from_csv(ops._string(key),
                     deref(target.thisptr))
 
 
-
     cdef csv_series_func(self, dict args):
-
+        """ Polymorphic methods of CSVParser each given with condition"""
         cdef:
             int cond_len
             _Location target, loc0,loc1
@@ -69,13 +73,13 @@ cdef class CSVParser:
             target = self.init_loc(args)
             self.thisptr.from_csv0(args.get("orient"),
                                 deref(target.thisptr), 
-                                args.get("idx",0))
+                                args.get("index",0))
 
         elif cond_len == 1:
             target = self.init_loc(args)
             loc0 = self.init_loc(args.get("cond")[0])
             self.thisptr.from_csv1(args.get("orient"),
-                                args.get("idx",0),
+                                args.get("index",0),
                                 deref(target.thisptr), 
                                 deref(loc0.thisptr))
 
@@ -84,7 +88,7 @@ cdef class CSVParser:
            loc0 = self.init_loc(args.get("cond")[0])
            loc1 = self.init_loc(args.get("cond")[1])
            self.thisptr.from_csv2(args.get("orient"),
-                               args.get("idx",0),
+                               args.get("index",0),
                                deref(target.thisptr),
                                deref(loc0.thisptr),
                                deref(loc1.thisptr))

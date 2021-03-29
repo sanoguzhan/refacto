@@ -17,6 +17,7 @@ setuptools.dist.Distribution().fetch_build_eggs(['Cython'])
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize 
 
+__version__ = '0.0.1'
 
 log = logging.getLogger("Refacto")
 
@@ -34,11 +35,12 @@ log.addHandler(fh)
 
 log.setLevel(logging.DEBUG)
 
-os.environ['LD_LIBRARY_PATH'] = "src/core/usr/local/lib/"
 
+# Linking C++ Refacto Library to Cython Parser.Pyx
+
+os.environ['LD_LIBRARY_PATH'] = "src/core/usr/local/lib/"
 os.environ["CC"] = "clang"
 _path = "/core/usr/local/lib/"
-
 ext_modules = [Extension("parsing.engine",
                      ["src/core/parser.pyx",],
                      language='c++',
@@ -48,6 +50,8 @@ ext_modules = [Extension("parsing.engine",
                      runtime_library_dirs=[_path]
                      )]
 
+# Running Cmake and Make as Subprocess 
+# So we can build library on each platform with command and install python library
 class Pwd:
     dir_stack = []
 
@@ -107,6 +111,8 @@ class InstallCppLib(distutils.cmd.Command):
 
 setup(
   name = "parsing",
+  version = __version__,
+  author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
   packages=setuptools.find_packages(exclude=[ "tests/*"]),
   include_package_data=True,
@@ -120,4 +126,20 @@ setup(
   tests_require = ['pytest'],
   test_suite ='tests',
   python_requires='>=3.0',
+    classifiers=[
+    'Development Status :: 3 - Alpha',      
+    'Intended Audience :: Developers',      
+    'Topic :: Software Development :: Build Tools',
+    'Natural Language :: English',   
+    'Programming Language :: Python :: 3',      
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+  ],
+  keywords=[
+        'Cython',
+        'Parsing',
+        'C++',
+        'Refacto'
+    ],
 )

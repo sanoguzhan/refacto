@@ -1,3 +1,13 @@
+/** @file controller.hpp
+ *  @brief Contains each parser with wrapper for Cython extension
+ *
+ *  This file contains the refacto's each parser wrapper
+ *  Header only for extending from cython
+ *  
+ *  @author Oguzhan San
+ *  @bug No known bugs.
+ * 
+ */
 #ifndef __CONTROLLER_HPP
 #define __CONTROLLER_HPP
 
@@ -17,6 +27,10 @@ using dict =  map<string, map<string,string>>;
 using csv_args = map<string,vector<map<string,map<string,string>>>>;
 
 class CSVParserWrapper{
+    /**
+     * @brief CSVParser Wrapper with Table class
+     * 
+     */
     public:
 
         shared_ptr<CSVParser> csvparser;
