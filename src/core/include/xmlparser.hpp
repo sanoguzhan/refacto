@@ -28,13 +28,13 @@
 #include "pugixml.hpp"
 
 using namespace table;
+using svector = std::vector<std::string>;
 
 
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
 
 void reinit(svector &);
-
 
 struct IDMap{
     std::string name;

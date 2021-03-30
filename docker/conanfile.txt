@@ -2,6 +2,7 @@
     yaml-cpp/0.6.3
     nlohmann_json/3.9.1
     boost/1.75.0
+    pugixml/1.11
 [generators]
     cmake
 
