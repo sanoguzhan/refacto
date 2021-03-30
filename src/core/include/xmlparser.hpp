@@ -28,15 +28,12 @@
 #include "pugixml.hpp"
 
 using namespace table;
-namespace fs = std::filesystem;
 
 
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
 
 void reinit(svector &);
-
-
 
 
 class XMLParser{
