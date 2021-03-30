@@ -24,26 +24,29 @@ TEST(XMLParser, IncludeDir){
         .degree="Mean",
     };
     XMLParser parser(inv_pac, inv_id, mppt_amp);
-    parser("tests/test_data/xml/Mean.20190102_153037.xml", "WebBox");
-    parser("tests/test_data/xml/Mean.20190112_123035.xml", "WebBox");
-    for(auto item:parser.data){
-        std::cout << item.name << std::endl;
-        std::cout << item.key << std::endl;
-        for(auto val:item.values){
-            std::cout << val << "";
-        }
-    }
+
+    parser("tests/test_data/xml/Mean.20190515_073036.xml", "WebBox");
+    // parser("tests/test_data/xml/Mean.20190515_091539.xml", "WebBox");
+
+    parser.to_csv();
+    // Table table;
+
+    // table.insert(parser.data);
+
+
 
 }
 // TEST(XMLParser, IncludeDir){
 //     IDMap inverter{
-//         .name=“inverter”,
-//         .node=“Key”,
-//         .key=“Pac”,
-//         .value=“Mean”,
+//         .name="inverter",
+//         .node="Key",
+//         .key="Pac",
+//         .value="Mean",
 //     };
 //     XMLParser parser;
-//     parser.read(“tests/test_data/xml/Mean.20190515_073036.xml”);
+
+//     parser.read("tests/test_data/xml/Mean.20190515_073036.xml");
+
 // }
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);

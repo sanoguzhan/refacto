@@ -11,21 +11,29 @@
 #ifndef __TABLE_HPP
 #define __TABLE_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <variant>
-#include <filesystem>
-#include <utility>
-#include <memory>
-#include <cctype>
-#include <any>
-#include <typeinfo>
-#include <type_traits>
-#include <fstream>
-#include <map>
+#if _WIN32 || _WIN64
+    #define NAV "\"
+#else
+    #define NAV "/"
+#endif
+
+#include<iostream>
+#include<string>
+#include<vector>
+#include<variant>
+#include<filesystem>
+#include<utility>
+#include<memory>
+#include<cctype>
+#include<any>
+#include<typeinfo>
+#include<type_traits>
+#include<fstream>
+#include<algorithm>
+
 using string = std::string;
-// namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
+using svector = std::vector<std::string>;
 
 /**
  * @brief Table namespace includes Table Class and Series for table insertion
@@ -55,6 +63,22 @@ namespace table
         std::map<string, std::vector<string>> values;
     };
 
+    // ! COMMENT
+    struct IDMap{
+        std::string name;
+        std::string node;
+        std::string key;
+        std::string degree;
+        svector values;
+
+        friend bool operator>(const IDMap &right, const IDMap &left);
+        friend bool operator<=(const IDMap &right, const IDMap &left);
+        friend bool operator<(const IDMap &right, const IDMap &left);
+        friend bool operator>=(const IDMap &right, const IDMap &left);
+
+    };
+
+
     /**
      * @brief Table Class (data container)
      *  Table Class
@@ -75,7 +99,8 @@ namespace table
              * 
              * @return bool: true on success
             */
-        bool save(string path);
+            bool save(std::string);
+
 
       
         /**
@@ -119,10 +144,9 @@ namespace table
              * 
              * @return data
              */
-        inline auto values()
-        {
-            return data;
-        }
+            inline auto values(){
+                return data;
+            }
 
            size_t get_size() const;
     private:
@@ -141,8 +165,26 @@ namespace table
              * 
              * @return size: (size_t) max. size 
              */
-  
-    };
+            size_t get_size() const;
+
+
+        };
+
+
+    inline bool operator>(const IDMap &right, const IDMap& left){
+        return right.name > left.name;
+    }
+    inline bool operator<=(const IDMap& right, const IDMap& left){
+        return right.name <= left.name;
+    }
+    inline bool operator<( const IDMap& right, const IDMap& left){
+        return right.name < left.name;
+    }
+
+    inline bool operator>=(const IDMap& right, const IDMap& left){
+        return right.name >= left.name;
+    }
+
 
 }
 #endif
