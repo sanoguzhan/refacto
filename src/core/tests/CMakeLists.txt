@@ -30,9 +30,11 @@ conan_basic_setup()
 # add_executable(test_csv_cases 
 # test_csv_cases.cpp)
 
-add_executable(test_controller 
-test_controller.cpp)
+# add_executable(test_controller 
+# test_controller.cpp)
 
+add_executable(test_xmlparser
+test_xmlparser.cpp)
 
 if(refacto_FOUND)
 
@@ -53,9 +55,13 @@ if(refacto_FOUND)
   # target_link_libraries(test_csv_cases ${CONAN_LIBS})
   # target_link_libraries(test_csv_cases GTest::GTest GTest::Main)
 
-  target_link_libraries(test_controller refacto)
-  target_link_libraries(test_controller ${CONAN_LIBS})
-  target_link_libraries(test_controller GTest::GTest GTest::Main)
+  # target_link_libraries(test_controller refacto)
+  # target_link_libraries(test_controller ${CONAN_LIBS})
+  # target_link_libraries(test_controller GTest::GTest GTest::Main)
+
+  target_link_libraries(test_xmlparser refacto)
+  target_link_libraries(test_xmlparser ${CONAN_LIBS})
+  target_link_libraries(test_xmlparser GTest::GTest GTest::Main)
 
 else()
   message(FATAL_ERROR "refacto library not found")

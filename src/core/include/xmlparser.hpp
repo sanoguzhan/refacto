@@ -36,6 +36,13 @@ static bool CONTAINS = false;
 void reinit(svector &);
 
 
+struct IDMap{
+    std::string name;
+    std::string node;
+    std::string key;
+    std::string degree;
+    svector values;
+};
 class XMLParser{
 
     private:

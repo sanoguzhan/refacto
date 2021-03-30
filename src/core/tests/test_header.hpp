@@ -14,6 +14,7 @@
 #include "refacto/dtables.hpp"
 #include "refacto/csvparser.hpp"
 #include"refacto/controller.hpp"
+#include"refacto/xmlparser.hpp"
 using namespace std;
 using namespace dtable;
 namespace fs = std::filesystem;
