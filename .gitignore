@@ -56,3 +56,13 @@ tests/test_data/csv/output/*.csv
 !.vscode/c_cpp_properties.json
 
 docker/.env
+
+src/core/usr/
+src/core/parser.cpp
+
+parsing.egg-info
+.eggs
+dist
+src/lib.log
+
+src/utils/__pycache__
