@@ -57,7 +57,7 @@ cdef class CSVParser:
                                     vars.get("vector_value").get(key).get("from"),
                                     vars.get("vector_value").get(key).get("to"))
         if vars.get("single_value"):
-            for key in vars.get("vector_value"):
+            for key in vars.get("single_value"):
                 target = self.init_loc(vars.get("single_value").get(key))
                 self.thisptr.from_csv(ops._string(key),
                     deref(target.thisptr))

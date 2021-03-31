@@ -30,9 +30,11 @@
 #include<type_traits>
 #include<fstream>
 #include<algorithm>
+#include<map>
+
 
 using string = std::string;
-namespace fs = std::filesystem;
+
 using svector = std::vector<std::string>;
 
 /**
@@ -165,8 +167,6 @@ namespace table
              * 
              * @return size: (size_t) max. size 
              */
-            size_t get_size() const;
-
 
         };
 

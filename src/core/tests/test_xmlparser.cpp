@@ -23,12 +23,30 @@ TEST(XMLParser, IncludeDir){
         .key="Amp",
         .degree="Mean",
     };
-    XMLParser parser(inv_pac, inv_id, mppt_amp);
 
-    parser("tests/test_data/xml/Mean.20190515_073036.xml", "WebBox");
+    IDMap mppt_vol{
+        .name="inverter_mppt",
+        .node="Key",
+        .key="Vol",
+        .degree="Mean",
+    };
+
+//    IDMap mppt_etotal{
+//         .name="inverter_mppt",
+//         .node="Key",
+//         .key="Amp",
+//         .degree="E-total",
+//     };
+
+
+    XMLParser parser(inv_pac, inv_id, mppt_amp, mppt_vol);
+
+    parser("tests/test_data/xml/Mean.20190102_153037.xml", "WebBox");
+    parser("tests/test_data/xml/Mean.20190512_150040.xml", "WebBox");
+    parser("tests/test_data/xml/Mean.20190112_123035.xml", "WebBox");
     // parser("tests/test_data/xml/Mean.20190515_091539.xml", "WebBox");
 
-    parser.to_csv();
+    parser.to_csv(".");
     // Table table;
 
     // table.insert(parser.data);

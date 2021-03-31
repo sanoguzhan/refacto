@@ -23,7 +23,6 @@
 #include<utility>
 #include<cstring>
 #include<initializer_list>
-
 #include "table.hpp"
 #include "pugixml.hpp"
 
@@ -40,10 +39,6 @@ void reinit(svector &);
 
 
 class XMLParser{
-
-    private:
-
-
     public:
         std::vector<IDMap> data;
 
@@ -103,24 +98,27 @@ class XMLParser{
             if(root) update(root, tag, ids);
         }
 
-        bool to_csv(){
+        bool to_csv(string dir){
 
             std::map<std::string, std::vector<IDMap>> keys;
+
             reconstruct(keys);
+
             size_t i, row = 0, col = 0;
             bool header = true;
             for(auto& p:keys){
-                std::cout << p.first << std::endl;
+                std::ofstream ofs(dir + "/" + p.first + ".csv", std::ofstream::out);
+                    cout <<"here" <<endl;
                     for(i = 0;i < p.second.size()-1; ++i){
-                        std::cout << p.second.at(i).key << ";";
+                        ofs << p.second.at(i).key << ";";
                     }
-                     std::cout << p.second.at(i).key << std::endl;
+                     ofs << p.second.at(i).key << std::endl;
 
                 for(row=0;row < max_size(p.second)-1; ++row ){
                     for(col=0;col < p.second.size()-1; col++){
-                        std::cout << p.second.at(col).values.at(row) << ";";
+                        ofs << p.second.at(col).values.at(row) << ";";
                     }
-                    std::cout << p.second.at(col).values.at(row)  << std::endl;
+                    ofs << p.second.at(col).values.at(row)  << std::endl;
                 }
             }
             return true;

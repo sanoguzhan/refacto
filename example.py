@@ -35,12 +35,13 @@ data = {
            "from":1,
            "to":-1}
         },
-    #"single_value":
-     #   {"date":
-      #      {"orient":"column",
-       #     "orient":"row",
-            # "row":0}
-        # }
+    "single_value":
+       {"name":
+           {"name":"test",
+               "orient":"orient",
+           "row":1,
+            "column":0}
+        }
 }
 
 p(data)
