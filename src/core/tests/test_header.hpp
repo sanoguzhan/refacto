@@ -76,5 +76,9 @@ const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/output/";
  * 
  */
 const static string TEST_CSV_EXPECTED_DIR = "tests/test_data/csv/expected/";
-
+/**
+ * @brief Constant directory for expected results of xml tests
+ * 
+ */
+const static string TEST_XML_OUTPUT_DIR = "tests/test_data/";
 #endif

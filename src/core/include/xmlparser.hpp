@@ -3,8 +3,9 @@
  *  @brief
  *
  *  This file contains the refacto's xmlparser
- *
- *
+ *      - File directory search for xml files
+ *      - Recursive key search
+ *      - Extractions for given IDMaps to separate csv files
  *
  *  @author Oguzhan San
  *  @bug No known bugs.
@@ -23,137 +24,135 @@
 #include<utility>
 #include<cstring>
 #include<initializer_list>
+#include<glob.h>
+
 #include "table.hpp"
 #include "pugixml.hpp"
 
+
 using namespace table;
+using std::map;
+using std::string;
+using std::vector;
 using svector = std::vector<std::string>;
 
 
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
 
-void reinit(svector &);
+/**
+ * @brief Greps the list of file for given directory
+ * 
+ * @param dir: (string) directory with pattern match
+ *      Example:
+ *                  ./*.xml
+ *  
+ * @return vector<string> as vector of matched files
+ */
+vector<string> listdir(const string&);
 
-
-
-
+/**
+ * @brief XMLParser Class for XML file search and value transform
+ *  Keeps arbitary number of IDMaps and construct Vector with Initializer List
+ */
 class XMLParser{
-    public:
-        std::vector<IDMap> data;
+    private:
+        std::vector<IDMap> data; 
 
+    public:
+
+        /**
+         * @brief XMLParser Constructer
+         *      - Takes arbitary number of IDMaps
+         *      - Construct a Vector and classify with the name of IDMap
+         * 
+         * @param lst List IDMap
+         */
         template<typename ...T>
         XMLParser(T ...lst): data{lst...}{}
 
+        /**
+         * @brief Writes data to csv files
+         *      - Writes each key variable to diffirent 
+         *      - appends the file names to given directory path
+         *  
+         * @param dir: (string) extraction directory
+         * @return true on success
+         */
+        bool to_csv(string dir);
 
+        /**
+         * @brief Operator for xml file data search
+         *         - Takes directory as input and looks for pattern match
+         *         - Search for variables for each IDMap
+         * 
+         * @param path: (string) path to xml file directory
+         * @param root_name : (string) root name in the xml files
+         */
+        void operator()(string path, const string root_name);
 
+    private:
+        /**
+         * @brief Read for operator()
+         *      - Reader for xml files 
+         * @param path : (string) path to file
+         * @param root_name : (string) xml root name
+         * @param doc : (pugi::xml_document) opened document
+         * @return decltype(auto) 
+         */
         inline decltype(auto) read(string path,
                                   const string root_name,
                                   pugi::xml_document &doc){
-
             if (!doc.load_file(path.c_str()))
                 throw std::runtime_error("File not exist at " +  path);
             pugi::xml_node _node = doc.child(root_name.c_str());
             if(!_node)
                 throw std::runtime_error("Root name is not correct " +  root_name);
-
             return std::move(_node);
-            }
-
-
-        void operator()(std::string path, const std::string root_name){
-            pugi::xml_document doc;
-            pugi::xml_node root{read(path, root_name, doc)};
-            svector ids;
-            for(auto& tag: data){
-                update(root, tag, ids);
-                tag.values.insert(tag.values.end(), ids.begin(), ids.end());
-                reinit(ids);
-            }
         }
 
 
 
+
+        /**
+         * @brief Update ids vector from xml tree
+         *      - Recursive function to tree-traversal 
+         * 
+         * @param root : (pugi::xml_node) root node
+         * @param tag : (IDMap) search IDMap
+         * @param ids : (vector<string>) id vector which filled up
+         */
         inline void update(pugi::xml_node root,
                             const IDMap &tag,
-                            svector &ids){
+                            svector &ids);
 
-            root = (!COUNTER) ? root.first_child(): root;
-            COUNTER++;
-            std::string token, id;
-            for (pugi::xml_node panel = root.first_child(); panel; panel = panel.next_sibling()){
-                token = panel.name();
-                    if(token == tag.node && std::string(panel.child_value()).find(tag.key) != std::string::npos){
-                        CONTAINS = true;
-                        id = panel.child_value();
-                    }
-                    if(CONTAINS){
-                        if(token.find(tag.degree) != std::string::npos){
-                            ids.push_back(panel.child_value());
-                        }
-                    }
-                }
-            CONTAINS = false;
-            root = root.next_sibling();
-            if(root) update(root, tag, ids);
-        }
+        /**
+         * @brief Map trasnformers to name-value map
+         *      - Create map from IDMap for each unique name
+         *      - Classify IDMap vector to unique name and values
+         * @param keys key-value pairs
+         */
+        void transfrom_map(map<string, vector<IDMap>>& keys);
 
-        bool to_csv(string dir){
-
-            std::map<std::string, std::vector<IDMap>> keys;
-
-            reconstruct(keys);
-
-            size_t i, row = 0, col = 0;
-            bool header = true;
-            for(auto& p:keys){
-                std::ofstream ofs(dir + "/" + p.first + ".csv", std::ofstream::out);
-                    cout <<"here" <<endl;
-                    for(i = 0;i < p.second.size()-1; ++i){
-                        ofs << p.second.at(i).key << ";";
-                    }
-                     ofs << p.second.at(i).key << std::endl;
-
-                for(row=0;row < max_size(p.second)-1; ++row ){
-                    for(col=0;col < p.second.size()-1; col++){
-                        ofs << p.second.at(col).values.at(row) << ";";
-                    }
-                    ofs << p.second.at(col).values.at(row)  << std::endl;
-                }
-            }
-            return true;
-        }
-
-        u_int64_t max_size(const std::vector<IDMap> &ids){
+        /**
+         * @brief Create variable size map for writing
+         * 
+         * @param keys key-value map for each unique IDMap
+         * @param sizes size key-value map for name+key values
+         */
+        void inline max_key_sizes(map<string, vector<IDMap>>& keys,
+                            map<string, u_int32_t>& sizes){
             u_int64_t size = 0;
-            for(const auto& id:ids){
-                size = id.values.size() >= size ? id.values.size() : 0;
+            for(auto& p:keys){
+                for(const auto& id:p.second){
+                    sizes.insert(std::pair<string, u_int32_t>(id.name + id.key, id.values.size()));
+                }
             }
-            return size;
         }
 
 
-        void reconstruct(std::map<std::string, std::vector<IDMap>>& keys){
-            std::vector<std::string> names;
-            std::sort(data.begin(), data.end());
-            std::transform(data.begin(), data.end(), back_inserter(names), [](IDMap &id){
-                return id.name;
-            });
-            names.erase(unique(names.begin(), names.end()), names.end());
-            transform(names.begin(), names.end(), std::inserter(keys, keys.end()), [](string &key){
-                return std::make_pair(key, std::vector<IDMap>());
-            });
-            for_each(data.begin(), data.end(), [&](IDMap& id){
-                keys.at(id.name).emplace_back(id);
-            });
-        }
 };
 
 
-
-inline void reinit(svector &ids){
-    ids.clear();
-    COUNTER = 0;
-}
 
 #endif

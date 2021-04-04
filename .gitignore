@@ -66,3 +66,10 @@ dist
 src/lib.log
 
 src/utils/__pycache__
+
+.idea/
+.vscode/launch.json
+foo.csv
+src/core/inverter.csv
+src/core/inverter_mppt.csv
+src/core/test_xml.csv
