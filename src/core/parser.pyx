@@ -6,25 +6,49 @@ from libcpp cimport bool
 from libcpp.map cimport map
 from libcpp.vector cimport vector
 from libcpp.string cimport string
-
 from cython.operator cimport dereference as deref
 
 cdef bint boolean_variable = True
 
+
+
+
+
+cdef extern from "include/controller.hpp":
+    cdef cppclass XMLParserController:
+        XMLParserController(vector[map[string,string]]) nogil except +;
+        bool to_csv(string) nogil except+;
+        void operator()(string, const string) nogil except +;
+
+cdef class XMLParser:
+    """ Python Interface for XMLParserController
+        Constructor expect dict with all parameters"""
+    cdef XMLParserController* thisptr
+    def __cinit__(self, vector[map[string, string]] values):
+        self.thisptr = new XMLParserController(values)
+
+    def __call__(self,str dir, str root):
+        return self.thisptr[0](ops._string(dir), ops._string(root))
+    
+    def to_csv(self, str dir):
+        return self.thisptr.to_csv(ops._string(dir))
+
+    def __dealloc__(self):
+        if self.thisptr != NULL:
+            del self.thisptr
+  
 # Only extend the ones we use
 cdef extern from "include/controller.hpp":
     cdef cppclass CSVParserWrapper:
         string path;
-        CSVParserWrapper(map[string,map[string, string]])
-        void init_csvparser(map[string,string]);
-        void from_csv(string, Loc); #Single value
-        void from_csv0(string, Loc, int); #Series
-        void from_csv1(string, int, Loc, Loc); #Series
-        void from_csv2(string, int, Loc, Loc, Loc); #Series
-        void from_csv_vec(string, string, int, int, int); # Vector value
-        void to_csv(string);
-
-
+        CSVParserWrapper(map[string,map[string, string]]);
+        void init_csvparser(map[string,string]) nogil except +;
+        void from_csv(string, Loc) nogil except +; #Single value
+        void from_csv0(string, Loc, int) nogil except +; #Series
+        void from_csv1(string, int, Loc, Loc) nogil except +; #Series
+        void from_csv2(string, int, Loc, Loc, Loc) nogil except +; #Series
+        void from_csv_vec(string, string, int, int, int) nogil except +; # Vector value
+        void to_csv(string) nogil except +;
 
 cdef class CSVParser:
     """ Python Interface for CSVParserWrapper
@@ -124,16 +148,6 @@ cdef extern from "include/table.hpp" namespace "table":
         bool insert(string, Series) except +;
         bool insert(string, vector[string]) except +;
 
-
-
-cdef extern from "include/csvparser.hpp":
-    cdef cppclass Loc:
-        string name;
-        string orient;
-        int row;
-        int column;
-
-
 cdef class _Table:
 
     cdef Table *thisptr 
@@ -151,6 +165,14 @@ cdef class _Table:
             del self.thisptr
 
 
+cdef extern from "include/csvparser.hpp":
+    cdef cppclass Loc:
+        string name;
+        string orient;
+        int row;
+        int column;
+
+
 cdef class _Location:
     cdef Loc *thisptr
 
@@ -160,6 +182,10 @@ cdef class _Location:
         if(orient): self.thisptr.orient = ops._string(orient)
         if(row): self.thisptr.row = row
         if(column): self.thisptr.column = column
+
+
+
+
 
 
 

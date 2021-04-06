@@ -19,7 +19,6 @@ bool Table::save(string path)
     csv_file << "id;";
     for (const auto &c : data)
     {
-        std::cout << c.first << std::endl;
         if (header)
         {
             for (; i < c.second.size() - 1; i++)

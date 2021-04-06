@@ -101,7 +101,7 @@ class InstallCppLib(distutils.cmd.Command):
         log.info("Building static library...",)
        
         shell.run(["make", "install"],  
-                stdout=open(os.devnull, 'wb')) 
+                ) 
         shell.run(["make", "install", "DESTDIR=.."],  
                 stdout=open(os.devnull, 'wb'))  
     log.info("Refacto Library Installed!")  

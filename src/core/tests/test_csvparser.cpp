@@ -142,7 +142,7 @@ TEST(CSVParser, SliceSelection)
     auto columns{p("row", 0, 0, 20)};
     ASSERT_EQ(columns.size(), 20);
 
-    auto date_value{p.values("column", 0, 1, 3)};
+    auto date_value{p("column", 0, 1, 3)};
 
     for (auto i : date_value)
     {

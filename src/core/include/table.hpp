@@ -73,6 +73,8 @@ namespace table
         std::string degree;
         svector values;
 
+        IDMap(string name, string node, string key, string degree)  
+            :name{name}, node{node}, key{key}, degree{degree}{}
         friend bool operator>(const IDMap &right, const IDMap &left);
         friend bool operator<=(const IDMap &right, const IDMap &left);
         friend bool operator<(const IDMap &right, const IDMap &left);

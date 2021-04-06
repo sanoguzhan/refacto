@@ -102,17 +102,7 @@ class XMLParser{
          */
         inline decltype(auto) read(string path,
                                   const string root_name,
-                                  pugi::xml_document &doc){
-            if (!doc.load_file(path.c_str()))
-                throw std::runtime_error("File not exist at " +  path);
-            pugi::xml_node _node = doc.child(root_name.c_str());
-            if(!_node)
-                throw std::runtime_error("Root name is not correct " +  root_name);
-            return std::move(_node);
-        }
-
-
-
+                                  pugi::xml_document &doc);
 
         /**
          * @brief Update ids vector from xml tree
@@ -141,14 +131,7 @@ class XMLParser{
          * @param sizes size key-value map for name+key values
          */
         void inline max_key_sizes(map<string, vector<IDMap>>& keys,
-                            map<string, u_int32_t>& sizes){
-            u_int64_t size = 0;
-            for(auto& p:keys){
-                for(const auto& id:p.second){
-                    sizes.insert(std::pair<string, u_int32_t>(id.name + id.key, id.values.size()));
-                }
-            }
-        }
+                            map<string, u_int32_t>& sizes);
 
 
 };

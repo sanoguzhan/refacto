@@ -12,9 +12,26 @@ vector<string> listdir(const string& pattern){
     globfree(&glob_result);
     return files;
 }
+void  XMLParser::max_key_sizes(map<string, vector<IDMap>>& keys,
+                            map<string, u_int32_t>& sizes){
+            u_int64_t size = 0;
+            for(auto& p:keys){
+                for(const auto& id:p.second){
+                    sizes.insert(std::pair<string, u_int32_t>(id.name + id.key, id.values.size()));
+                }
+            }
+        }
 
-
-
+decltype(auto) XMLParser::read(string path,
+                                  const string root_name,
+                                  pugi::xml_document &doc){
+            if (!doc.load_file(path.c_str()))
+                throw std::runtime_error("File not exist at " +  path);
+            pugi::xml_node _node = doc.child(root_name.c_str());
+            if(!_node)
+                throw std::runtime_error("Root name is not correct " +  root_name);
+            return std::move(_node);
+        }
 void XMLParser::transfrom_map(map<string, vector<IDMap>>& keys){
     vector<string> names;
     std::sort(data.begin(), data.end());

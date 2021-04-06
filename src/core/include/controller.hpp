@@ -4,6 +4,7 @@
  *  This file contains the refacto's each parser wrapper
  *  Header only for extending from cython
  *  
+ *  Acst as Proxy between refacto c++ library and parsing python library
  *  @author Oguzhan San
  *  @bug No known bugs.
  * 
@@ -19,17 +20,18 @@
 #include<iostream>
 #include"csvparser.hpp"
 #include"table.hpp"
-
+#include"xmlparser.hpp"
 
 using namespace std;
 
 using dict =  map<string, map<string,string>>;
 using csv_args = map<string,vector<map<string,map<string,string>>>>;
 
+
 class CSVParserWrapper{
     /**
      * @brief CSVParser Wrapper with Table class
-     * 
+     *  Table csvparser run this wrapper together to aviod returning any values to Python
      */
     public:
 
@@ -89,4 +91,34 @@ class CSVParserWrapper{
 
 };
 
+inline vector<IDMap> clean_values(vector<map<string, string>> kwargs){
+         vector<IDMap> values;
+         for(const auto& p:kwargs){
+             values.emplace_back(p.at("name"),
+                                p.at("node"),
+                                p.at("key"),
+                                p.at("degree"));
+            }
+         return values;
+     }
+
+
+// Reason for this class 
+//  Cython is buggy when it comes to overloaded functions and memory management
+//  XMLParser expects initilizer list however it is not possible with Cython
+//  That is why we take all parameters of IDMap as vector of maps and construct in cpp
+//  if we do other way around, it makes buggy code to create this vector of IDMap 
+//  then we need to be careful not create python objects on the cython part etc.
+//  This solution allows as to create a layer of abstraction where we can also validate input
+class XMLParserController :public XMLParser {
+    public:
+        XMLParserController(vector<map<string, string>>lst):
+        XMLParser{clean_values(lst)}{}
+
+    void get(string dir, const string root){
+        XMLParser::operator()(dir,root);
+    }
+    
+    
+};
 #endif
