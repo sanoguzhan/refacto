@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+./src/core/tests/csv/output/*
 # Compiled Object files
 *.slo
 *.lo
