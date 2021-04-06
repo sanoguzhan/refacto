@@ -30,6 +30,8 @@ bool Table::save(string path)
         }
         for (; loc < size; loc++, i = 0)
         {
+                // std::cout << c.second.size() << std::endl;
+
             for (i = 0; i < c.second.size() - 1; i++)
             {
                 if (id_col)

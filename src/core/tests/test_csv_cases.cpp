@@ -16,8 +16,8 @@ TEST(CSVParserCases, PlantName1)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "min200611.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
@@ -29,8 +29,8 @@ TEST(CSVParserCases, PlantName1)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
@@ -45,8 +45,8 @@ TEST(CSVParserCases, Solarlog_Kaco__Inverter)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_Kaco.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
@@ -58,8 +58,8 @@ TEST(CSVParserCases, Solarlog_Kaco__Inverter)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
@@ -74,8 +74,8 @@ TEST(CSVParserCases, Solarlog_Kaco__Mppt)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_Kaco.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
@@ -97,10 +97,10 @@ TEST(CSVParserCases, Solarlog_Kaco__Mppt)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
-    auto udc_cols{p.values("row", udc, 1)};
-    auto idc_cols{p.values("row", idc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
+    auto udc_cols{p("row", udc, 1)};
+    auto idc_cols{p("row", idc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
@@ -117,8 +117,8 @@ TEST(CSVParserCases, Solarlog_SMA__Inverter)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_SMA.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
@@ -130,8 +130,8 @@ TEST(CSVParserCases, Solarlog_SMA__Inverter)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
@@ -146,8 +146,8 @@ TEST(CSVParserCases, Solarlog_SMA__Mppt)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_SMA.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
@@ -169,11 +169,11 @@ TEST(CSVParserCases, Solarlog_SMA__Mppt)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
-    auto udc_cols{p.values("row", udc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
+    auto udc_cols{p("row", udc, 1)};
     // Empty IDC must be Nan Values
-    auto idc_cols{p.values("row", idc, 1)};
+    auto idc_cols{p("row", idc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
@@ -190,15 +190,15 @@ TEST(CSVParserCases, Solarlog_ABB__Inverter)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_ABB.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pac{
         .name = "Pac",
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
+    auto pac_cols{p("row", pac, 1)};
 
     table.insert(pac_cols);
     table.insert("date", date);
@@ -212,8 +212,8 @@ TEST(CSVParserCases, Solarlog_ABB__Mppt)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Solarlog_ABB.csv", 0);
     Table table;
-    auto date{p.values("column", 0, 1, -1)};
-    auto time{p.values("column", 1, 1, -1)};
+    auto date{p("column", 0, 1, -1)};
+    auto time{p("column", 1, 1, -1)};
 
     Loc pdc{
         .name = "Pdc1",
@@ -240,12 +240,12 @@ TEST(CSVParserCases, Solarlog_ABB__Mppt)
         .orient = "row",
         .row = 0};
 
-    auto pdc_cols{p.values("row", pdc, 1)};
-    auto pdc2_cols{p.values("row", pdc2, 1)};
-    auto udc_cols{p.values("row", udc, 1)};
-    auto udc2_cols{p.values("row", udc2, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
+    auto pdc2_cols{p("row", pdc2, 1)};
+    auto udc_cols{p("row", udc, 1)};
+    auto udc2_cols{p("row", udc2, 1)};
     // Empty IDC must be Nan Values
-    auto idc_cols{p.values("row", idc, 1)};
+    auto idc_cols{p("row", idc, 1)};
 
     table.insert(pdc_cols);
     table.insert(pdc2_cols);
@@ -290,7 +290,7 @@ TEST(CSVParserCases, Meteocontrol_Inverter)
 
     CSVParser p(TEST_CSV_INPUT_DIR + "Meteocontrol.csv", ",", 1);
     Table table;
-    auto datetime{p.values("column", 0, 2, -1)};
+    auto datetime{p("column", 0, 2, -1)};
 
     Loc id{
         .name = "Id",
@@ -307,8 +307,8 @@ TEST(CSVParserCases, Meteocontrol_Inverter)
         .orient = "row",
         .row = 1};
 
-    auto ac_cols{p.values("row", 2, id, ac)};
-    auto udc_cols{p.values("row", 2, id, udc)};
+    auto ac_cols{p("row", 2, id, ac)};
+    auto udc_cols{p("row", 2, id, udc)};
 
     table.insert(ac_cols);
     table.insert(udc_cols);
@@ -327,7 +327,7 @@ TEST(CSVParserCases, Maulevrier_Inverter)
     // p.erase_data("row", 2, 3);
     // p.erase_diverge_row();
     p.to_csv(TEST_CSV_OUTPUT_DIR + "test.csv");
-    auto datetime{p.values("column", 0, 2, -1)};
+    auto datetime{p("column", 0, 2, -1)};
 
     Loc id{
         .name = "-",
@@ -344,8 +344,8 @@ TEST(CSVParserCases, Maulevrier_Inverter)
         .orient = "row",
         .row = 1};
 
-    auto pac_cold{p.values("row", 2, id, Pac)};
-    auto pdc_cols{p.values("row", 2, id, Pdc)};
+    auto pac_cold{p("row", 2, id, Pac)};
+    auto pdc_cols{p("row", 2, id, Pdc)};
 
     table.insert(pac_cold);
     table.insert(pdc_cols);

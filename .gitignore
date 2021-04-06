@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+./src/core/tests/csv/output/*
 # Compiled Object files
 *.slo
 *.lo
@@ -56,3 +56,20 @@ tests/test_data/csv/output/*.csv
 !.vscode/c_cpp_properties.json
 
 docker/.env
+
+src/core/usr/
+src/core/parser.cpp
+
+parsing.egg-info
+.eggs
+dist
+src/lib.log
+
+src/utils/__pycache__
+
+.idea/
+.vscode/launch.json
+foo.csv
+src/core/inverter.csv
+src/core/inverter_mppt.csv
+src/core/test_xml.csv

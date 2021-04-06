@@ -11,7 +11,6 @@ make
  
 cd $CODE_DIR
 echo CODE_DIR
-./tests/build/bin/test_controller
-# for script in tests/build/bin/*; do $script; done
+for script in tests/build/bin/*; do $script; done
 popd
 

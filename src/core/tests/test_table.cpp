@@ -40,8 +40,8 @@ TEST(TableTests, TableConstructor)
         .orient = "row",
         .row = 2};
 
-    auto cols{p.values("row", 4, targets, cond1)};
-    auto cols2{p.values("row", 4, targets2, cond2)};
+    auto cols{p("row", 4, targets, cond1)};
+    auto cols2{p("row", 4, targets2, cond2)};
 
     for (auto &p : cols.values)
     {
@@ -89,8 +89,8 @@ TEST(TableTests, TableSave)
         .orient = "row",
         .row = 2};
 
-    auto cols{p.values("row", 4, targets, cond1)};
-    auto cols2{p.values("row", 4, targets2, cond2)};
+    auto cols{p("row", 4, targets, cond1)};
+    auto cols2{p("row", 4, targets2, cond2)};
 
     for (auto &p : cols.values)
     {
@@ -125,8 +125,8 @@ TEST(TableTests, TableSaveRowWise)
         .orient = "row",
         .row = 0};
 
-    auto pac_cols{p.values("row", pac, 1)};
-    auto pdc_cols{p.values("row", pdc, 1)};
+    auto pac_cols{p("row", pac, 1)};
+    auto pdc_cols{p("row", pdc, 1)};
 
     table.insert(pac_cols);
     table.insert(pdc_cols);
