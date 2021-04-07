@@ -37,8 +37,8 @@ Modules:
 
 | Name          | Type           | Library
 | ------------- |:-------------:|-------------:|
-| [XMLParser](https://github.com/sanoguzhan/refacto/blob/xmlparser/src/core/include/xmlparser.hpp)    |  XML files       | Refacto & Parsing
-| [CSVParser](https://github.com/sanoguzhan/refacto/blob/xmlparser/src/core/include/csvparser.hpp)     | CSV files      |   Refacto & Parsing 
+| [XMLParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/xmlparser.hpp)    |  XML files       | Refacto & Parsing
+| [CSVParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/csvparser.hpp)     | CSV files      |   Refacto & Parsing 
 
 
 ------
@@ -65,4 +65,4 @@ Import the modules and run
 
 ```
 
-see more at [example.py](https://github.com/sanoguzhan/refacto/blob/xmlparser/example.py)
+see more at [example.py](https://github.com/sanoguzhan/refacto/blob/master/example.py)
