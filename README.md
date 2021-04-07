@@ -37,7 +37,7 @@ Modules:
 
 | Name          | Type           | Library
 | ------------- |:-------------:|-------------:|
-| [XMLParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/xmlparser.hpp)    |  XML files       | Refacto & Parsing
+| [XMLParser](https://github.com/sanoguzhan/refacto/blob/master/core/include/xmlparser.hpp)    |  XML files       | Refacto & Parsing
 | [CSVParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/csvparser.hpp)     | CSV files      |   Refacto & Parsing 
 
 
