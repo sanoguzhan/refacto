@@ -43,6 +43,7 @@ cdef extern from "include/controller.hpp":
         string path;
         CSVParserWrapper(map[string,map[string, string]]);
         void init_csvparser(map[string,string]) nogil except +;
+        void from_csv_static(string, string) nogil except +; #Single value
         void from_csv(string, Loc) nogil except +; #Single value
         void from_csv0(string, Loc, int) nogil except +; #Series
         void from_csv1(string, int, Loc, Loc) nogil except +; #Series
@@ -86,7 +87,11 @@ cdef class CSVParser:
                 self.thisptr.from_csv(ops._string(key),
                     deref(target.thisptr))
 
-
+        if vars.get("static_value"):
+            for key in vars.get("static_value"):
+                self.thisptr.from_csv_static(ops._string(key), 
+                   ops._string(vars.get("static_value").get(key))) 
+ 
     cdef csv_series_func(self, dict args):
         """ Polymorphic methods of CSVParser each given with condition"""
         cdef:
@@ -122,7 +127,10 @@ cdef class CSVParser:
         return _Location(args.get("name"),
                         args.get("orient"),
                         args.get("row", 0),
-                        args.get("column", 0)) 
+                        args.get("column", 0))
+
+    cpdef again(self,  map[string,string] kwargs):
+        return self.thisptr.init_csvparser(kwargs) 
 
 
     cpdef to_csv(self, str path):

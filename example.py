@@ -23,11 +23,15 @@ data = {
            "index":0,
            "from":1,
           "to":-1},
-        }
+        },
+  
+    "static_value":{"id":"foo"}
+
 }
 
 p(data)
 
+p.to_csv("t.csv")
 #XMLParser
 # Expect number of dictionary as list
 # Name in the dictionary will be used to catogorized to file
@@ -60,7 +64,7 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # Here, pattern search for xml files are given, and the root name of each document
-xml_parser("src/core/tests/test_data/xml/*.xml", "WebBox");
+# xml_parser("src/core/tests/test_data/xml/*.xml", "WebBox");
 
 # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
-xml_parser.to_csv(".");
+# xml_parser.to_csv(".");

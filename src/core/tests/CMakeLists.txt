@@ -4,7 +4,7 @@ set (CMAKE_CXX_STANDARD 17)
 add_compile_options("-std=gnu++17")
 set(CMAKE_CXX_FLAGS "-O3")
 add_compile_options("-Wno-error=deprecated-declarations")
-project(test_dtables)
+project(test_cod)
 enable_testing()
 
 
@@ -30,12 +30,12 @@ function(build_tests target_name target_source)
 endif()
 endfunction()
 
-build_tests(test_dtables test_dtables.cpp)
-build_tests(test_csv_cases test_csv_cases.cpp)
+# build_tests(test_dtables test_dtables.cpp)
+# build_tests(test_csv_cases test_csv_cases.cpp)
 
-build_tests(test_csvparser test_csvparser.cpp)
-build_tests(test_table test_table.cpp)
-build_tests(test_controller test_controller.cpp)
-build_tests(test_xmlparser test_xmlparser.cpp)
-
+# build_tests(test_csvparser test_csvparser.cpp)
+# build_tests(test_table test_table.cpp)
+# build_tests(test_controller test_controller.cpp)
+# build_tests(test_xmlparser test_xmlparser.cpp)
+build_tests(test_cod test_cod.cpp)
 
