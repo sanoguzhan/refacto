@@ -141,6 +141,76 @@ cdef class CSVParser:
         if self.thisptr != NULL:
             del self.thisptr
 
+cdef extern from "include/cod.hpp":
+    cdef cppclass DECOMPRESSDIR:
+        DECOMPRESSDIR(string) nogil except +;
+        void operator()(string) nogil except +;
+
+cdef class Decompressdir:
+    """Python DECOMPRESSDIR operator extension
+    """
+    cdef DECOMPRESSDIR *thisptr 
+
+    def __cinit__(self, str extension = None):
+        if(extension):
+            self.thisptr = new DECOMPRESSDIR(ops._string(extension))
+        else:
+            self.thisptr = new DECOMPRESSDIR(ops._string(""))
+            
+    
+    def __call__(self, str extension=None):
+        if(extension):
+            self.thisptr[0](extension)
+
+
+    def __dealloc__(self):
+        if self.thisptr != NULL:
+            del self.thisptr
+
+
+cdef extern from "include/cod.hpp":
+    cdef cppclass COMPRESSDIR:
+        void operator()(string,string) nogil except +;
+
+cdef class Compressdir:
+    """Python COMPRESSDIR operator extension
+    """
+    cdef COMPRESSDIR *thisptr 
+    
+    def __cinit__(self):
+        self.thisptr =  new COMPRESSDIR()
+
+
+    def __call__(self, str path, str file_name):
+        return self.thisptr[0](ops._string(path), ops._string(file_name))
+
+        
+    def __dealloc__(self):
+        if self.thisptr != NULL:
+            del self.thisptr
+
+
+cdef extern from "include/cod.hpp":
+    cdef cppclass CLEANFILES:
+        void operator()(string,string) nogil except +;
+
+cdef class Cleandir:
+    """Python CLEANFILES operator extension
+    """
+    cdef CLEANFILES *thisptr 
+    
+    def __cinit__(self):
+        self.thisptr =  new CLEANFILES()
+
+
+    def __call__(self, str path, str pattern):
+        return self.thisptr[0](ops._string(path), ops._string(pattern))
+
+        
+    def __dealloc__(self):
+        if self.thisptr != NULL:
+            del self.thisptr
+
 
 
 cdef extern from "include/table.hpp" namespace "table":
