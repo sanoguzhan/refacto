@@ -1,6 +1,6 @@
 from parsing.engine import CSVParser
 from parsing.engine import XMLParser
-
+from parsing.engine import Decompressdir, Cleandir, Compressdir
 # CSVParser
 # Constructor input should be all string
 p = CSVParser({"csvparser" :{"path":"src/core/tests/test_data/csv/input/2110130777_treated_data.csv",
@@ -23,10 +23,16 @@ data = {
            "index":0,
            "from":1,
           "to":-1},
-        }
+        },
+  
+    "static_value":{"id":"foo"}
+
 }
 
 p(data)
+#Uncomment to run
+#p.to_csv("t.csv")
+
 
 #XMLParser
 # Expect number of dictionary as list
@@ -60,7 +66,16 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # Here, pattern search for xml files are given, and the root name of each document
-xml_parser("src/core/tests/test_data/xml/*.xml", "WebBox");
+# Uncomment to run
+# xml_parser("src/core/tests/test_data/xml/*.xml", "WebBox");
 
 # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
-xml_parser.to_csv(".");
+# Uncomment to run
+# xml_parser.to_csv(".");
+
+
+# Decompressdir, Compressdir, Cleandir examples
+
+#Decompressdir()("src/core/tests/test_data/gz/")
+#Cleandir()("src/core/tests/test_data/gz/", "*.csv")
+#Compressdir()("src/core/tests/test_data/gz/", "test")

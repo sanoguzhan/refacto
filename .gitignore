@@ -6,7 +6,8 @@
 *.lo
 *.o
 *.obj
-
+src/core/tests/test_data/chanzeaux/
+src/core/tests/test_data/
 # Precompiled Headers
 *.gch
 *.pch

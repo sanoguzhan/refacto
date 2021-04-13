@@ -27,7 +27,6 @@ using namespace std;
 using dict =  map<string, map<string,string>>;
 using csv_args = map<string,vector<map<string,map<string,string>>>>;
 
-
 class CSVParserWrapper{
     /**
      * @brief CSVParser Wrapper with Table class
@@ -83,6 +82,10 @@ class CSVParserWrapper{
     void inline from_csv(string column ,
                         const Loc& target){
         table->insert(column, (*csvparser)(target));
+    }
+
+    void inline from_csv_static(string column, string value){
+        table->insert(column, value);
     }
 
     void inline to_csv(string path){
