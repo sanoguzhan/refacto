@@ -65,4 +65,4 @@ Import the modules and run
 
 ```
 
-see more at [example.py](https://github.com/sanoguzhan/refacto/blob/master/example.py)
+see more at [example.py](https://github.com/sanoguzhan/refacto/blob/master/docs/example.py)
