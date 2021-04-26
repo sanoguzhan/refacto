@@ -11,7 +11,7 @@ make
  
 cd $CODE_DIR
 echo CODE_DIR
-./tests/build/bin/test_cod
+./tests/build/bin/test_csvparser
 # for script in tests/build/bin/*; do $script; done
 popd
 

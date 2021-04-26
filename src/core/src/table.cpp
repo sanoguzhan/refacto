@@ -6,34 +6,28 @@ typedef std::map<std::string, std::vector<std::pair<std::string, std::vector<str
 typedef std::vector<std::pair<string, std::vector<string>>> pair_vector;
 
 
-bool Table::save(string path)
-{
+bool Table::save(string path){
     
     std::ofstream csv_file;
     csv_file.open(path);
     size_t i = 0, loc = 0;
-    size_t size = get_size();
-    bool header = true;
-    bool id_col = true;
+    size_t size{get_size()};
+    bool header = true,id_col = true;
 
     csv_file << "id;";
-    for (const auto &c : data)
-    {
-        if (header)
-        {
-            for (; i < c.second.size() - 1; i++)
-            {
+    for (const auto &c : data){
+        if (header){
+            for (; i < c.second.size() - 1; i++){
                 csv_file << c.second.at(i).first << ";";
             }
             csv_file << c.second.at(i).first << std::endl;
             header = false;
         }
-        for (; loc < size; loc++, i = 0)
-        {
-                // std::cout << c.second.size() << std::endl;
-
-            for (i = 0; i < c.second.size() - 1; i++)
-            {
+        for (; loc < size; loc++, i = 0){
+            if(c.second.size() <= 1){
+                csv_file << c.first << ";" << c.second.at(i).second.at(loc) << std::endl;
+            }else{
+            for (i = 0; i < c.second.size() - 1; i++){
                 if (id_col)
                     csv_file << c.first << ";" << c.second.at(i).second.at(loc) << ";";
                 else
@@ -42,6 +36,7 @@ bool Table::save(string path)
             }
             id_col = true;
             csv_file << c.second.at(i).second.at(loc) << std::endl;
+            }
         }
         loc = 0;
     }
