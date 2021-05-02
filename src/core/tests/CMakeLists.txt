@@ -3,7 +3,7 @@ set (CMAKE_CXX_STANDARD 17)
 
 add_compile_options("-std=gnu++17")
 add_compile_options("-fmax-errors=10")
-set(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS "-O2")
 add_compile_definitions(LOG)
 
 add_compile_options("-Wno-error=deprecated-declarations")

@@ -61,8 +61,9 @@ using std::shared_ptr;
  *  row: (int) row location
  *  column: (int) column location
  */
-struct Entity
-{
+
+
+struct Entity{
     string key;  //meta info ( example: inverter)
     string name;
     string orient;
@@ -140,14 +141,6 @@ deque<string> get_flist(string pattern){
 class CustomParser
 {
 private:
-    // string file_path;
-    // std::ifstream f;
-    // int skip_rows = 0;
-    // // csv::CsvParser parser;
-    // std::string delim = ";";
-    // string dir_path;
-    // deque<string> files_vector;
-    // map<string,shared_ptr<Table>> tables;
 
     vector<Entity> meta;
     
@@ -162,8 +155,9 @@ public:
      * @brief filename of the parsed csv file 
      * 
      */
-
+    string id_iter, id_type;
     std::string file_name;
+    
     template<typename ...T>
     CustomParser(T ...lst)
         : meta{lst...}{}
@@ -184,28 +178,36 @@ public:
             #endif
             in_read(file, delimeter, skip);
             file_name = get_substring("/", ".", file);
+            for(auto p:tables){
+                in_insert(p.second, keys.at(p.first), series, vec_values);
+                p.second->insert(series);
+                series.values.clear(); // clean the parsed values
+
+            }
+            data.clear();
         }
-        for(auto p:tables){
-            in_insert(p.second, keys.at(p.first), series, vec_values);
-        }
+
+    
+
+  
     }
 
     void in_insert(shared_ptr<Table> tb, 
             const vector<Entity> &entity_lst,
             Series &series,
             vector<string> &vec_values){
+
+
         for(auto item:entity_lst){
-            if(item.type == "ids" && !ids_exists){
+            if(item.type == "ids"){
                 create_ids(series, item);
             }
             else if(item.type == "series"){
-                from_series(series, item);
-                tb->insert(series);
-                series.values.clear(); // clean the parsed values
+                from_series(series, item, tb);
             }else if(item.type == "vector"){
                 from_vector(vec_values, item);
                 tb->insert(item.name, vec_values);
-                vec_values.clear();
+                // vec_values.clear();
             }else if(item.type == "entity"){
                 if(item.keyword =="file_name")
                     tb->insert(item.name, file_name);
@@ -240,16 +242,24 @@ public:
     else{throw std::runtime_error("Orient is missing!");}
     }
 
+    void to_csv(string dir){
+        string save_path;
+        for(const auto& p:tables){
+            save_path = dir + "/" + p.first + ".csv";
+            if(p.first == "inverter")
+                p.second->save(save_path);
+        }
+    }
     private:
-        bool ids_exists{false};
 
 
-        void from_series(Series &series, const Entity& item){
+        void from_series(Series &series, const Entity& item, 
+                    shared_ptr<Table> tb){
              if(item.conditions.empty()) {
-                 construct_series(series, item);
+                 construct_series(series, item, tb);
              }
            else if(item.conditions.size() == 1){
-                construct_series(series, item, item.conditions.at(0));
+                construct_series(series, item, item.conditions.at(0), tb);
             }
             else if(item.conditions.size() == 2){
                 throw std::runtime_error("Multi conditions are not supported");
@@ -258,64 +268,75 @@ public:
             }
         }
      
-       
-        void from_value(const Entity& item){
-
-        }
-
 
     void create_ids(Series& series, const Entity& item){
         if(item.keyword == "file_name"){
-            series.values.insert(std::make_pair(file_name, vector<string>()));
+            if(!id_exist(series, file_name)){
+                series.values.insert(std::make_pair(file_name, vector<string>()));
+                id_type = "single";
+                id_iter = file_name;
+            }
         }else if(item.keyword == "single"){
-            series.values.insert(std::make_pair(data.at(item.row).at(item.column), vector<string>()));
+            if(!id_exist(series, data.at(item.row).at(item.column))){
+                series.values.insert(std::make_pair(data.at(item.row).at(item.column), vector<string>()));
+                id_type = "single";
+                id_iter = file_name;
+            }
         }else if(item.keyword == "multi"){
             vector<u_int32_t> indexes;
             find_ids(data,indexes, item);
             for(auto i:indexes){
-                series.values.insert(std::make_pair(std::to_string(i), vector<string>()));
+                if(!id_exist(series, data.at(item.value_begin).at(i)))
+                   series.values.insert(std::make_pair(data.at(item.value_begin).at(i), vector<string>()));
             }
+            id_type = "multi";
             indexes.clear();
         }else{
             throw std::runtime_error("Wrong id config");
         }
     }
 
+    bool id_exist(Series& series, string check_id){
+    
+        if(series.values.find(check_id) == series.values.end())
+            return false;
+        return true;
+    }
 
    void construct_series(Series& series,
-                       const Entity& item){
+                       const Entity& item,
+                       shared_ptr<Table> tb){
     std::vector<string> rows;
 
     //First Condition as name
     series.name = item.name;
-
     std::vector<u_int32_t> data_idx;
     find_ids(data,data_idx,item);
 
-    if(data_idx.size() != series.values.size()){
-        throw std::runtime_error(R"(IDs not initilized correctly, 
-                                There are more data column than ids)");
-    }
-    std::map<string,vector<string>>::iterator current_id = series.values.begin();
-    for (const u_int32_t col : data_idx){
-        for (size_t i = item.value_begin; i < data.size(); i++){
-            rows.push_back(data.at(i).at(col));
-        }
 
-        //Iterate with keys
-        series.values.find(current_id->first)->second.insert(
-                std::end(series.values.find(current_id->first)->second),
-                std::begin(rows),
-                std::end(rows));
-        rows.resize(0);
-        }
-        current_id++;
+    if(id_type == "single"){
+        for (const u_int32_t col : data_idx){
+            for (size_t i = item.value_begin; i < data.size(); i++){
+                rows.push_back(data.at(i).at(col));
+            }
+
+            series.values.find(id_iter)->second.insert(
+                    std::end(series.values.find(id_iter)->second),
+                    std::begin(rows),
+                    std::end(rows));
+            rows.resize(0);
+            }
+            tb->insert(series);
+            series.values.find(id_iter)->second.clear();
+    }else if(id_type == "multi"){}
+
     }
 
 
    void construct_series(Series& series,
                        const Entity& item,
-                        map<string, string> target){
+                        map<string, string> target,
+                        shared_ptr<Table> tb){
     std::vector<string> rows;
 
     //First Condition as name
@@ -329,8 +350,7 @@ public:
         for (size_t i = item.value_begin; i < data.size(); i++){
             rows.push_back(data.at(i).at(col));
         }
-        current_id =data.at(std::stoi(target.find("row")->second)).at(col);
-
+        current_id = data.at(std::stoi(target.find("row")->second)).at(col);
         //Key not Exist so Initilize
         if(series.values.find(current_id) == series.values.end()){
             series.values.insert({current_id, rows});
@@ -391,6 +411,7 @@ public:
     }
 
 
+
 void find_ids(s_matrix &data,
                 vector<u_int32_t> &indexes,
                  const Entity &item){
@@ -410,28 +431,26 @@ void find_ids(s_matrix &data,
                  const Entity &item){
     string lookup_var, lookup_id;
     std::regex reg_id{cond.find("name")->second};
+    std::regex reg_var{item.name};
     for (size_t c = 0; c < data.at(0).size(); c++){
         lookup_id = data.at(std::stoi(cond.find("row")->second)).at(c);
         lookup_var =data.at(item.row).at(c);
-        if(std::regex_match ( lookup_id, reg_id) && 
-            lookup_var.find(item.name) != string::npos)
+        if(std::regex_match(lookup_id, reg_id) && 
+            std::regex_match(lookup_var, reg_var))
             indexes.push_back(c);
         }
     }
 
 
-string get_substring(std::string delimiter, std::string extention, std::string s)
-{
+string get_substring(std::string delimiter, std::string extention, std::string s){
     std::string token;
     size_t pos = 0;
-    while ((pos = s.find(delimiter)) != std::string::npos)
-    {
+    while ((pos = s.find(delimiter)) != std::string::npos){
         token = s.substr(0, pos);
         s.erase(0, pos + delimiter.length());
     }
     pos = 0;
-    while ((pos = s.find(extention)) != std::string::npos)
-    {
+    while ((pos = s.find(extention)) != std::string::npos){
         token = s.substr(0, pos);
         s.erase(pos, token.length() + delimiter.length());
     }
@@ -439,14 +458,6 @@ string get_substring(std::string delimiter, std::string extention, std::string s
 }
 
 };
-
-
-
-
-
-
-
-
 
 
 

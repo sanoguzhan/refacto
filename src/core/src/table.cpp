@@ -1,9 +1,12 @@
 #include "dtables.hpp"
-
+#include"table.hpp"
 using namespace table;
 
 typedef std::map<std::string, std::vector<std::pair<std::string, std::vector<string>>>>::iterator map_iterator;
 typedef std::vector<std::pair<string, std::vector<string>>> pair_vector;
+
+
+static string DELIMETER = ";";
 
 
 bool Table::save(string path){
@@ -12,35 +15,44 @@ bool Table::save(string path){
     csv_file.open(path);
     size_t i = 0, loc = 0;
     size_t size{get_size()};
-    bool header = true,id_col = true;
+    bool id_col = true;
 
+    std::stringstream ss;
+    //write headers
     csv_file << "id;";
+    for (; i < data.begin()->second.size() - 1; i++)
+                ss << data.begin()->second.at(i).first << ";";
+    ss << data.begin()->second.at(i).first << "\n";
+
     for (const auto &c : data){
-        if (header){
-            for (; i < c.second.size() - 1; i++){
-                csv_file << c.second.at(i).first << ";";
+        if(c.second.size() <= 1){
+            for (; loc < size; loc++, i = 0){
+                try{ss << c.first << DELIMETER << c.second.at(i).second.at(loc) << "\n";}
+                catch(const std::out_of_range){ss << "\n";}
             }
-            csv_file << c.second.at(i).first << std::endl;
-            header = false;
-        }
-        for (; loc < size; loc++, i = 0){
-            if(c.second.size() <= 1){
-                csv_file << c.first << ";" << c.second.at(i).second.at(loc) << std::endl;
-            }else{
-            for (i = 0; i < c.second.size() - 1; i++){
-                if (id_col)
-                    csv_file << c.first << ";" << c.second.at(i).second.at(loc) << ";";
-                else
-                    csv_file << c.second.at(i).second.at(loc) << ";";
+        }else{
+            for (; loc < size; loc++, i = 0){
+                for (i = 0; i < c.second.size() - 1; i++){
+                    if (id_col){
+                        try{ss << c.first << DELIMETER << c.second.at(i).second.at(loc) << DELIMETER;}
+                        catch(const std::out_of_range){ss << DELIMETER;}
+                    }
+                    else{
+                        try{ss << c.second.at(i).second.at(loc) << DELIMETER;}
+                        catch(const std::out_of_range){ss << DELIMETER;}
+                    }
                 id_col = false;
-            }
+                }
             id_col = true;
-            csv_file << c.second.at(i).second.at(loc) << std::endl;
+            try{ss << c.second.at(i).second.at(loc) << "\n";}
+            catch(const std::out_of_range){ss <<"\n";} 
             }
         }
         loc = 0;
     }
+    csv_file << ss.str();
     csv_file.close();
+    ss.str(std::string());
     return true;
 }
 
