@@ -3,7 +3,8 @@
 
 static string DELIMETER = ";";
 
-vector<string> listdir(const string& pattern){
+vector<string> listdir(string pattern){
+    pattern += "*.xml";
     glob_t glob_result;
     glob(pattern.c_str(),GLOB_TILDE,NULL,&glob_result);
     vector<string> files;

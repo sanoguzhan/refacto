@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-O2")
 add_compile_definitions(LOG)
 
 add_compile_options("-Wno-error=deprecated-declarations")
-project(test_csvparser)
+project(test_dtables)
 enable_testing()
 
 
@@ -33,14 +33,14 @@ function(build_tests target_name target_source)
 endif()
 endfunction()
 
-# build_tests(test_dtables test_dtables.cpp)
-# build_tests(test_csv_cases test_csv_cases.cpp)
+build_tests(test_dtables test_dtables.cpp)
+build_tests(test_csv_cases test_csv_cases.cpp)
 
-# build_tests(test_csvparser test_csvparser.cpp)
-build_tests(test_csvparser test_customparser.cpp)
+build_tests(test_csvparser test_csvparser.cpp)
+build_tests(test_customparser test_customparser.cpp)
 
-# build_tests(test_table test_table.cpp)
-# build_tests(test_controller test_controller.cpp)
-# build_tests(test_xmlparser test_xmlparser.cpp)
-# build_tests(test_cod test_cod.cpp)
+build_tests(test_table test_table.cpp)
+build_tests(test_controller test_controller.cpp)
+build_tests(test_xmlparser test_xmlparser.cpp)
+build_tests(test_cod test_cod.cpp)
 

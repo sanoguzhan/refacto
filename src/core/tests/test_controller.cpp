@@ -8,7 +8,7 @@ class ControllerTest : public TestTimer
 
 TEST(Controller, TestConstructor)
 {
-    dict kwargs ={{"csvparser",{{"path", "tests/test_data/csv/input/min200611.csv"}, {"delim", ";"}, {"skip","0"}}}};
+    dict kwargs ={{"csvparser",{{"path", "tests/test_data/csv/input/test_id_input/min200611.csv"}, {"delim", ";"}, {"skip","0"}}}};
     CSVParserWrapper c(kwargs);
      Loc pac{
         .name = "Pac",

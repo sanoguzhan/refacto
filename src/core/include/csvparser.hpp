@@ -26,11 +26,7 @@
 #include "table.hpp"
 #include "parser.hpp"
 
-#if _WIN32 || _WIN64
-#define NAV "\"
-#else
-#define NAV "/"
-#endif
+
 using namespace std;
 using namespace aria;
 using namespace table;
@@ -77,7 +73,7 @@ u_vector row_search(const std::vector<std::vector<string>> &,
  *      Opens file
  *      Search given data
  */
-class CSVParser
+class  [[deprecated("Csvparser will be removed, use CustomParser")]]CSVParser
 {
 private:
     string file_path;

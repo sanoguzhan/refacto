@@ -11,11 +11,13 @@
 #ifndef __TABLE_HPP
 #define __TABLE_HPP
 
-#if _WIN32 || _WIN64
-    #define NAV "\"
-#else
-    #define NAV "/"
-#endif
+// #ifndef _WIN32 || _WIN64
+//     #define NAV "\"
+// #else
+//     #define NAV "/"
+// #endif
+
+#define NAV "/"
 
 #include<iostream>
 #include<string>

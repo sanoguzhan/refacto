@@ -14,7 +14,7 @@ class CSVParserTest : public TestTimer
 TEST(CSVParserCases, PlantName1)
 {
 
-    CSVParser p(TEST_CSV_INPUT_DIR + "min200611.csv", 0);
+    CSVParser p(TEST_CSV_INPUT_DIR + "test_id_input/min200611.csv", 0);
     Table table;
     auto date{p("column", 0, 1, -1)};
     auto time{p("column", 1, 1, -1)};
@@ -323,9 +323,9 @@ TEST(CSVParserCases, Maulevrier_Inverter)
     CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv", ",", 2);
     Table table;
 
-    // p.erase_data("row", 1, 5);
-    // p.erase_data("row", 2, 3);
-    // p.erase_diverge_row();
+    p.erase_data("row", 1, 5);
+    p.erase_data("row", 2, 3);
+    p.erase_diverge_row();
     p.to_csv(TEST_CSV_OUTPUT_DIR + "test.csv");
     auto datetime{p("column", 0, 2, -1)};
 

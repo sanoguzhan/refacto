@@ -78,7 +78,7 @@ TEST(DtableTests, InsertSeries)
 {
     Tables table = Tables("tests/test_data/inverter_metrics.yaml");
 
-    CSVParser p("tests/test_data/csv/input/2018-07-05.csv", 3);
+    CSVParser p("tests/test_data/csv/input/test_more_input/2018-07-05.csv", 3);
 
     Loc targets{
         .name = "2001",
