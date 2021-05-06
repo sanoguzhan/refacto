@@ -9,7 +9,7 @@ RUN apt-get -qq update; \
         llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
          swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\
         autoconf automake dpkg-dev file git make patch python3 python3-pip\
-        libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev \
+        libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev libboost-all-dev\
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5; \
     rm -rf /var/lib/apt/lists/*
 

@@ -5,8 +5,7 @@ add_compile_options("-std=gnu++17")
 add_compile_options("-fmax-errors=10")
 set(CMAKE_CXX_FLAGS "-O2")
 add_compile_definitions(LOG)
-
-add_compile_options("-Wno-error=deprecated-declarations")
+add_compile_options("-Wno-deprecated-declarations")
 project(test_dtables)
 enable_testing()
 

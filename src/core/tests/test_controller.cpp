@@ -20,7 +20,7 @@ TEST(Controller, TestConstructor)
         .row = 0};
     c.from_csv0("row", pac, 1);
     c.from_csv0("row", pdc, 1);
-    c.to_csv("test.csv");
+    // c.to_csv("test.csv");
     ASSERT_EQ(c.csvparser->file_name, "min200611");
 }
 
@@ -65,7 +65,7 @@ TEST(XMLParserController, TestInterfaceController){
   
     parser("tests/test_data/xml/*.xml", "WebBox");
 
-    parser.to_csv("tests/test_data/xml/");
+    // parser.to_csv("tests/test_data/xml/");
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter_mppt.csv"));
   

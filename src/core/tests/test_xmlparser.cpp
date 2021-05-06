@@ -56,7 +56,7 @@ TEST(XMLParser, IncludeDir){
   
     parser("tests/test_data/xml/", "WebBox");
 
-    parser.to_csv("tests/test_data/xml/");
+    // parser.to_csv("tests/test_data/xml/");
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter_mppt.csv"));
 

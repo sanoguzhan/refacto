@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O2 -fPIC -funroll-loops")
 add_compile_options("-fmax-errors=10")
 # add_compile_definitions(LOG)
-add_compile_options("-Wno-error=deprecated-declarations")
+add_compile_options("-Wno-deprecated-declarations")
 link_libraries(stdc++fs)
 
 project(refacto VERSION 0.0.1 LANGUAGES CXX)

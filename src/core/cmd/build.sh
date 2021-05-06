@@ -10,7 +10,7 @@ mkdir -p build
 cd build
 rm -rf *
 conan install $CODE_DIR
-cmake $CODE_DIR
+cmake $CODE_DIR  -Wno-deprecated
 make install
 
 # Compile tests
@@ -18,6 +18,6 @@ mkdir -p $CODE_DIR/tests/build
 cd $CODE_DIR/tests/build
 rm -rf *
 conan install $CODE_DIR
-cmake $CODE_DIR/tests
+cmake $CODE_DIR/tests -Wno-deprecated
 
 popd
