@@ -122,7 +122,7 @@ test_csv3 = CSVParser([
                  }
             ])
 test_csv3("src/core/tests/test_data/csv/" , ";",  0)
-# test_csv3.to_csv(".")
+test_csv3.to_csv(".")
 
 
 # #XMLParser
@@ -162,7 +162,7 @@ xml_parser("src/core/tests/test_data/xml/", "WebBox");
 
 # # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
 # # Uncomment to run
-xml_parser.to_csv(".");
+# xml_parser.to_csv(".");
 
 
 # # Decompressdir, Compressdir, Cleandir examples

@@ -66,7 +66,6 @@ class CustomParserWrapper{
         parser.to_csv(dir);
     }
 
-
     void operator()(string dir_path, string delimeter, int skip){
             parser(dir_path, delimeter, skip);
     }
@@ -153,10 +152,6 @@ class CustomParserWrapper{
                             std::stoi(vals.at("value_begin")));
     }
 
-
-
-    void init_entity();
-    void init_vector();
 
     void check_keys_pyx(map<string, string> &vals){
         if(not_exists(vals, "key") ||
