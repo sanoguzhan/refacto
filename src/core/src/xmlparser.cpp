@@ -1,8 +1,10 @@
 #include"xmlparser.hpp"
 
 
+static string DELIMETER = ";";
 
-vector<string> listdir(const string& pattern){
+vector<string> listdir(string pattern){
+    pattern += "*.xml";
     glob_t glob_result;
     glob(pattern.c_str(),GLOB_TILDE,NULL,&glob_result);
     vector<string> files;
@@ -57,6 +59,8 @@ bool XMLParser::to_csv(string dir){
     bool header = true;
     max_key_sizes(keys, key_sizes);
 
+    std::stringstream ss;
+
     for(auto& key:keys){
         level_sizes.insert(std::pair<std::string, u_int32_t>(key.first, 
         std::max_element(key.second.begin(),key.second.end(),[] (const IDMap& a,const IDMap& b)->bool{ 
@@ -66,20 +70,22 @@ bool XMLParser::to_csv(string dir){
 
         std::ofstream ofs(dir + "/" + p.first + ".csv", std::ofstream::out);
             for(i = 0;i < p.second.size()-1; ++i){
-                ofs << p.second.at(i).key << ";";
+                ss << p.second.at(i).key << DELIMETER;
             }
-            ofs << p.second.at(i).key << std::endl;
+            ss << p.second.at(i).key << "\n";
         for(row=0;row < level_sizes.at(p.first); row++ ){
             for(col=0;col < p.second.size()-1; col++){
                 if( row  < key_sizes.at(p.second.at(col).name + p.second.at(col).key)){
-                    ofs << p.second.at(col).values.at(row) << ";";
-                }else{ofs << ";";}
+                    ss << p.second.at(col).values.at(row) << DELIMETER;
+                }else{ss << DELIMETER;}
             }
             if(row  < key_sizes.at(p.second.at(col).name + p.second.at(col).key)){
-                ofs << p.second.at(col).values.at(row)  << std::endl;
-            }else{ofs << std::endl;}
+                ss << p.second.at(col).values.at(row) << "\n";
+            }else{ss <<"\n";}
         }
+        ofs << ss.str();
         ofs.close();
+        ss.str(std::string());
     }
     return true;
 }

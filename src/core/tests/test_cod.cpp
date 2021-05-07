@@ -17,11 +17,9 @@ TEST(CompressOrDecompress, TestZIP)
   CLEANFILES()("tests/test_data/gz/", "*.csv");
   ASSERT_EQ(find_ext("tests/test_data/gz/"), "gz");
 
-
-
-  DECOMPRESSDIR()("tests/test_data/zips/");
-  CLEANFILES()("tests/test_data/zips/", "Mean*");
-  CLEANFILES()("tests/test_data/zips/", "Log*");
+//   DECOMPRESSDIR()("tests/test_data/zips/");
+//   CLEANFILES()("tests/test_data/zips/", "Mean*");
+//   CLEANFILES()("tests/test_data/zips/", "Log*");
 
 }
 

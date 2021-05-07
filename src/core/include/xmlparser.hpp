@@ -49,7 +49,7 @@ static bool CONTAINS = false;
  *  
  * @return vector<string> as vector of matched files
  */
-vector<string> listdir(const string&);
+vector<string> listdir(string);
 
 /**
  * @brief XMLParser Class for XML file search and value transform

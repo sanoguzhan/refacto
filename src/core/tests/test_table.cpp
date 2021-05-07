@@ -18,7 +18,7 @@ TEST(TableTests, TableConstructor)
 */
     Table table = Table();
 
-    CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 3);
+    CSVParser p(TEST_CSV_INPUT_DIR + "test_more_input/2018-07-05.csv", 3);
 
     Loc targets{
         .name = "2001",
@@ -67,7 +67,7 @@ TEST(TableTests, TableSave)
 
     Table table = Table();
 
-    CSVParser p(TEST_CSV_INPUT_DIR + "2018-07-05.csv", 3);
+    CSVParser p(TEST_CSV_INPUT_DIR + "test_more_input/2018-07-05.csv", 3);
 
     Loc targets{
         .name = "2001",
@@ -99,7 +99,6 @@ TEST(TableTests, TableSave)
     table.insert(cols);
     table.insert(cols2);
     table.insert("date", p.file_name);
-    table.save("test.csv");
     for (const auto &p : table.values())
     {
         ASSERT_EQ(p.second.size(), 3);
@@ -115,7 +114,7 @@ TEST(TableTests, TableSaveRowWise)
     - Missing values should be empty in CSV
 */
     Table table = Table();
-    CSVParser p(TEST_CSV_INPUT_DIR + "min200611.csv", 0);
+    CSVParser p(TEST_CSV_INPUT_DIR + "test_id_input/min200611.csv", 0);
     Loc pac{
         .name = "Pac",
         .orient = "row",

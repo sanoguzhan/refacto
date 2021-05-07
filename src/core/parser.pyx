@@ -10,10 +10,46 @@ from cython.operator cimport dereference as deref
 
 cdef bint boolean_variable = True
 
+#### CSVParser ####
+cdef extern from "include/controller.hpp":
+     cpdef cppclass CustomParserWrapper:
+         CustomParserWrapper(vector[map[string, string]], map[string,map[string,string]]) nogil except+;
+         void save(string) nogil except+;
+         void operator()(string, string, int) nogil except+;
 
 
+cdef class CSVParser:
+    """ Python Interface for CustomParserWrapper
+        Overload operator() accepts dict"""
+    cdef CustomParserWrapper* thisptr
+
+    
+    def __cinit__(self, list test):
+        cdef vector[map[string, string]] entity
+        cdef map[string, map[string, string]] condition
+        for i in test:
+            if i["type"] == "series" and i.get("condition", False):
+                temp = i["condition"]
+                condition_name = i["key"] + i["name"]
+                i["condition"] = condition_name
+                entity.push_back(i)
+                condition[condition_name] = temp
+            else:
+                entity.push_back(i) 
+        self.thisptr = new  CustomParserWrapper(entity, condition)
+
+    def __call__(self,str dir, str delimeter, int skip):
+        return self.thisptr[0](ops._string(dir), ops._string(delimeter), skip)
 
 
+    def to_csv(self, string dir):
+        return self.thisptr.save(dir)
+
+    def __dealloc__(self):
+        if self.thisptr != NULL:
+            del self.thisptr
+    
+#### XMLParser ####
 cdef extern from "include/controller.hpp":
     cdef cppclass XMLParserController:
         XMLParserController(vector[map[string,string]]) nogil except +;
@@ -37,110 +73,10 @@ cdef class XMLParser:
         if self.thisptr != NULL:
             del self.thisptr
   
-# Only extend the ones we use
-cdef extern from "include/controller.hpp":
-    cdef cppclass CSVParserWrapper:
-        string path;
-        CSVParserWrapper(map[string,map[string, string]]);
-        void init_csvparser(map[string,string]) nogil except +;
-        void from_csv_static(string, string) nogil except +; #Single value
-        void from_csv(string, Loc) nogil except +; #Single value
-        void from_csv0(string, Loc, int) nogil except +; #Series
-        void from_csv1(string, int, Loc, Loc) nogil except +; #Series
-        void from_csv2(string, int, Loc, Loc, Loc) nogil except +; #Series
-        void from_csv_vec(string, string, int, int, int) nogil except +; # Vector value
-        void to_csv(string) nogil except +;
-
-cdef class CSVParser:
-    """ Python Interface for CSVParserWrapper
-        Overload operator() accepts dict"""
-    cdef CSVParserWrapper* thisptr
-    cdef dict kwargs
-    cdef str parser_type 
-
-    def __cinit__(self, map[string, map[string,string]] kwargs):
-        self.kwargs = kwargs
-        self.parser_type = str(*self.kwargs.keys())
-
-        self.thisptr =  new CSVParserWrapper(kwargs)
-
-    def __call__(self,dict vars):
-        cdef _Location target
-
-        if self.parser_type != "csvparser":
-            raise KeyError("wrong Key, Key must be csvparser")
-
-        if vars.get("series"):
-            for key in vars.get("series"):
-                self.csv_series_func(vars.get("series").get(key))
-        
-        if vars.get("vector_value"):
-            for key in vars.get("vector_value"):
-                self.thisptr.from_csv_vec(ops._string(key), 
-                                    vars.get("vector_value").get(key).get("orient"),
-                                    vars.get("vector_value").get(key).get("index"),
-                                    vars.get("vector_value").get(key).get("from"),
-                                    vars.get("vector_value").get(key).get("to"))
-        if vars.get("single_value"):
-            for key in vars.get("single_value"):
-                target = self.init_loc(vars.get("single_value").get(key))
-                self.thisptr.from_csv(ops._string(key),
-                    deref(target.thisptr))
-
-        if vars.get("static_value"):
-            for key in vars.get("static_value"):
-                self.thisptr.from_csv_static(ops._string(key), 
-                   ops._string(vars.get("static_value").get(key))) 
- 
-    cdef csv_series_func(self, dict args):
-        """ Polymorphic methods of CSVParser each given with condition"""
-        cdef:
-            int cond_len
-            _Location target, loc0,loc1
-        cond_len = len(args.get("cond"))
-        if cond_len == 0:
-            target = self.init_loc(args)
-            self.thisptr.from_csv0(args.get("orient"),
-                                deref(target.thisptr), 
-                                args.get("index",0))
-
-        elif cond_len == 1:
-            target = self.init_loc(args)
-            loc0 = self.init_loc(args.get("cond")[0])
-            self.thisptr.from_csv1(args.get("orient"),
-                                args.get("index",0),
-                                deref(target.thisptr), 
-                                deref(loc0.thisptr))
-
-        elif cond_len == 2:
-           target = self.init_loc(args)
-           loc0 = self.init_loc(args.get("cond")[0])
-           loc1 = self.init_loc(args.get("cond")[1])
-           self.thisptr.from_csv2(args.get("orient"),
-                               args.get("index",0),
-                               deref(target.thisptr),
-                               deref(loc0.thisptr),
-                               deref(loc1.thisptr))
 
 
-    cdef init_loc(self, dict args):
-        return _Location(args.get("name"),
-                        args.get("orient"),
-                        args.get("row", 0),
-                        args.get("column", 0))
 
-    cpdef again(self,  map[string,string] kwargs):
-        return self.thisptr.init_csvparser(kwargs) 
-
-
-    cpdef to_csv(self, str path):
-        self.thisptr.to_csv(ops._string(path))
-
-
-    def __dealloc__(self):
-        if self.thisptr != NULL:
-            del self.thisptr
-
+#### Decompressdir ####
 cdef extern from "include/cod.hpp":
     cdef cppclass DECOMPRESSDIR:
         DECOMPRESSDIR(string) nogil except +;
@@ -167,7 +103,7 @@ cdef class Decompressdir:
         if self.thisptr != NULL:
             del self.thisptr
 
-
+#### Compressdir ####
 cdef extern from "include/cod.hpp":
     cdef cppclass COMPRESSDIR:
         void operator()(string,string) nogil except +;
@@ -189,7 +125,7 @@ cdef class Compressdir:
         if self.thisptr != NULL:
             del self.thisptr
 
-
+#### Cleandir ####
 cdef extern from "include/cod.hpp":
     cdef cppclass CLEANFILES:
         void operator()(string,string) nogil except +;

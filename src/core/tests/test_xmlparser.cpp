@@ -54,9 +54,9 @@ TEST(XMLParser, IncludeDir){
 
     XMLParser parser(inv_pac,inv_id, mppt_amp, mppt_etotal, mppt_vol);
   
-    parser("tests/test_data/xml/*.xml", "WebBox");
+    parser("tests/test_data/xml/", "WebBox");
 
-    parser.to_csv("tests/test_data/xml/");
+    // parser.to_csv("tests/test_data/xml/");
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter_mppt.csv"));
 
@@ -68,7 +68,7 @@ TEST(XMLParser, IncludeDir){
 TEST(XMLParser, TestGlobVector){
     /* Test for file search with pattern
     */
-    auto files{listdir("tests/test_data/xml/*.xml")};
+    auto files{listdir("tests/test_data/xml/")};
     EXPECT_EQ(3, files.size());
   
 }

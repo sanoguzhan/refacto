@@ -26,19 +26,12 @@
 #include "table.hpp"
 #include "parser.hpp"
 
-#if _WIN32 || _WIN64
-#define NAV "\"
-#else
-#define NAV "/"
-#endif
 
 using namespace std;
 using namespace aria;
 using namespace table;
 // namespace fs = std::filesystem;
-
 using u_vector = const std::vector<u_int32_t>;
-
 /**
  * @brief Loc struct for paramaterization of variables
  * 
@@ -58,7 +51,6 @@ struct Loc
     int row;
     int column;
 };
-
 /**
  * @brief Search Methods (Internal)
  * 
@@ -75,14 +67,13 @@ u_vector row_search(const std::vector<std::vector<string>> &,
                     const Loc &, const Loc &);
 u_vector row_search(const std::vector<std::vector<string>> &,
                     const Loc &);
-
 /**
  * @brief CSVParser Class for CSV Data Search
  *  CSVParser Class
  *      Opens file
  *      Search given data
  */
-class CSVParser
+class  [[deprecated("Csvparser will be removed, use CustomParser")]]CSVParser
 {
 private:
     string file_path;
@@ -90,7 +81,6 @@ private:
     int skip_rows = 0;
     csv::CsvParser parser;
     std::string delim = ";";
-
 public:
     /**
      * @brief resulting data of the parsing composed of 2D array with 1th axis as row and 2nd as column
@@ -102,15 +92,10 @@ public:
      * 
      */
     std::string file_name;
-
     CSVParser(string path, string delim, int skip_rows);
-
     CSVParser(string path, string delim);
-
     CSVParser(string path, int skip_rows);
-
     CSVParser(string path);
-
     /**
      * @brief Get a Serie of data
      * 
@@ -126,7 +111,6 @@ public:
                   const Loc &target,
                   const Loc &cond1,
                   const Loc &cond2);
-
     /**
      * @brief Get a Serie of data
      * 
@@ -140,7 +124,6 @@ public:
                   u_int32_t idx,
                   const Loc &target,
                   const Loc &cond1);
-
     /**
      * @brief Get a Serie of data
      * 
@@ -152,7 +135,6 @@ public:
     Series operator()(string orient,
                   const Loc &target,
                   u_int32_t idx = 0);
-
     /**
      * @brief Get a vector of range data
      * 
@@ -166,7 +148,6 @@ public:
                                int32_t idx,
                                int32_t from,
                                int32_t to);
-
     /**
      * @brief Get value of at the precised location (row + column)
      * 
@@ -177,7 +158,6 @@ public:
     {
         return data.at(target.row).at(target.column);
     }
-
     /**
      * @brief Erase multiple row or columns to clean irrelevant data [first,last)
      * 
@@ -186,7 +166,6 @@ public:
      * @param end  last index to erase (not include)
      */
     void erase_data(string orient, int32_t start, int32_t end);
-
     /**
      * @brief Erase multiple rows or columns to clean pattern
      * 
@@ -194,13 +173,11 @@ public:
      * @param pattern pattern to search and erase
      */
     void erase_pattern(string orient, string pattern);
-
     /**
      * @brief Erase row with not the same number column as the header
      * 
      */
     void erase_diverge_row();
-
     /**
      * @brief Save the data as it is in a csv file
      * 
@@ -209,7 +186,6 @@ public:
      * @return false 
      */
     bool to_csv(string path);
-
 private:
     /**
      * @brief Check if the input csv file exist
@@ -217,7 +193,6 @@ private:
      * @return string 
      */
     string validate_f(string);
-
     /**
      * @brief read a csv file and parse it to data attribute format
      * 
@@ -225,7 +200,6 @@ private:
      * @return std::vector<std::vector<string>> 
      */
     std::vector<std::vector<string>> read(int skip);
-
     /**
      * @brief Get the substring object
      * 
@@ -236,5 +210,4 @@ private:
      */
     std::string get_substring(std::string delimiter, std::string extention, std::string s);
 };
-
 #endif

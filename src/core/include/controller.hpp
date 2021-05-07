@@ -21,11 +21,156 @@
 #include"csvparser.hpp"
 #include"table.hpp"
 #include"xmlparser.hpp"
-
+#include"customparser.hpp"
 using namespace std;
 
 using dict =  map<string, map<string,string>>;
 using csv_args = map<string,vector<map<string,map<string,string>>>>;
+
+
+
+class CustomParserWrapper{
+    vector<map<string, string>> kwargs;
+    vector<Entity> vargs;
+    CustomParser parser;
+    public:
+    CustomParserWrapper(vector<map<string, string>> kwargs ,map<string,map<string, string>> condition)
+    :  parser{validate(kwargs, condition)}{}   
+
+
+   vector<Entity> validate(vector<map<string, string>> values,
+                 map<string, map<string, string>> condition){
+        vector<Entity> entity;
+
+        for(auto i:values){
+            map<string, string>::iterator condition_name {i.find("condition")};
+            if(i.at("type") == "series"){
+                if(condition_name == i.end())
+                    init_series_pyx(i, entity);
+                else    
+                    init_series_pyx(i, entity, condition.at(i.at("key") + i.at("name")));
+            }else if(i.at("type") == "ids"){
+                    init_series_ids_pyx(i, entity);
+            }else if(i.at("type") == "vector"){
+                    init_vector_ids_pyx(i, entity);
+            }else if(i.at("type") == "entity"){
+                    init_series_entity_pyx(i, entity);
+            }else{
+                throw std::runtime_error("Keys not found: [series, ids, vector]");
+            }
+        }
+        return entity;
+    }
+
+    void save(string dir){
+        parser.to_csv(dir);
+    }
+
+    void operator()(string dir_path, string delimeter, int skip){
+            parser(dir_path, delimeter, skip);
+    }
+
+    void init_series_entity_pyx(map<string, string>& vals,
+                            vector<Entity>& entity){
+                            
+            entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("type"),
+                            vals.at("keyword"));    
+    }
+
+    void init_vector_ids_pyx(map<string, string>& vals,
+                            vector<Entity>& entity){
+
+            entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("orient"),
+                            vals.at("type"),
+                            "vector",
+                            std::stoi(vals.at("column")),
+                            std::stoi(vals.at("from")),
+                            std::stoi(vals.at("to")));
+    }   
+
+    void init_series_ids_pyx(map<string, string>& vals,
+                            vector<Entity>& entity){
+        if(vals.at("keyword") == "file_name"){
+            entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("type"),
+                            vals.at("keyword"));
+        }else if(vals.at("keyword") =="multi"){
+            entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("orient"),
+                            vals.at("type"),
+                            std::stoi(vals.at("row")),
+                            std::stoi(vals.at("column")),
+                            std::stoi(vals.at("value_begin")),
+                            vals.at("keyword"));
+        }else if(vals.at("keyword") == "single"){
+            entity.emplace_back(vals.at("key"),
+                        vals.at("name"),
+                        vals.at("orient"),
+                        vals.at("type"),
+                        std::stoi(vals.at("row")),
+                        std::stoi(vals.at("column")),
+                        std::stoi(vals.at("value_begin")),
+                        vals.at("keyword"));
+        }else{
+            throw std::runtime_error("Wrong configuration");
+        }
+    }
+
+    void init_series_pyx(map<string, string>& vals, 
+                    vector<Entity>& entity,
+                    map<string, string>& condition){
+        vector<map<string,string>> cond;
+        cond.push_back({{"name",condition.at("name")},
+                        {"orient", condition.at("orient")},
+                        {"row", condition.at("row")}});
+        check_keys_pyx(vals);
+        entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("orient"),
+                            vals.at("type"),
+                            std::stoi(vals.at("row")),
+                            std::stoi(vals.at("value_begin")));
+
+        entity.back().conditions =cond;
+        }
+
+         
+    void init_series_pyx(map<string, string>& vals, vector<Entity>& entity){
+       
+        check_keys_pyx(vals);
+        entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("orient"),
+                            vals.at("type"),
+                            std::stoi(vals.at("row")),
+                            std::stoi(vals.at("value_begin")));
+    }
+
+
+    void check_keys_pyx(map<string, string> &vals){
+        if(not_exists(vals, "key") ||
+            not_exists(vals, "name") ||
+            not_exists(vals, "orient") ||
+            not_exists(vals, "type") ||
+            not_exists(vals, "row") ||
+            not_exists(vals, "value_begin"))
+                throw std::runtime_error("Series keys are not matched!");
+    }
+
+
+    bool not_exists(map<string, string>& vals, string key){
+        std::map<string, string>::iterator it{vals.find(key)};
+        if(it == vals.end())
+            return true;
+        return false;
+    }
+};
 
 class CSVParserWrapper{
     /**
@@ -106,8 +251,6 @@ inline vector<IDMap> clean_values(vector<map<string, string>> kwargs){
      }
 
 
-// Reason for this class 
-//  Cython is buggy when it comes to overloaded functions and memory management
 //  XMLParser expects initilizer list however it is not possible with Cython
 //  That is why we take all parameters of IDMap as vector of maps and construct in cpp
 //  if we do other way around, it makes buggy code to create this vector of IDMap 

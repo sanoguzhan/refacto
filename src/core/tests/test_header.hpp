@@ -13,6 +13,7 @@
 #include "gtest/gtest.h"
 #include "refacto/dtables.hpp"
 #include "refacto/csvparser.hpp"
+#include "refacto/customparser.hpp"
 #include"refacto/controller.hpp"
 #include"refacto/xmlparser.hpp"
 #include"refacto/cod.hpp"
@@ -71,7 +72,7 @@ const static string TEST_CSV_INPUT_DIR = "tests/test_data/csv/input/";
  * @brief Constant directory for outputs of csv tests
  * 
  */
-const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/output/";
+const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/expected/";
 /**
  * @brief Constant directory for expected results of csv tests
  * 
