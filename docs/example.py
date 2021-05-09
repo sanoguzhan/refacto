@@ -2,8 +2,8 @@ from parsing.engine import CSVParser
 from parsing.engine import XMLParser
 from parsing.engine import Decompressdir, Cleandir, Compressdir
 
+""" """
 
-#################### CSVParser Examples ####################
 test_csv1 = CSVParser([
                 {"key": "inverter",
                     "name":"Pac",
@@ -161,6 +161,7 @@ xml_parser = XMLParser(kwargs)
 xml_parser("src/core/tests/test_data/xml/", "WebBox");
 
 # # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
+
 # # Uncomment to run
 # xml_parser.to_csv(".");
 
