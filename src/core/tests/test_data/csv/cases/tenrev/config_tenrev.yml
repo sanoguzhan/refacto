@@ -1,0 +1,49 @@
+---
+name: "tenrev"
+extractions:
+    Inverter:
+        # Optional
+        output: "/etc/password"
+        series:
+            pac:
+                name: "Pac"
+                orient: "row"
+                row: 0
+                # Optional
+                cond1:
+                    name: "blabla"
+                    orient: "row"
+                    row: 1
+        raw_data:
+            date:
+                orient: "column"
+                axis_orient: 0
+                other_axis_start: 2
+                # -1 means end of file
+                other_axis_end: -1
+            time:
+                orient: "column"
+                axis_orient: 1
+                other_axis_start: 2
+                # -1 means end of file
+                other_axis_end: -1
+structure:
+    inverter:
+        type: "filename"
+        pattern: "(?P<NAME>.*?)_treated_data"
+        src: "./tenrev/"
+        child:
+            mppt:
+                type: "data"
+                orient: "column"
+                oth_axis_nth: 0
+                pattern: "(?P<NAME>.*?)_mppt"
+                child:
+                    string:
+                        type: "data"
+                        orient: "column"
+                        oth_axis_nth: 0
+                        # pattern: "(?P<PARENT>\\w+)(?P<NAME>\\d+)_string"
+                        pattern: "(\\w+\\d+)_string"
+                        parent:
+                            pattern: "(?P<NAME>\\w+)\\d+_string"
