@@ -1,0 +1,27 @@
+include:
+  project: 'exposed/template_ci'
+  file: '/python-package.yml'
+
+stages:
+  - create-staging
+  - make-tag
+  - build-and-deploy-docker-image
+  - build-and-deploy-package
+  - release
+  - merge-production
+
+build-docker:
+  extends: .build-and-deploy-docker-image
+  stage: build-and-deploy-docker-image
+  variables:
+    PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
+    PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
+
+build-package:
+  extends: .build-and-deploy-package
+  stage: build-and-deploy-package
+  variables:
+    BUILD_CMD: CFLAGS="-Wno-everything" python3 src/setup.py install_library build_ext sdist bdist_wheel
+
+
+

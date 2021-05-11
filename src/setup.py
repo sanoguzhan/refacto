@@ -17,7 +17,7 @@ setuptools.dist.Distribution().fetch_build_eggs(['Cython'])
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize 
 
-__version__ = '0.0.1'
+__version__ = os.getenv('LIB_VERSION')
 
 log = logging.getLogger("Refacto")
 
@@ -110,7 +110,7 @@ class InstallCppLib(distutils.cmd.Command):
 
 
 setup(
-  name = "parsing",
+  name = "qparsing-core",
   version = __version__,
   author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
