@@ -110,7 +110,7 @@ wget -nv -O "${DOWNLOAD_FILE}"     "${MIRROR_URL}/${DOWNLOAD}"
 wget -nv -O "${DOWNLOAD_FILE}.sig" "${MIRROR_URL}/${DOWNLOAD}.sig"
 
 # Verify
-gpg --batch --verify "${DOWNLOAD_FILE}.sig" "${DOWNLOAD_FILE}"
+#gpg --batch --verify "${DOWNLOAD_FILE}.sig" "${DOWNLOAD_FILE}"
 
 # Install
 echo "Installing ${TARGET}"
