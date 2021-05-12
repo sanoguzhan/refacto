@@ -12,12 +12,14 @@ from distutils.command.build_clib import build_clib
 from logging import log
 from pathlib import Path
 from utils import custom_logger
-
+import pathlib
 setuptools.dist.Distribution().fetch_build_eggs(['Cython'])
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize 
 
-__version__ = os.getenv('LIB_VERSION')
+BASE_DIR = pathlib.Path(__file__).parent
+README = ( BASE_DIR.parent / "README.md").read_text()
+__version__ = '0.0.1'
 
 log = logging.getLogger("Refacto")
 
@@ -110,10 +112,12 @@ class InstallCppLib(distutils.cmd.Command):
 
 
 setup(
-  name = "qparsing-core",
+  name = "qparsing",
   version = __version__,
   author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
+  long_description=README,
+  long_description_content_type="text/markdown",
   packages=setuptools.find_packages(exclude=[ "tests/*"]),
   include_package_data=True,
   ext_modules = cythonize(ext_modules, 
