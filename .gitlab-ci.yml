@@ -3,12 +3,16 @@ include:
   file: '/python-package.yml'
 
 stages:
-  - create-staging
+  - pull-master-into-staging
   - make-tag
   - build-and-deploy-docker-image
   - build-and-deploy-package
   - release
-  - merge-production
+  - pull-prod-into-master
+
+pull-master-into-staging:
+  extends: .pull-master-into-staging-base
+  stage: pull-master-into-staging
 
 build-docker:
   extends: .build-and-deploy-docker-image
@@ -23,5 +27,7 @@ build-package:
   variables:
     BUILD_CMD: CFLAGS="-Wno-everything" python3 src/setup.py install_library build_ext sdist bdist_wheel
 
-
+pull-prod-into-master:
+  extends: .pull-prod-into-master-base
+  stage: pull-prod-into-master
 
