@@ -4,7 +4,7 @@ FROM python:3.9.1
 # Install dependencies
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
-        ca-certificates  pkg-config \
+        ca-certificates  pkg-config cppcheck\
          libsasl2-dev python3-dev libldap2-dev libssl-dev gcc libpq-dev python-dev  python-pip\
         llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
          swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\

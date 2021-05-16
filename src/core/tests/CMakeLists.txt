@@ -16,6 +16,9 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIR})
 link_libraries(stdc++fs)
 
+option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
+message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()

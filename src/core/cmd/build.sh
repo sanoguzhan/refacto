@@ -6,11 +6,15 @@ CODE_DIR="$(realpath $SCRIPT_DIR/..)"
 pushd $CODE_DIR
 
 # Compile project
+export UBSAN_OPTIONS=suppressions=ubsan.supp
 mkdir -p build
+cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 src 2> cppcheck-result.xml
 cd build
 rm -rf *
-conan install $CODE_DIR
-cmake $CODE_DIR  -Wno-deprecated
+
+#  Enable Code Analysis -DENABLE_CODE_ANALYSIS=ON 
+conan install $CODE_DIR 
+cmake $CODE_DIR 
 make install
 
 # Compile tests
@@ -18,6 +22,6 @@ mkdir -p $CODE_DIR/tests/build
 cd $CODE_DIR/tests/build
 rm -rf *
 conan install $CODE_DIR
-cmake $CODE_DIR/tests -Wno-deprecated
+cmake $CODE_DIR/tests -Wno-deprecated 
 
 popd

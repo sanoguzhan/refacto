@@ -175,7 +175,7 @@ void CustomParser::construct_series(Series& series,
                     std::begin(rows),
                     std::end(rows));
             rows.resize(0);
-            id_iterator++;
+            ++id_iterator;
 
             }
             tb->insert(series);
