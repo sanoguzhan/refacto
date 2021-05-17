@@ -9,6 +9,7 @@ stages:
     - build-and-deploy-docker-image
     - build-and-deploy-package
     - release
+    - pull-staging-into-production
     - pull-prod-into-master
 
 pull-master-into-staging:
@@ -28,6 +29,11 @@ build-package:
     variables:
         BUILD_CMD: CFLAGS="-Wno-everything" python3 src/setup.py install_library build_ext sdist bdist_wheel
 
+pull-staging-into-production:
+    extends: .pull-staging-into-production-base
+    stage: pull-staging-into-production
+
 pull-prod-into-master:
     extends: .pull-prod-into-master-base
     stage: pull-prod-into-master
+
