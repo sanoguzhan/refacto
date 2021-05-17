@@ -15,6 +15,41 @@ include(GNUInstallDirs)
 include(CTest)
 
 
+# Code Static Analysis
+option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
+message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+
+if(ENABLE_CODE_ANALYSIS)
+    find_program(cppcheck cppcheck)
+    message(STATUS "cppcheck                   ${cppcheck}")
+    if(NOT (cppcheck MATCHES "NOTFOUND"))
+        # Notes:
+        # - unmatchedSuppression needed since not all source files are
+        #   analyzed simultaneously
+        # - unusedFunction needed since not all source files are
+        #   analyzed simultaneously
+        # - template needed to force "warning" into output string, and
+        #   to make the 'id' available for suppression
+        set(CMAKE_CXX_CPPCHECK "${cppcheck}"
+            "--enable=all"
+            "-i/pugixml.cpp"
+            "--language=c++"
+            "--inconclusive"
+            "--inline-suppr"
+            "--quiet"
+            "--suppress=unmatchedSuppression"
+            "--suppress=unusedFunction"
+            "--template='{file}:{line}: warning: {id} ({severity}): {message}'")
+    endif()
+endif(ENABLE_CODE_ANALYSIS)
+
+#Code dynamic analysis Memory - Debug
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
+#Code dynamic analysis: Enable Undefined Behaviour Sanitizer (UBSan) for GCC/Clang
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
+# set (CMAKE_EXELINKER_FLAGS "${CMAKE_EXELINKER_FLAGS} -fsanitize=undefined")
 
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -45,6 +80,5 @@ file(GLOB HEADERS include/*.hpp)
 install(FILES ${HEADERS} DESTINATION  ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 install(FILES ${CMAKE_BINARY_DIR}/refacto.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 install(EXPORT ${PROJECT_NAME} FILE refacto-config.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME})
-
 
 target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})

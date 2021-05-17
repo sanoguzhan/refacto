@@ -8,8 +8,10 @@ std::vector<string> Tables::columns()
 
     const YAML::Node &columns = file["COLUMNS"];
 
-    for (YAML::const_iterator it = columns.begin(); it != columns.end(); it++)
+    for (YAML::const_iterator it = columns.begin(); it != columns.end(); ++it)
     {
+        
+
         for (auto &kv : *it)
         {
             vec.push_back(kv.first.as<string>());
@@ -38,7 +40,7 @@ void Tables::insert_column()
 {
     const YAML::Node &columns = file["COLUMNS"];
     string column;
-    for (YAML::const_iterator it = columns.begin(); it != columns.end(); it++)
+    for (YAML::const_iterator it = columns.begin(); it != columns.end(); ++it)
     {
         for (auto &kv : *it)
         {
@@ -113,23 +115,25 @@ void Tables::validate()
 
 std::vector<string> Tables::operator[](const string key) const
 {
-    for (const auto &col : data)
-    {
-        if (key == col->name)
-        {
-            return col->row;
-        }
+
+    auto found{std::find_if(data.begin(), data.end(), [&key](const auto& col){
+            return col->name == key;
+        })};
+    if(found != std::end(data)){
+        return (*found)->row;
     }
     throw std::runtime_error("Column not exist");
 }
 
 std::shared_ptr<DataRow> Tables::get_column(const string &name)
 {
-    for (const auto &row : data)
-    {
-        if (row->name == name)
-            return row;
+
+    auto is_name = [name](const auto& row){ return row->name == name; };
+    auto found = std::find_if(std::begin(data), std::end(data), is_name);
+    if(*found != nullptr){
+        return *found;
     }
+
     throw std::runtime_error("Column not exist");
 }
 
@@ -144,9 +148,9 @@ void Tables::save()
     }
     csv_file << data.at(i)->name << std::endl;
     i = 0;
-    size_t counter;
     for (; i < get_size(); i++)
     {
+        size_t counter;
         counter = 0;
         for (const auto &item : data)
         {

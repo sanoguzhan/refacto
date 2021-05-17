@@ -19,7 +19,7 @@ from Cython.Build import cythonize
 
 BASE_DIR = pathlib.Path(__file__).parent
 README = ( BASE_DIR.parent / "README.md").read_text()
-__version__ = '0.0.1'
+__version__ = os.getenv('LIB_VERSION')
 
 log = logging.getLogger("Refacto")
 
