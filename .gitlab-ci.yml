@@ -7,6 +7,7 @@ stages:
     - pull-master-into-staging
     - make-tag
     - build-and-deploy-docker-image
+    - cppcheck
     - build-and-deploy-package
     - release
     - pull-staging-into-production
@@ -23,11 +24,29 @@ build-docker:
         PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
         PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
 
+make-cpcheck:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
+    artifacts:
+        paths:
+            - "cppcheck-result.xml"
+    stage: cppcheck
+    script:
+        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 src 2> cppcheck-result.xml
+    only:
+        - staging
+        - production
+
 build-package:
     extends: .build-and-deploy-package
     stage: build-and-deploy-package
     variables:
         BUILD_CMD: CFLAGS="-Wno-everything" python3 src/setup.py install_library build_ext sdist bdist_wheel
+
+release:
+    extends: .release-base
+    stage: release
+    variables:
+        additional_files: (cppcheck-result.xml)
 
 pull-staging-into-production:
     extends: .pull-staging-into-production-base
