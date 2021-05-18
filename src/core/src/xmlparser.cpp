@@ -56,7 +56,6 @@ bool XMLParser::to_csv(string dir){
     transfrom_map(keys);
 
     size_t i, row = 0, col = 0;
-    bool header = true;
     max_key_sizes(keys, key_sizes);
 
     std::stringstream ss;

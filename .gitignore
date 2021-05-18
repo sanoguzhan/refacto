@@ -74,3 +74,4 @@ foo.csv
 src/core/inverter.csv
 src/core/inverter_mppt.csv
 src/core/test_xml.csv
+.DS_Store

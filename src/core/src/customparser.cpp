@@ -50,8 +50,23 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
     for(auto item:entity_lst){
         if(item.eType== "ids"){
             create_ids(series, item);
-        }
-        else if(item.eType == "series"){
+        }else if(item.eType== "group"){
+            std::regex e (item.name);
+            std::cmatch cm; 
+
+            for (size_t c = 0; c < data.at(0).size(); c++){
+              std::regex_match ( data.at(0).at(c).c_str(), cm, e, std::regex_constants::match_default );
+                if(cm.size() >0 ){
+                if(!id_exist(series, cm[1])){
+                    std::cout << "here" << std::endl;
+                } 
+                std::cout << c << std::endl;
+                std::cout << "[" << cm[1] << "] ";
+                std::cout << "[" << cm[2] << "] ";
+                }
+            }
+
+        }else if(item.eType == "series"){
             from_series(series, item, tb);
         }else if(item.eType == "vector"){
             from_vector(vec_values, item);
@@ -97,7 +112,7 @@ void CustomParser::from_vector(vector<string> &vec_values,
 
 void CustomParser::from_series(Series &series, const Entity& item, 
             shared_ptr<Table> tb){
-        if(item.conditions.empty()) {
+    if(item.conditions.empty()) {
             construct_series(series, item, tb);
         }
     else if(item.conditions.size() == 1){
@@ -176,7 +191,6 @@ void CustomParser::construct_series(Series& series,
                     std::end(rows));
             rows.resize(0);
             ++id_iterator;
-
             }
             tb->insert(series);
     }

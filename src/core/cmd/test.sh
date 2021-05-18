@@ -10,6 +10,8 @@ make
  
 cd $CODE_DIR
 echo CODE_DIR
-for script in tests/build/bin/*; do $script; done
+
+./tests/build/bin/test_customparser
+# for script in tests/build/bin/*; do $script; done
 popd
 

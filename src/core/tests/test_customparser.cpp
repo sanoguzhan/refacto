@@ -272,9 +272,38 @@ TEST(CustomParser, TestTreatedInput){
         }
     }
 
-    // p.to_csv(".");
 }
 
+
+
+TEST(CustomParser, TestGroupId){
+    vector<map<string, string>> ent;
+    ent.push_back({{"id", "(.*)(_mppt_power_watt)"},
+                    {"name", "(.*)(_mppt_power_watt)"}
+                    });
+
+    Entity ids{
+        .key = "inverter",
+        .name = "(.*)(_mppt_power_watt)",
+        .orient ="row",
+        .type = "group",
+         .row=0,
+        .value_begin=1};
+    ids.conditions = ent;
+    // - ID: dsadsa ( second)
+    // - NAME: dasdsa ( first)
+
+
+    CustomParser p(ids);
+    p("tests/test_data/csv/input/test_id_group/", ";",  0);
+
+    // for(auto t:p.tables){
+    //     if(t.first == "inverter"){
+    //         ASSERT_EQ(45756, t.second->get_size());
+    //     }
+    // }
+
+}
 
 
 int main(int argc, char *argv[])
