@@ -27,8 +27,9 @@ build-docker:
 make-cpcheck:
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
     artifacts:
-        paths:
-            - "cppcheck-result.xml"
+        reports:
+            codequality: "cppcheck-result.xml"
+
     stage: cppcheck
     script:
         - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 src 2> cppcheck-result.xml
@@ -45,8 +46,8 @@ build-package:
 release:
     extends: .release-base
     stage: release
-    variables:
-        additional_files: cppcheck-result.xml
+#    variables:
+#        additional_files: cppcheck-result.xml
 
 pull-staging-into-production:
     extends: .pull-staging-into-production-base
@@ -55,4 +56,6 @@ pull-staging-into-production:
 pull-production-into-staging:
     extends: .pull-production-into-staging-base
     stage: pull-production-into-staging
+    when: on_success
+
 
