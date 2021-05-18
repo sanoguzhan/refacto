@@ -46,7 +46,7 @@ release:
     extends: .release-base
     stage: release
     variables:
-        additional_files: (cppcheck-result.xml)
+        additional_files: cppcheck-result.xml
 
 pull-staging-into-production:
     extends: .pull-staging-into-production-base
