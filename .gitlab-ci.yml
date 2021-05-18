@@ -56,4 +56,3 @@ pull-production-into-staging:
     extends: .pull-production-into-staging-base
     stage: pull-production-into-staging
 
-
