@@ -11,7 +11,7 @@ stages:
     - build-and-deploy-package
     - release
     - pull-staging-into-production
-    - pull-prod-into-master
+    - pull-prod-into-staging
 
 pull-master-into-staging:
     extends: .pull-master-into-staging-base
@@ -52,8 +52,8 @@ pull-staging-into-production:
     extends: .pull-staging-into-production-base
     stage: pull-staging-into-production
 
-pull-prod-into-master:
-    extends: .pull-prod-into-master-base
+pull-production-into-staging:
+    extends: .pull-production-into-staging-base
     stage: pull-prod-into-master
 
 
