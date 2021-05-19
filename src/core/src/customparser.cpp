@@ -33,13 +33,24 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip){
             file_name = get_substring("/", ".", file);
             for(auto p:tables){
                 in_insert(p.second, keys.at(p.first), series, vec_values);
-                // p.second->insert(series);
                 series.values.clear(); // clean the parsed values
                 id_iter_vector.clear();
             }
             data.clear();
         }
     }
+
+string CustomParser::get_variable_name(map<string,string> mapping){
+        std::regex e_name (mapping.at("name"));
+        std::cmatch cm_name; 
+        for (size_t c = 0; c < data.at(0).size(); c++){
+            std::regex_match ( data.at(0).at(c).c_str(), cm_name, e_name, std::regex_constants::match_default );
+                if(cm_name.size() >0 ){
+                    return cm_name[1];
+                }
+            }
+        throw std::runtime_error("Regex is greedy, Column Not Found");
+}
 
 void CustomParser::in_insert(shared_ptr<Table> tb, 
         const vector<Entity> &entity_lst,
@@ -51,18 +62,25 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
         if(item.eType== "ids"){
             create_ids(series, item);
         }else if(item.eType== "group"){
-            std::regex e (item.name);
-            std::cmatch cm; 
+            std::regex e_id (item.conditions.at(0).at("id"));
+            std::cmatch cm_id; 
+            series.name = get_variable_name(item.conditions.at(0));
 
             for (size_t c = 0; c < data.at(0).size(); c++){
-              std::regex_match ( data.at(0).at(c).c_str(), cm, e, std::regex_constants::match_default );
-                if(cm.size() >0 ){
-                if(!id_exist(series, cm[1])){
-                    std::cout << "here" << std::endl;
-                } 
-                std::cout << c << std::endl;
-                std::cout << "[" << cm[1] << "] ";
-                std::cout << "[" << cm[2] << "] ";
+              std::regex_match ( data.at(0).at(c).c_str(), cm_id, e_id, std::regex_constants::match_default );
+                 std::vector<string> rows;   
+                if(cm_id.size() >0 ){
+                    for (size_t i = item.value_begin; i < data.size(); i++){
+                        rows.push_back(data.at(i).at(c));
+                    }
+                    if(!id_exist(series, cm_id[1])){
+                    }else{
+                            series.values.find(cm_id[1])->second.insert(
+                            std::end(series.values.find(cm_id[1])->second),
+                            std::begin(rows),
+                            std::end(rows)); 
+                    } 
+                    rows.clear();
                 }
             }
 

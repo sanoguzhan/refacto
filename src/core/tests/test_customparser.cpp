@@ -278,8 +278,8 @@ TEST(CustomParser, TestTreatedInput){
 
 TEST(CustomParser, TestGroupId){
     vector<map<string, string>> ent;
-    ent.push_back({{"id", "(.*)(_mppt_power_watt)"},
-                    {"name", "(.*)(_mppt_power_watt)"}
+    ent.push_back({{"id", "(.*)_mppt_power_watt"},
+                    {"name", ".*(_mppt_power_watt)"}
                     });
 
     Entity ids{

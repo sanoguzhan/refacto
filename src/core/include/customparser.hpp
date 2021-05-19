@@ -193,6 +193,13 @@ class CustomParser{
                         Entity& item);
 
 
+
+
+
+        string get_variable_name(map<string,string> );
+
+
+
         /**
          * @brief writes to csv
          * 
