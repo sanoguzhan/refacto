@@ -1,7 +1,7 @@
 # cython: c_string_type=unicode, c_string_encoding=utf8
 # distutils: language = c++
 
-from core cimport ops
+from qparsing.core cimport ops
 from libcpp cimport bool
 from libcpp.map cimport map
 from libcpp.vector cimport vector

@@ -1,31 +1,56 @@
+from __future__ import print_function 
+
 import setuptools
 import os
 import subprocess
 import distutils
 import logging
-
+from copy import copy
+from logging import Formatter
 from setuptools import setup
 from distutils.extension import Extension
 from distutils.command.sdist import sdist as _sdist
-from distutils.errors import DistutilsSetupError
-from distutils.command.build_clib import build_clib
 from logging import log
-from pathlib import Path
-from utils import custom_logger
 import pathlib
 setuptools.dist.Distribution().fetch_build_eggs(['Cython'])
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize 
 
 BASE_DIR = pathlib.Path(__file__).parent
-README = ( BASE_DIR.parent / "README.md").read_text()
+README = ( BASE_DIR / "README.md").read_text()
 __version__ = os.getenv('LIB_VERSION')
+
+
+MAPPING = {
+    'DEBUG'   : 37, # white
+    'INFO'    : 36, # cyan
+    'WARNING' : 33, # yellow
+    'ERROR'   : 31, # red
+    'CRITICAL': 41, # white on red bg
+}
+
+PREFIX = '\033['
+SUFFIX = '\033[0m'
+
+class ColoredFormatter(Formatter):
+
+    def __init__(self, patern):
+        Formatter.__init__(self, patern)
+
+    def format(self, record):
+        colored_record = copy(record)
+        levelname = colored_record.levelname
+        seq = MAPPING.get(levelname, 37) # default white
+        colored_levelname = ('{0}{1}m{2}{3}') \
+            .format(PREFIX, seq, levelname, SUFFIX)
+        colored_record.levelname = colored_levelname
+        return Formatter.format(self, colored_record)
 
 log = logging.getLogger("Refacto")
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
-cf = custom_logger.ColoredFormatter("[%(name)s][%(levelname)s]  %(message)s (%(filename)s:%(lineno)d)")
+cf = ColoredFormatter("[%(name)s][%(levelname)s]  %(message)s (%(filename)s:%(lineno)d)")
 ch.setFormatter(cf)
 log.addHandler(ch)
 
@@ -43,7 +68,7 @@ log.setLevel(logging.DEBUG)
 os.environ['LD_LIBRARY_PATH'] = "qparsing/core/usr/local/lib/"
 os.environ["CC"] = "clang"
 _path = "/core/usr/local/lib/"
-ext_modules = [Extension("parsing.engine",
+ext_modules = [Extension("qparsing.engine",
                      ["qparsing/core/parser.pyx",],
                      language='c++',
                      include_dirs= ["/include", ],
@@ -118,7 +143,7 @@ setup(
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
   long_description=README,
   long_description_content_type="text/markdown",
-  packages=setuptools.find_packages(exclude=[ "tests/*"]),
+  packages=setuptools.find_packages(exclude=[ "tests/*", "utils"]),
   include_package_data=True,
   ext_modules = cythonize(ext_modules, 
   compiler_directives={'language_level' : "3"},
