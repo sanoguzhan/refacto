@@ -41,7 +41,7 @@ build-package:
     extends: .build-and-deploy-package
     stage: build-and-deploy-package
     variables:
-        BUILD_CMD: CFLAGS="-Wno-everything" python3 qparsing/setup.py install_library build_ext sdist bdist_wheel
+        BUILD_CMD: CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
 
 release:
     extends: .release-base
