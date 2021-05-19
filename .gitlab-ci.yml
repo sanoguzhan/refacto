@@ -32,7 +32,7 @@ make-cpcheck:
 
     stage: cppcheck
     script:
-        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 src 2> cppcheck-result.xml
+        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
     only:
         - staging
         - production
@@ -41,7 +41,7 @@ build-package:
     extends: .build-and-deploy-package
     stage: build-and-deploy-package
     variables:
-        BUILD_CMD: CFLAGS="-Wno-everything" python3 src/setup.py install_library build_ext sdist bdist_wheel
+        BUILD_CMD: CFLAGS="-Wno-everything" python3 qparsing/setup.py install_library build_ext sdist bdist_wheel
 
 release:
     extends: .release-base

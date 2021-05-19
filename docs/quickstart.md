@@ -97,7 +97,7 @@ Extension is searched in the given directory so the directory should be uniform
 
 *Example:* 
 ```python
-            Decompressdir()("src/core/tests/test_data/gz/") 
+            Decompressdir()("qparsing/core/tests/test_data/gz/") 
 ```
 
 ## Compressdir
@@ -107,7 +107,7 @@ Uses shell command to compress files in zip format
 *Example:*
     
 ```python
-    Compressdir()("src/core/tests/test_data/gz/", "test")
+    Compressdir()("qparsing/core/tests/test_data/gz/", "test")
 ```
 
 ### Cleandir 

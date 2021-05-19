@@ -24,7 +24,7 @@ test_csv1 = CSVParser([
                     "row" :"1",
                     "value_begin" :"3"}
             ])
-test_csv1("src/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
+test_csv1("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
 # test_csv1.to_csv(".")
 
 test_csv2 = CSVParser([
@@ -88,7 +88,7 @@ test_csv2 = CSVParser([
                     "keyword" : "test",
                  }
             ])
-test_csv2("src/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
+test_csv2("qparsing/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
 # test.to_csv(".")
 
 
@@ -121,7 +121,7 @@ test_csv3 = CSVParser([
                     "value_begin":"1",
                  }
             ])
-test_csv3("src/core/tests/test_data/csv/" , ";",  0)
+test_csv3("qparsing/core/tests/test_data/csv/" , ";",  0)
 test_csv3.to_csv(".")
 
 
@@ -158,7 +158,7 @@ xml_parser = XMLParser(kwargs)
 
 # # Here, pattern search for xml files are given, and the root name of each document
 # # Uncomment to run
-xml_parser("src/core/tests/test_data/xml/", "WebBox");
+xml_parser("qparsing/core/tests/test_data/xml/", "WebBox");
 
 # # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
 
@@ -168,6 +168,6 @@ xml_parser("src/core/tests/test_data/xml/", "WebBox");
 
 # # Decompressdir, Compressdir, Cleandir examples
 
-# Decompressdir()("src/core/tests/test_data/gz/")
-# Cleandir()("src/core/tests/test_data/gz/", "*.csv")
-# Compressdir()("src/core/tests/test_data/gz/", "test")
+# Decompressdir()("qparsing/core/tests/test_data/gz/")
+# Cleandir()("qparsing/core/tests/test_data/gz/", "*.csv")
+# Compressdir()("qparsing/core/tests/test_data/gz/", "test")

@@ -19,13 +19,13 @@ Run the project:
     cd docker
     docker-compose build
     docker-compose run clang bash
-    ./src/core/cmd/build.sh
+    ./qparsing/core/cmd/build.sh
 ```
 
 For Tests:
 
 ```sh
-    ./src/core/cmd/test.sh 
+    ./qparsing/core/cmd/test.sh 
 ```
 
 This will compile all the code, build the c++ library and run the tests.
