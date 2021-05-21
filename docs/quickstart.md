@@ -9,6 +9,25 @@ if any id is not exist in the data then ids condition should be the first in gro
 The Constructer tkaes arbitary number of ordered-dictionaries and creates the Entity object each condition
 Operator () is overload and expect the directory path of files as string, deliemeter, and the rows to be skipped
 
+*Example 0:*
+
+In some cases, column name include each key such as "A_mppt_power_watt" A as key of the mppt as all column includes variable of it. In this cases grouping condition can be used with regex to transform the data.
+In the condition, first group belong to id and second condition for column variable
+
+```python
+{"key": "inverter",
+        "name":"Mppt_power",
+        "orient": "row",
+        "type" : "group",
+        "row" : "0",
+        "value_begin" : "1",
+        "condition": {
+        "id": "(.*)_string_current_amper",
+        "name": ".*(_string_current_amper)"
+            }
+        }
+```
+
 *Example 1:*  
 Here the key is the condition and data parsed based on the key condition
 So for every variable found with given name, Pac column will be inserted to data 

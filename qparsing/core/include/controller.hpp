@@ -49,8 +49,12 @@ class CustomParserWrapper{
              || i.at("type") == "group") {
                 if(condition_name == i.end())
                     init_series_pyx(i, entity);
-                else    
-                    init_series_pyx(i, entity, condition.at(i.at("key") + i.at("name")));
+                else{
+                    if(i.at("type") == "series") 
+                        init_series_pyx(i, entity, condition.at(i.at("key") + i.at("name")));
+                    else
+                        init_series_group_pyx(i, entity, condition.at(i.at("key") + i.at("name")));
+                }    
             }else if(i.at("type") == "ids"){
                     init_series_ids_pyx(i, entity);
             }else if(i.at("type") == "vector"){
@@ -128,7 +132,10 @@ class CustomParserWrapper{
                     vector<Entity>& entity,
                     map<string, string>& condition){
         vector<map<string,string>> cond;
-        cond.push_back(condition);
+        cond.push_back({{"name",condition.at("name")},
+                        {"orient", condition.at("orient")},
+                        {"row", condition.at("row")}});
+
 
         check_keys_pyx(vals);
         entity.emplace_back(vals.at("key"),
@@ -141,6 +148,24 @@ class CustomParserWrapper{
         entity.back().conditions = cond;
         }
 
+    void init_series_group_pyx(map<string, string>& vals, 
+                    vector<Entity>& entity,
+                    map<string, string>& condition){
+        vector<map<string,string>> cond;
+        cond.push_back({{"id",condition.at("id")},
+                        {"name", condition.at("name")}});
+
+
+        check_keys_pyx(vals);
+        entity.emplace_back(vals.at("key"),
+                            vals.at("name"),
+                            vals.at("orient"),
+                            vals.at("type"),
+                            std::stoi(vals.at("row")),
+                            std::stoi(vals.at("value_begin")));
+
+        entity.back().conditions = cond;
+        }
         
          
     void init_series_pyx(map<string, string>& vals, vector<Entity>& entity){

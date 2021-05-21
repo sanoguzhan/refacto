@@ -1,10 +1,10 @@
-from parsing.engine import CSVParser
-from parsing.engine import XMLParser
-from parsing.engine import Decompressdir, Cleandir, Compressdir
+from qparsing.engine import CSVParser
+from qparsing.engine import XMLParser
+from qparsing.engine import Decompressdir, Cleandir, Compressdir
 
-""" """
-
-test_csv1 = CSVParser([
+""" CSV PARSER Examples"""
+# Conditional id search
+test_csv0 = CSVParser([
                 {"key": "inverter",
                     "name":"Pac",
                     "orient": "row",
@@ -24,8 +24,26 @@ test_csv1 = CSVParser([
                     "row" :"1",
                     "value_begin" :"3"}
             ])
-test_csv1("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
-# test_csv1.to_csv(".")
+test_csv0("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
+# test_csv0.to_csv(".")
+
+
+# Grouping elements with column name
+test_csv1 = CSVParser([
+                {"key": "inverter",
+                    "name":"Mppt_power",
+                    "orient": "row",
+                    "type" : "group",
+                    "row" : "0",
+                    "value_begin" : "1",
+                    "condition": {
+                   "id": "(.*)_string_current_amper",
+                    "name": ".*(_string_current_amper)"
+                        }
+                 },
+            ])
+test_csv1("qparsing/core/tests/test_data/csv/input/test_id_group/" , ";",  0)
+test_csv1.to_csv(".")
 
 test_csv2 = CSVParser([
                 {"key": "inverter",
@@ -122,7 +140,7 @@ test_csv3 = CSVParser([
                  }
             ])
 test_csv3("qparsing/core/tests/test_data/csv/" , ";",  0)
-test_csv3.to_csv(".")
+# test_csv3.to_csv(".")
 
 
 # #XMLParser

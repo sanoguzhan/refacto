@@ -28,7 +28,7 @@ cdef class CSVParser:
         cdef vector[map[string, string]] entity
         cdef map[string, map[string, string]] condition
         for i in test:
-            if i["type"] == "series" and i.get("condition", False):
+            if (i["type"] == "series" or i["type"] == "group") and i.get("condition", False):
                 temp = i["condition"]
                 condition_name = i["key"] + i["name"]
                 i["condition"] = condition_name

@@ -12,7 +12,6 @@ services:
             - ./.env
         volumes:
             - ../:/code
-            - ../data:/data
         
         healthcheck:
             interval: 30s

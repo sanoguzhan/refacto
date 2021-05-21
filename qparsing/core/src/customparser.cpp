@@ -28,9 +28,9 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip){
         vector<string> vec_values;
 
         for(auto file: files){
-            // #ifdef LOG
+            #ifdef LOG
             BOOST_LOG_TRIVIAL(info) << "Reading file: " << file <<std::endl;
-            // #endif
+            #endif
             in_read(file, delimeter, skip);
             file_name = get_substring("/", ".", file);
             for(auto p:tables){
@@ -44,7 +44,7 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip){
 
 string CustomParser::get_variable_name(map<string,string> mapping){
         std::regex e_name (mapping.at("name"));
-        std::cmatch cm_name; 
+        std::cmatch cm_name;
         for (size_t c = 0; c < data.at(0).size(); c++){
             std::regex_match ( data.at(0).at(c).c_str(), cm_name, e_name, std::regex_constants::match_default );
                 if(cm_name.size() >0 ){
