@@ -26,6 +26,8 @@
 #include <cctype>
 #include<deque>
 #include <boost/log/trivial.hpp>
+#include <sys/stat.h>
+
 #include "table.hpp"
 #include "parser.hpp"
 
@@ -113,6 +115,12 @@ struct Entity{
 };
 
 
+inline bool is_path_exist(const std::string &s)
+{
+  struct stat buffer;
+  return (stat (s.c_str(), &buffer) == 0);
+}
+
 void find_ids(s_matrix &,vector<u_int32_t> &,const Entity &);
 void find_ids(s_matrix &,vector<u_int32_t> &,map<string,string>, const Entity &);
 
@@ -191,6 +199,28 @@ class CustomParser{
          */
         void from_vector(vector<string> &vec_values, 
                         Entity& item);
+
+
+
+
+        /**
+         * @brief Get the variable name object
+         *  - Search key name with regex
+         * @param mapping (map<string,string>) id value maps - id are the key
+         * @return (string) found id
+         */
+        string get_variable_name(map<string,string> );
+
+        /**
+         * @brief Insert group ids with regex search
+         *  - Custom search for id as vairable
+         * 
+         * @param series (Series &) series to be inserted  
+         * @param item ( Entity&) conditional search  
+         * @param tb (shared_pr<Table>) table which data will be inserted
+         */
+        void from_group_series(Series &series, const Entity& item, 
+            shared_ptr<Table> tb);
 
 
         /**

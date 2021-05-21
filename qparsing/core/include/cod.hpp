@@ -129,7 +129,7 @@ struct CLEANFILES{
         string cwd{tmp};
         // string cmd="unzip {} -d " + cwd +"/"+ path ;
         std::ostringstream stringStream;
-        stringStream << "yes 2>/dev/null" << " | " << "find " <<  path  << " -name '"<< pattern << "' -type f -exec " << cmd << " {} \\;";
+        stringStream << "yes " << " | " << "find " <<  path  << " -name '"<< pattern << "' -type f -exec " << cmd << " {} \\;";
         std::system(stringStream.str().c_str());
     }
 };

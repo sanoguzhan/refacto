@@ -68,6 +68,15 @@ bool Table::insert(Series series)
         {
             data.at(p.first).push_back(make_pair(series.name, p.second));
         }
+        else if(data.find(p.first) != data.end())
+        {
+            auto found = std::find_if(data.find(p.first)->second.begin(),
+            data.find(p.first)->second.end(), [&series](const auto& p){
+               return p.first == series.name;
+            });
+            found->second.insert(std::end(found->second), 
+            p.second.begin(), p.second.end());
+        }
     }
     return true;
 }
@@ -114,12 +123,16 @@ size_t Table::get_size() const
 
 bool Table::column_exist(const string &id, const string &col_name) const
 {
-    for (const auto &p : data.at(id))
-    {
-        if (col_name == p.first)
-        {
-            return true;
-        }
-    }
-    return false;
+
+    return std::any_of(data.at(id).begin(), data.at(id).end(), [&](const auto& p){
+        return col_name == p.first;
+    });
+    // for (const auto &p : data.at(id))
+    // {
+    //     if (col_name == p.first)
+    //     {
+    //         return true;
+    //     }
+    // }
+    // return false;
 }

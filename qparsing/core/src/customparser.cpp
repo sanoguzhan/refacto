@@ -2,9 +2,12 @@
 
 
 
-
+static bool group_insert = false;
 
 deque<string> get_flist(string pattern){
+    if(!is_path_exist(pattern)){
+        throw std::runtime_error("Folder not exist!");
+    }
     pattern += "*.csv";
     glob_t glob_result;
     glob(pattern.c_str(),GLOB_TILDE,NULL,&glob_result);
@@ -21,19 +24,17 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip){
         deque<string> files{get_flist(dir_path)};
         map<string, vector<Entity>> keys;
         transform_keys(keys);
-
         Series series;
         vector<string> vec_values;
 
         for(auto file: files){
-            #ifdef LOG
+            // #ifdef LOG
             BOOST_LOG_TRIVIAL(info) << "Reading file: " << file <<std::endl;
-            #endif
+            // #endif
             in_read(file, delimeter, skip);
             file_name = get_substring("/", ".", file);
             for(auto p:tables){
                 in_insert(p.second, keys.at(p.first), series, vec_values);
-                // p.second->insert(series);
                 series.values.clear(); // clean the parsed values
                 id_iter_vector.clear();
             }
@@ -41,17 +42,29 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip){
         }
     }
 
+string CustomParser::get_variable_name(map<string,string> mapping){
+        std::regex e_name (mapping.at("name"));
+        std::cmatch cm_name; 
+        for (size_t c = 0; c < data.at(0).size(); c++){
+            std::regex_match ( data.at(0).at(c).c_str(), cm_name, e_name, std::regex_constants::match_default );
+                if(cm_name.size() >0 ){
+                    return cm_name[1];
+                }
+            }
+        throw std::runtime_error("Regex is greedy, Column Not Found");
+}
+
 void CustomParser::in_insert(shared_ptr<Table> tb, 
         const vector<Entity> &entity_lst,
         Series &series,
         vector<string> &vec_values){
 
-
     for(auto item:entity_lst){
         if(item.eType== "ids"){
             create_ids(series, item);
-        }
-        else if(item.eType == "series"){
+        }else if(item.eType== "group"){
+            from_group_series(series, item, tb);
+        }else if(item.eType == "series"){
             from_series(series, item, tb);
         }else if(item.eType == "vector"){
             from_vector(vec_values, item);
@@ -69,6 +82,35 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
     }
 }
 
+
+void CustomParser::from_group_series(Series &series, const Entity& item, 
+            shared_ptr<Table> tb){
+    std::regex e_id (item.conditions.at(0).at("id"));
+    std::cmatch cm_id; 
+    series.name = get_variable_name(item.conditions.at(0));
+    vector<string> rows;
+    for (size_t c = 0; c < data.at(0).size(); c++){
+    std::regex_match ( data.at(0).at(c).c_str(), cm_id, e_id, std::regex_constants::match_default );
+        if(cm_id.size() >0 ){
+            for (size_t i = item.value_begin; i < data.size(); i++){
+                    rows.push_back(data.at(i).at(c));
+                }
+                if(!id_exist(series, cm_id[1])){
+                        series.values.insert(std::make_pair(cm_id[1],rows));
+
+                }else{
+                    series.values.find(cm_id[1])->second.insert(
+                    std::end(series.values.find(cm_id[1])->second),
+                    std::begin(rows),
+                    std::end(rows)); 
+                } 
+            rows.clear();
+            }
+        }
+        
+    tb->insert(series);
+    clean_series(series);
+}
 
 void CustomParser::from_vector(vector<string> &vec_values, 
                 Entity& item){
@@ -97,7 +139,7 @@ void CustomParser::from_vector(vector<string> &vec_values,
 
 void CustomParser::from_series(Series &series, const Entity& item, 
             shared_ptr<Table> tb){
-        if(item.conditions.empty()) {
+    if(item.conditions.empty()) {
             construct_series(series, item, tb);
         }
     else if(item.conditions.size() == 1){
@@ -176,7 +218,6 @@ void CustomParser::construct_series(Series& series,
                     std::end(rows));
             rows.resize(0);
             ++id_iterator;
-
             }
             tb->insert(series);
     }

@@ -17,6 +17,7 @@
 #include<memory>
 #include<variant>
 #include<map>
+#include<utility>
 #include<iostream>
 #include"csvparser.hpp"
 #include"table.hpp"
@@ -44,7 +45,8 @@ class CustomParserWrapper{
 
         for(auto i:values){
             map<string, string>::iterator condition_name {i.find("condition")};
-            if(i.at("type") == "series"){
+            if(i.at("type") == "series"
+             || i.at("type") == "group") {
                 if(condition_name == i.end())
                     init_series_pyx(i, entity);
                 else    
@@ -126,9 +128,8 @@ class CustomParserWrapper{
                     vector<Entity>& entity,
                     map<string, string>& condition){
         vector<map<string,string>> cond;
-        cond.push_back({{"name",condition.at("name")},
-                        {"orient", condition.at("orient")},
-                        {"row", condition.at("row")}});
+        cond.push_back(condition);
+
         check_keys_pyx(vals);
         entity.emplace_back(vals.at("key"),
                             vals.at("name"),
@@ -137,9 +138,10 @@ class CustomParserWrapper{
                             std::stoi(vals.at("row")),
                             std::stoi(vals.at("value_begin")));
 
-        entity.back().conditions =cond;
+        entity.back().conditions = cond;
         }
 
+        
          
     void init_series_pyx(map<string, string>& vals, vector<Entity>& entity){
        

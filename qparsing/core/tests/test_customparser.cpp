@@ -125,7 +125,6 @@ TEST(CustomParser, Constructor)
             FAIL();
         }
     }
-    // p.to_csv(".");
 }
 
 
@@ -180,6 +179,64 @@ TEST(CustomParser, TestInputSize){
     for(auto t:p.tables){
         if(t.first == "inverter"){
             ASSERT_EQ(75,t.second->get_size());
+        }
+    }
+    // p.to_csv(".");
+}
+
+
+TEST(CustomParser, TestContinousSize){
+
+    /* Test for CustomParser Conditional series insertion
+        - Load the file
+        - Create table
+        - Parse data from conditional series to table
+        - Insert to exisint Series
+    */
+
+   // !Example of conditional series parsing
+   // ids as conditonal, and takes a regex
+    vector<map<string, string>> ent;
+    vector<map<string, string>> ent1;
+    ent.push_back({{"name", "^2001.*98$"},
+                    {"orient", "row"},
+                    {"row", "0"}});
+
+    Entity pac{
+        .key = "inverter",
+        .name = "Pac",
+        .orient = "row",
+        .type = "series",
+        .row = 1,
+        .value_start=3};
+
+    ent1.push_back({{"name", "^2001.*98$"},
+                    {"orient", "row"},
+                    {"row", "0"}});
+
+    Entity pac1{
+        .key = "inverter",
+        .name = "Riso",
+        .orient = "row",
+        .type = "series",
+        .row = 1,
+        .value_start=3};
+
+    Entity single{
+        .key = "inverter",
+        .name = "Test_single_Value",
+        .type = "entity",
+        .keyword="test",
+        }; 
+    pac.conditions = ent;
+    pac1.conditions = ent1;
+    CustomParser p(pac, single);
+    // insert single values, and other entities
+    p(TEST_CSV_INPUT_DIR + "test_more_input/" , ";",  3 );
+
+    for(auto t:p.tables){
+        if(t.first == "inverter"){
+            ASSERT_EQ(431,t.second->get_size());
         }
     }
     // p.to_csv(".");
@@ -272,8 +329,67 @@ TEST(CustomParser, TestTreatedInput){
         }
     }
 
-    // p.to_csv(".");
 }
+
+
+
+TEST(CustomParser, TestGroupId){
+    /* Test for CustomParser group id parsing
+        - Load the file
+        - Create table
+        - group ids with regex
+        - Create column name with regex
+        - Parse data from conditional series to table
+    */
+    vector<map<string, string>> ent;
+    ent.push_back({{"id", "(.*)_mppt_power_watt"},
+                    {"name", ".*(_mppt_power_watt)"}
+                    });
+
+    Entity power{
+        .key = "inverter",
+        .name = "(.*)(_mppt_power_watt)",
+        .orient ="row",
+        .type = "group",
+         .row=0,
+        .value_begin=1};
+    power.conditions = ent;
+
+    vector<map<string, string>> ent1;
+    ent1.push_back({{"id", "(.*)_string_current_amper"},
+                    {"name", ".*(_string_current_amper)"}
+                    });
+
+    Entity current{
+        .key = "string",
+        .name = "",
+        .orient ="row",
+        .type = "group",
+         .row=0,
+        .value_begin=1};
+    current.conditions = ent1;
+
+    CustomParser p(power, current);
+    p("tests/test_data/csv/input/test_id_group/", ";",  0);
+
+    for(auto t:p.tables){
+        if(t.first == "inverter"){
+            ASSERT_EQ(91166, t.second->get_size());
+        }else if(t.first == "string"){
+            ASSERT_EQ(91166, t.second->get_size());
+        }
+    }
+    //    p.to_csv("."); 
+}
+
+TEST(CustomParser, TestHelperMethod){
+  
+    /* Test for CustomParser Helper Methods
+    */
+    ASSERT_EQ(false, is_path_exist("foo/bar"));
+        
+}
+
 
 
 

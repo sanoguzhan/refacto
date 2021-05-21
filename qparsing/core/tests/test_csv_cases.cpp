@@ -326,7 +326,6 @@ TEST(CSVParserCases, Maulevrier_Inverter)
     p.erase_data("row", 1, 5);
     p.erase_data("row", 2, 3);
     p.erase_diverge_row();
-    p.to_csv(TEST_CSV_OUTPUT_DIR + "test.csv");
     auto datetime{p("column", 0, 2, -1)};
 
     Loc id{
