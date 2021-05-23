@@ -6,7 +6,7 @@ Unstructred files are transform to more uniform format with given ordered-condit
 Condition should follow the order as if there is a conditional values, this should come first in the group of keys
 if any id is not exist in the data then ids condition should be the first in grouped keys
 
-The Constructer tkaes arbitary number of ordered-dictionaries and creates the Entity object each condition
+The Constructer takes arbitary number of ordered-dictionaries and creates the Entity object each condition
 Operator () is overload and expect the directory path of files as string, deliemeter, and the rows to be skipped
 
 *Example 0:*
