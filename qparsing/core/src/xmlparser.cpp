@@ -3,6 +3,7 @@
 static string DELIMETER = ";";
 
 vector<string> listdir(string pattern) {
+
   pattern += "*.xml";
   glob_t glob_result;
   glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
@@ -14,7 +15,7 @@ vector<string> listdir(string pattern) {
   return files;
 }
 void XMLParser::max_key_sizes(map<string, vector<IDMap>> &keys,
-                              map<string, u_int32_t> &sizes) const{
+                              map<string, u_int32_t> &sizes) {
   for (auto &p : keys) {
     for (const auto &id : p.second) {
       sizes.insert(
@@ -95,17 +96,22 @@ void XMLParser::update(pugi::xml_node root, const IDMap &tag, svector &ids) {
 
   root = (!COUNTER) ? root.first_child() : root;
   COUNTER++;
-  string token, id;
+  string token, id, child_value;
+  regex re{tag.key};
+  smatch matches;
   for (pugi::xml_node panel = root.first_child(); panel;
        panel = panel.next_sibling()) {
     token = panel.name();
+    child_value = static_cast<string>(panel.child_value());
+
     if (token == tag.node &&
-        string(panel.child_value()).find(tag.key) != string::npos) {
+        regex_match(child_value, matches, re)) {
       CONTAINS = true;
       id = panel.child_value();
     }
     if (CONTAINS) {
       if (token.find(tag.degree) != string::npos) {
+        std::cout << id << std::endl;
         ids.push_back(panel.child_value());
       }
     }

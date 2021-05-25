@@ -1,6 +1,5 @@
 
-/** @file csvparser.hpp
- *  @brief
+/** @file xmlparser.hpp
  *
  *  This file contains the refacto's xmlparser
  *      - File directory search for xml files
@@ -15,6 +14,8 @@
 #ifndef __XMLPARSER_HPP
 #define __XMLPARSER_HPP
 
+#include "pugixml.hpp"
+#include "table.hpp"
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -22,16 +23,17 @@
 #include <initializer_list>
 #include <iostream>
 #include <map>
+#include <regex>
 #include <string>
 #include <utility>
-
-#include "pugixml.hpp"
-#include "table.hpp"
 
 using namespace table;
 using std::map;
 using std::string;
 using std::vector;
+using std::regex;
+using std::smatch;
+using std::regex_match;
 using svector = std::vector<std::string>;
 
 static u_int32_t COUNTER = 0;
@@ -74,7 +76,7 @@ public:
    * @param dir: (string) extraction directory
    * @return true on success
    */
-  bool to_csv(string dir) ;
+  bool to_csv(string dir);
 
   /**
    * @brief Operator for xml file data search
@@ -114,7 +116,7 @@ private:
    *      - Classify IDMap vector to unique name and values
    * @param keys key-value pairs
    */
-  void transfrom_map(map<string, vector<IDMap>> &keys) ;
+  void transfrom_map(map<string, vector<IDMap>> &keys);
 
   /**
    * @brief Create variable size map for writing
@@ -123,7 +125,7 @@ private:
    * @param sizes size key-value map for name+key values
    */
   void inline max_key_sizes(map<string, vector<IDMap>> &keys,
-                            map<string, u_int32_t> &sizes) const;
+                            map<string, u_int32_t> &sizes);
 };
 
 #endif
