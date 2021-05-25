@@ -23,9 +23,9 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip) {
   vector<string> vec_values;
 
   for (auto file : files) {
-// #ifdef LOG
+    #ifdef LOG
     BOOST_LOG_TRIVIAL(info) << "Reading file: " << file << std::endl;
-// #endif
+    #endif
     in_read(file, delimeter, skip);
     file_name = get_substring("/", ".", file);
     for (auto p : tables) {

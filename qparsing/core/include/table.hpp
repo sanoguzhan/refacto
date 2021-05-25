@@ -150,8 +150,8 @@ public:
    */
   inline auto values() { return data; }
 
-  size_t get_size() const;
-
+  size_t max_size() const;
+  size_t get_size(string,string) const;
 private:
   /**
    * @brief Checks if column exists

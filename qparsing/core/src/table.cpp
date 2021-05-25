@@ -14,7 +14,7 @@ bool Table::save(string path) const{
   std::ofstream csv_file;
   csv_file.open(path);
   size_t i = 0, loc = 0;
-  size_t size{get_size()};
+  size_t size{max_size()};
   bool id_col = true;
 
   std::stringstream ss;
@@ -89,6 +89,15 @@ bool Table::insert(string name, std::vector<string> vec) {
   for (const auto &p : data) {
     if (!column_exist(p.first, name)) {
       data.at(p.first).push_back(make_pair(name, vec));
+    }else{
+        if(get_size(p.first, name) <= max_size()){
+         auto found = std::find_if(
+          data.find(p.first)->second.begin(), data.find(p.first)->second.end(),
+          [&name](const auto &p) { return p.first == name; });
+          found->second.insert(std::end(found->second), vec.begin(),
+                           vec.end()); 
+          
+      } 
     }
   }
   return true;
@@ -97,18 +106,46 @@ bool Table::insert(string name, std::vector<string> vec) {
 bool Table::insert(string name, string insert_name) {
   for (const auto &p : data) {
     if (!column_exist(p.first, name)) {
+
       data.at(p.first).push_back(
-          make_pair(name, std::vector<string>(get_size(), insert_name)));
+          make_pair(name, std::vector<string>(max_size(), insert_name)));
+    }else{
+      if(get_size(p.first, name) <= max_size()){
+         auto found = std::find_if(
+          data.find(p.first)->second.begin(), data.find(p.first)->second.end(),
+          [&name](const auto &p) { return p.first == name; });
+          found->second.insert(std::end(found->second), max_size() - get_size(p.first,name),
+                           insert_name); 
+      }
+ 
     }
   }
   return true;
 }
 
-size_t Table::get_size() const {
+size_t Table::max_size() const {
   size_t size = 0;
   for (const auto &c : data) {
     for (const auto &item : c.second) {
       if (size < item.second.size()) {
+        size = item.second.size();
+      }
+    }
+  }
+  return size;
+}
+
+size_t Table::get_size(string id_name, string column_name) const {
+  size_t size = 0;
+  for (const auto &c : data) {
+    for (const auto &item : c.second) {
+
+      if (id_name == c.first && item.first == column_name) {
+        // if(id_name == "02"){
+        //   for(auto a:item.second){
+        //     std::cout << a<<std::endl;
+        //   }
+        // }
         size = item.second.size();
       }
     }

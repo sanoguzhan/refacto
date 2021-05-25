@@ -400,29 +400,39 @@ TEST(CustomParser, test){
         - Create column name with regex
         - Parse data from conditional series to table
     */
-    Entity ids{
-        .key = "string",
-        .name = "inv",
-        .type = "ids",
-        .keyword="file_name"};
+    vector<map<string, string>> ent;
+    ent.push_back({{"id", ".*Channel_(\\d+)_I_AvgMn.*"},
+                    {"name", ".*Channel_\\d+_(I_AvgMn).*"}
+                    });
 
-    Entity pac_watt{
+    Entity first{
         .key = "string",
-        .name = ".*.Channel_01_I_AvgMn.*",
-        .orient= "row",
-        .type="series",
-        .row=0,
-        .value_begin=1
-    };
-    //  Entity time{
-    //     .key = "inverter",
-    //     .name = "time",
-    //     .orient= "row",
-    //     .type="series",
-    //     .row=0,
-    //     .value_begin=1
-    // }; 
-    CustomParser p(ids, pac_watt);
+        .name = "I_AvgMn",
+        .orient ="row",
+        .type = "group",
+         .row=0,
+        .value_begin=1};
+    first.conditions = ent;
+
+
+    Entity second{
+        .key = "string",
+        .name = "dcbox",
+        .type ="entity",
+        .keyword = "file_name"};
+
+        Entity date_time{
+        .key = "string",
+        .name = "date_time",
+        .orient = "column",
+        .type = "vector",
+        .keyword="vector",
+        .column=0,
+        .from=1,
+        .to=-1
+        };
+
+    CustomParser p(first, second, date_time);
     p("tests/test_data/test01/dcbox/", ";",  0);
 
     // for(auto t:p.tables){
