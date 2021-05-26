@@ -85,8 +85,13 @@ bool Table::insert(Series series) {
   return true;
 }
 
-bool Table::insert(string name, std::vector<string> vec) {
+bool Table::insert(string name, std::vector<string> vec, bool single) {
+
   for (const auto &p : data) {
+    if(single){
+           data.at(p.first).push_back(make_pair(name, vec));
+           continue;
+    }
     if (!column_exist(p.first, name)) {
       data.at(p.first).push_back(make_pair(name, vec));
     }else{
@@ -96,12 +101,22 @@ bool Table::insert(string name, std::vector<string> vec) {
           [&name](const auto &p) { return p.first == name; });
           found->second.insert(std::end(found->second), vec.begin(),
                            vec.end()); 
-          
       } 
     }
   }
   return true;
 }
+
+bool Table::insert(string name, std::vector<string> vec) {
+
+  for (const auto &p : data) {
+    if (!column_exist(p.first, name)) {
+      data.at(p.first).push_back(make_pair(name, vec));
+    }
+  }
+  return true;
+}
+
 
 bool Table::insert(string name, string insert_name) {
   for (const auto &p : data) {

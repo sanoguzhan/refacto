@@ -141,8 +141,8 @@ public:
    *
    * @return bool true on success
    */
+  bool insert(string name, std::vector<string> vec, bool);
   bool insert(string name, std::vector<string> vec);
-
   /**
    * @brief Getter Method of object data
    *

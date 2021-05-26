@@ -24,7 +24,9 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip) {
 
   for (auto file : files) {
     #ifdef LOG
-    BOOST_LOG_TRIVIAL(info) << "Reading file: " << file << std::endl;
+      BOOST_LOG_TRIVIAL(info) << "Reading file: " << file << std::endl;
+    #else
+      std::cout << "Reading file: " << file << "\n";
     #endif
     in_read(file, delimeter, skip);
     file_name = get_substring("/", ".", file);
@@ -63,7 +65,10 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
       from_series(series, item, tb);
     } else if (item.eType == "vector") {
       from_vector(vec_values, item);
-      tb->insert(item.name, vec_values);
+      if(id_type == "single") 
+        tb->insert(item.name, vec_values, true);
+      else
+        tb->insert(item.name, vec_values, false);
       vec_values.clear();
     } else if (item.eType == "entity") {
       if (item.keyword == "file_name")
