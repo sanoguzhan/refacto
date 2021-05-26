@@ -124,7 +124,7 @@ bool Table::insert(string name, string insert_name) {
     if (!column_exist(p.first, name)) {
 
       data.at(p.first).push_back(
-          make_pair(name, std::vector<string>(max_size(), insert_name)));
+          make_pair(name, std::vector<string>( data.at(p.first).front().second.size(), insert_name)));
     }else{
       if(get_size(p.first, name) <= max_size()){
          auto found = std::find_if(
@@ -133,7 +133,6 @@ bool Table::insert(string name, string insert_name) {
           found->second.insert(std::end(found->second), max_size() - get_size(p.first,name),
                            insert_name); 
       }
- 
     }
   }
   return true;

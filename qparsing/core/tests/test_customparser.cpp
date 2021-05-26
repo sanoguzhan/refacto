@@ -441,13 +441,19 @@ TEST(CustomParser, TestHelperMethod){
 
 //     Entity first2{
 //         .key = "inverter",
-//         .name = ".*Pac.*",
+//         .name = ".*I_DC_AvgMn.*",
 //         .orient ="row",
 //         .type = "series",
 //          .row=0,
 //         .value_begin=1};
 
-
+//         Entity first3{
+//         .key = "inverter",
+//         .name = ".*U_DC_AvgMn.*",
+//         .orient ="row",
+//         .type = "series",
+//          .row=0,
+//         .value_begin=1};
    
 
 //         Entity date_time2{
@@ -468,9 +474,9 @@ TEST(CustomParser, TestHelperMethod){
 //         .type ="entity",
 //         .keyword = "file_name"};
 //     CustomParser p(first, second, date_time);
-    // CustomParser p(second2, first2, date_time2, second3);
-    // p("tests/test_data/test01/dcbox/", ";",  0);
-// p("tests/test_data/test02/inverter/", ";",  0);
+//     // CustomParser p(second2, first2, first3, date_time2, second3);
+//     p("tests/test_data/test01/dcbox/", ";",  0);
+// // p("tests/test_data/test02/inverter/", ";",  0);
 //     // for(auto t:p.tables){
 //     //     if(t.first == "inverter"){
 //     //         ASSERT_EQ(91166, t.second->get_size());
@@ -478,7 +484,7 @@ TEST(CustomParser, TestHelperMethod){
 //     //         ASSERT_EQ(91166, t.second->get_size());
 //     //     }
 //     // }
-    //    p.to_csv("."); 
+//        p.to_csv("."); 
 // }
 
 
