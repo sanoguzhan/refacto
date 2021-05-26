@@ -65,10 +65,8 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
       from_series(series, item, tb);
     } else if (item.eType == "vector") {
       from_vector(vec_values, item);
-      if(id_type == "single") 
-        tb->insert(item.name, vec_values, true);
-      else
-        tb->insert(item.name, vec_values, false);
+   
+        tb->insert(item.name, vec_values);
       vec_values.clear();
     } else if (item.eType == "entity") {
       if (item.keyword == "file_name")
