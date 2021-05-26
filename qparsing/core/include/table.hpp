@@ -129,7 +129,7 @@ public:
    * @return bool true on success
    */
   bool insert(string name, string insert_name);
-
+  bool insert(string name, string id, string insert_name);
   /**
    * @brief Inserts given vector to table
    *
@@ -142,7 +142,7 @@ public:
    * @return bool true on success
    */
   bool insert(string name, std::vector<string> vec);
-
+  bool insert(string name,string id, std::vector<string> vec);
   /**
    * @brief Getter Method of object data
    *

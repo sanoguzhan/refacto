@@ -90,6 +90,30 @@ bool Table::insert(string name, std::vector<string> vec) {
     
     if (!column_exist(p.first, name)) {
       data.at(p.first).push_back(make_pair(name, vec));
+    }else{
+          auto found = std::find_if(
+          data.find(p.first)->second.begin(), data.find(p.first)->second.end(),
+          [&name](const auto &p) { return p.first == name; });
+          found->second.insert(std::end(found->second),vec.begin(),
+                           vec.end()); 
+    }
+  }
+  return true;
+}
+bool Table::insert(string name, string id, std::vector<string> vec) {
+  for (const auto &p : data) {
+    
+    if (!column_exist(p.first, name)) {
+      data.at(p.first).push_back(make_pair(name, vec));
+    }else{
+        if(p.first ==id){
+          auto found = std::find_if(
+          data.find(p.first)->second.begin(), data.find(p.first)->second.end(),
+          [&name](const auto &p) { return p.first == name; });
+          found->second.insert(std::end(found->second),vec.begin(),
+                           vec.end()); 
+
+        }
     }
   }
   return true;
@@ -133,11 +157,6 @@ size_t Table::get_size(string id_name, string column_name) const {
     for (const auto &item : c.second) {
 
       if (id_name == c.first && item.first == column_name) {
-        // if(id_name == "02"){
-        //   for(auto a:item.second){
-        //     std::cout << a<<std::endl;
-        //   }
-        // }
         size = item.second.size();
       }
     }
