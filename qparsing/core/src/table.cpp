@@ -14,7 +14,7 @@ bool Table::save(string path) const{
   std::ofstream csv_file;
   csv_file.open(path);
   size_t i = 0, loc = 0;
-  size_t size{max_size()};
+  size_t size;
   bool id_col = true;
 
   std::stringstream ss;
@@ -25,6 +25,7 @@ bool Table::save(string path) const{
   ss << data.begin()->second.at(i).first << "\n";
 
   for (const auto &c : data) {
+      size = data.at(c.first).front().second.size();
     if (c.second.size() <= 1) {
       for (; loc < size; loc++, i = 0) {
         try {
@@ -112,7 +113,6 @@ bool Table::insert(string name, string id, std::vector<string> vec) {
           [&name](const auto &p) { return p.first == name; });
           found->second.insert(std::end(found->second),vec.begin(),
                            vec.end()); 
-
         }
     }
   }
@@ -125,7 +125,8 @@ bool Table::insert(string name, string insert_name) {
 
       data.at(p.first).push_back(
           make_pair(name, std::vector<string>( data.at(p.first).front().second.size(), insert_name)));
-    }else{
+    }
+    else{
       if(get_size(p.first, name) <= max_size()){
          auto found = std::find_if(
           data.find(p.first)->second.begin(), data.find(p.first)->second.end(),
