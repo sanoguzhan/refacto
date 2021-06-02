@@ -27,13 +27,12 @@ build-docker:
 make-cpcheck:
     image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
     artifacts:
-        reports:
-            codequality: "cppcheck-result.xml"
-
+        paths:
+            - "cppcheck-result.xml"
     stage: cppcheck
     script:
         - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
-    only:
+    except:
         - staging
         - production
 
