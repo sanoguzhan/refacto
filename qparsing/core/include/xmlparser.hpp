@@ -69,10 +69,10 @@ vector<string> listdir(string);
  *  Keeps arbitary number of IDMaps and construct Vector with Initializer List
  */
 class XMLParser {
-private:
-  std::vector<IDMap> data;
 
 public:
+  std::vector<IDMap> data;
+
   /**
    * @brief XMLParser Constructer
    *      - Takes arbitary number of IDMaps
@@ -95,7 +95,7 @@ public:
 
 
 
-  string inline write_header(std::pair<const string,vector<IDMap>>& p);
+  std::string inline write_header(std::pair<const string,vector<IDMap>>& p);
 
 
 
