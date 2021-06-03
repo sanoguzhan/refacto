@@ -162,7 +162,10 @@ bool XMLParser::to_csv(string dir){
 string inline XMLParser::write_header(std::pair<const string,vector<IDMap>>& p){
   return std::string(std::accumulate(p.second.begin(), p.second.end(), std::string("INITIAL"), 
     [](string entry, IDMap id){
-      return entry != "INITIAL" ? entry + ";" + id.key : id.key;
+      string name;
+      if(id.output.empty()) name = id.key;
+      else name = id.output;
+      return entry != "INITIAL" ? entry + ";" + name : name;
     } ));
 }
 
