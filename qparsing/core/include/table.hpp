@@ -69,15 +69,25 @@ struct Series {
  *  Used for grouping Data
  * XMLParser need this class to insert data to Table Instance
  */
-struct IDMap {
-  std::string name;
-  std::string node;
-  std::string key;
-  std::string degree;
-  svector values;
 
-  IDMap(string name, string node, string key, string degree)
-      : name{name}, node{node}, key{key}, degree{degree} {}
+struct IDMap {
+  string name;
+  string node;
+  string key;
+  string degree;
+  string type;
+  std::map<string,string> conditions;
+
+
+  string output; 
+  svector values;
+  std::map<string, std::vector<string>> map_values;
+
+  IDMap(string name, string node, string key, string degree, string type="single", string output="")
+      : name{name}, node{node}, key{key}, degree{degree}, type{type}, output{output}{}
+  IDMap(string name, string node, string key, string degree, svector values, string type="single", string output="")
+      : name{name}, node{node}, key{key}, degree{degree}, values{values}, type{type}, output{output}{}
+       
   friend bool operator>(const IDMap &right, const IDMap &left);
   friend bool operator<=(const IDMap &right, const IDMap &left);
   friend bool operator<(const IDMap &right, const IDMap &left);

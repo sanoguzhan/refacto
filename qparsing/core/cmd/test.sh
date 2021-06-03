@@ -10,7 +10,7 @@ make
 cd $CODE_DIR
 echo CODE_DIR
 
-./tests/build/bin/test_customparser
+./tests/build/bin/test_xmlparser
 # for script in tests/build/bin/*; do $script; done
 popd
 

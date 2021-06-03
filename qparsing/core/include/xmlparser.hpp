@@ -26,7 +26,9 @@
 #include <regex>
 #include <string>
 #include <utility>
-
+#include <type_traits>
+#include<numeric>
+#include<algorithm>
 using namespace table;
 using std::map;
 using std::string;
@@ -38,6 +40,18 @@ using svector = std::vector<std::string>;
 
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * @brief Greps the list of file for given directory
@@ -78,6 +92,14 @@ public:
    */
   bool to_csv(string dir);
 
+
+
+
+  string inline write_header(std::pair<const string,vector<IDMap>>& p);
+
+
+
+
   /**
    * @brief Operator for xml file data search
    *         - Takes directory as input and looks for pattern match
@@ -108,8 +130,8 @@ private:
    * @param tag : (IDMap) search IDMap
    * @param ids : (vector<string>) id vector which filled up
    */
-  inline void update(pugi::xml_node root, const IDMap &tag, svector &ids);
-
+  void update(pugi::xml_node root, const IDMap &tag, svector &ids);
+  void update(pugi::xml_node root, const IDMap &tag, map<string, vector<string>> &ids);
   /**
    * @brief Map trasnformers to name-value map
    *      - Create map from IDMap for each unique name

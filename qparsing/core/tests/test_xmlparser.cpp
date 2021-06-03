@@ -28,6 +28,8 @@ class XMLParserTest: public TestTimer{
 //         .node="Key",
 //         .key="Seri",
 //         .degree="Mean",
+//         .type="single",
+//         .output="test_name"
 //     };
 
 //     IDMap mppt_amp{
@@ -54,7 +56,7 @@ class XMLParserTest: public TestTimer{
 
 //     XMLParser parser(inv_pac,inv_id, mppt_amp, mppt_etotal, mppt_vol);
   
-//     parser("tests/test_data/xml/", "WebBox");
+//     parser("tests/test_data/xml/single_variables/", "WebBox");
 
 //     parser.to_csv("tests/test_data/xml/");
 //     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
@@ -68,33 +70,87 @@ class XMLParserTest: public TestTimer{
 // TEST(XMLParser, TestGlobVector){
 //     /* Test for file search with pattern
 //     */
-//     auto files{listdir("tests/test_data/xml/")};
+//     auto files{listdir("tests/test_data/xml/single_variables/")};
 //     EXPECT_EQ(3, files.size());
   
 // }
 
 TEST(XMLParser, RegexSearch){
-    IDMap inv_pac{
+    IDMap amp{
         .name="string",
         .node="Key",
         .key="^(.*?).Ms.Amp",
+        .degree="Mean",
+        .type="multi"
+    };
+
+    //
+
+      IDMap tmp{
+        .name="string",
+        .node="Key",
+        .key="WRTP4Q44:2110070939:Inv.TmpLimStt",
         .degree="Mean",
     };
 
-    IDMap inv_pac2{
-        .name="string",
-        .node="Key",
-        .key="^(.*?).Ms.Amp",
-        .degree="Mean",
-    };
-    XMLParser parser(inv_pac,inv_pac2);
+
+    // Single should be always the last one
+    XMLParser parser(amp,tmp);
   
     parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
 
-    parser.to_csv("tests/test_data/xml/");
+    parser.to_csv(".");
   
 }
 
+TEST(XMLParser, GroupElements){
+    IDMap amp{
+        .name="string",
+        .node="Key",
+        .key="^(.*?).Ms.Amp",
+        .degree="Mean",
+        .type="multi"
+    };
+
+    //
+
+      IDMap tmp{
+        .name="string",
+        .node="Key",
+        .key="WRTP4Q44:2110070939:Inv.TmpLimStt",
+        .degree="Mean",
+    };
+
+
+    // Single should be always the last one
+    XMLParser parser(amp,tmp);
+  
+    parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+
+    parser.to_csv(".");
+  
+}
+
+
+TEST(XMLParser, WrongType){
+    IDMap amp{
+        .name="string",
+        .node="Key",
+        .key="^(.*?).Ms.Amp",
+        .degree="Mean",
+        .type="test"
+    };
+
+
+    XMLParser parser(amp);
+    try{
+    parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+
+    }catch(std::exception &ex){
+        EXPECT_EQ("Wrong Type \n Defined Types: 'single', 'multi', 'group' ", (std::string)ex.what());
+    }
+  
+}
 
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
