@@ -1,40 +1,68 @@
-
 include:
     project: 'exposed/template_ci'
     file: '/python-package.yml'
 
 stages:
-    - pull-master-into-staging
+    - build-and-deploy-docker-test-image
+    - cppcheck
+    - MR-master-staging
     - make-tag
     - build-and-deploy-docker-image
-    - cppcheck
     - build-and-deploy-package
     - release
-    - pull-staging-into-production
-    - pull-production-into-staging
+    - MR-staging-production
+    - MR-production-staging
 
-pull-master-into-staging:
-    extends: .pull-master-into-staging-base
-    stage: pull-master-into-staging
-
-build-docker:
-    extends: .build-and-deploy-docker-image
-    stage: build-and-deploy-docker-image
+build-and-deploy-docker-test-image:
+    extends: .build-and-deploy-docker-image-base
+    stage: build-and-deploy-docker-test-image
     variables:
         PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
         PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
+        BUILD_TEST: "true"
+    only:
+        - branches
+    except:
+        - tags
+        - production
+        - staging
 
-make-cpcheck:
-    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
+cppcheck:
+    image: $CI_REGISTRY_IMAGE:test
     artifacts:
         paths:
             - "cppcheck-result.xml"
     stage: cppcheck
     script:
         - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
+    only:
+        - branches
     except:
-        - staging
+        - tags
         - production
+        - staging
+
+MR-master-staging:
+    extends: .pull-master-into-staging-base
+    stage: MR-master-staging
+
+make-tag:
+    extends: .make-tag-base
+    stage: make-tag
+
+release:
+    extends: .release-base
+    stage: release
+
+
+build-docker:
+    extends: .build-and-deploy-docker-image-base
+    stage: build-and-deploy-docker-image
+    variables:
+        PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
+        PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
+
+
 
 build-package:
     extends: .build-and-deploy-package
@@ -42,20 +70,12 @@ build-package:
     variables:
         BUILD_CMD: CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
 
-release:
-    extends: .release-base
-    stage: release
-#    variables:
-#        additional_files: cppcheck-result.xml
-
-pull-staging-into-production:
+MR-staging-production:
+#    extends: .MR-staging-production-base
     extends: .pull-staging-into-production-base
-    stage: pull-staging-into-production
+    stage: MR-staging-production
 
-pull-production-into-staging:
+MR-production-staging:
+#    extends: .MR-production-staging-base
     extends: .pull-production-into-staging-base
-    stage: pull-production-into-staging
-    when: on_success
-
-
-
+    stage: MR-production-staging
