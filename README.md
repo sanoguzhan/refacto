@@ -1,4 +1,3 @@
-
 # Refacto & Parsing Library
 
 [![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
@@ -25,33 +24,32 @@ Run the project:
 For Tests:
 
 ```sh
-    ./qparsing/core/cmd/test.sh 
+    ./qparsing/core/cmd/test.sh
 ```
 
 This will compile all the code, build the c++ library and run the tests.
 
 Modules:
 
-| Name          | Type           | Library
-| ------------- |:-------------:|-------------:|
-| [XMLParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/xmlparser.hpp)    |  XML files       | Refacto & Parsing
-| [CSVParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/csvparser.hpp)     | CSV files      |   Refacto & Parsing 
-| [Decompressdir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp) | Compressed files | Refactor & Parsing
-| [Compressdir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp) | XML and CSV files | Refactor & Parsing
-| [Cleandir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp) | Clean files | Refactor & Parsing
-------
+| Name                                                                                          |       Type        |            Library |
+| --------------------------------------------------------------------------------------------- | :---------------: | -----------------: |
+| [XMLParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/xmlparser.hpp) |     XML files     |  Refacto & Parsing |
+| [CSVParser](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/csvparser.hpp) |     CSV files     |  Refacto & Parsing |
+| [Decompressdir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp)   | Compressed files  | Refactor & Parsing |
+| [Compressdir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp)     | XML and CSV files | Refactor & Parsing |
+| [Cleandir](https://github.com/sanoguzhan/refacto/blob/master/src/core/include/cod.hpp)        |    Clean files    | Refactor & Parsing |
+
+---
+
 ## Getting started
 
-
-To get started, install the library with 
+To get started, install the library with
 
 ```sh
     ./install_lib.sh
 ```
-  
 
-## Example 
-
+## Example
 
 Import the modules and run
 

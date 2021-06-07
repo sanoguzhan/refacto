@@ -1,24 +1,18 @@
-version: '3.3'
-
+version: "3.3"
 
 services:
-  
-    clang:
-        build:
-            context: .
-            dockerfile: ./Dockerfile
-        restart: always
-        env_file:
-            - ./.env
-        volumes:
-            - ../:/code
-        
-        healthcheck:
-            interval: 30s
-            timeout: 30s
-            retries: 3
-        command: /bin/sh -c "while sleep 1000; do :; done"
+  clang:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ../:/code
 
-
-
-
+    healthcheck:
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    command: /bin/sh -c "while sleep 1000; do :; done"

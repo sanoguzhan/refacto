@@ -1,33 +1,31 @@
 #ifndef __TEST_HEADER_HPP
 #define __TEST_HEADER_HPP
 
-#include <iostream>
-#include <vector>
-#include <string>
 #include <limits.h>
 #include <time.h>
+
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <string>
+#include <vector>
 
 #include "gtest/gtest.h"
-#include "refacto/dtables.hpp"
+#include "refacto/cod.hpp"
+#include "refacto/controller.hpp"
 #include "refacto/csvparser.hpp"
 #include "refacto/customparser.hpp"
-#include"refacto/controller.hpp"
-#include"refacto/xmlparser.hpp"
-#include"refacto/cod.hpp"
+#include "refacto/dtables.hpp"
+#include "refacto/xmlparser.hpp"
 using namespace std;
 using namespace dtable;
 namespace fs = std::filesystem;
 
-class TestTimer : public testing::Test
-{
-protected:
+class TestTimer : public testing::Test {
+   protected:
     void SetUp() override { start_time_ = time(nullptr); }
 
-    void TearDown() override
-    {
+    void TearDown() override {
         const time_t end_time = time(nullptr);
 
         EXPECT_TRUE(end_time - start_time_ <= 5) << "The test took too long.";
@@ -37,12 +35,11 @@ protected:
 
 /**
  * @brief Read a file and return it as string
- * 
+ *
  * @param path path of the file to read
- * @return std::string 
+ * @return std::string
  */
-std::string readFile(fs::path path)
-{
+std::string readFile(fs::path path) {
     // Open the stream to 'lock' the file.
     std::ifstream f(path, std::ios::in | std::ios::binary);
 
@@ -60,27 +57,27 @@ std::string readFile(fs::path path)
 
 /**
  * @brief Constant with the csv test directory
- * 
+ *
  */
 const static string TEST_CSV_DIR = "tests/test_data/csv/";
 /**
  * @brief Constant directory for test with input csv data
- * 
+ *
  */
 const static string TEST_CSV_INPUT_DIR = "tests/test_data/csv/input/";
 /**
  * @brief Constant directory for outputs of csv tests
- * 
+ *
  */
 const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/expected/";
 /**
  * @brief Constant directory for expected results of csv tests
- * 
+ *
  */
 const static string TEST_CSV_EXPECTED_DIR = "tests/test_data/csv/expected/";
 /**
  * @brief Constant directory for expected results of xml tests
- * 
+ *
  */
 const static string TEST_XML_OUTPUT_DIR = "tests/test_data/";
 #endif

@@ -1,8 +1,6 @@
 #include "test_header.hpp"
 
-class CSVParserTest : public TestTimer
-{
-};
+class CSVParserTest : public TestTimer {};
 
 /* Test for CustomParser
     - Test for openning file
@@ -10,8 +8,6 @@ class CSVParserTest : public TestTimer
     - Test for CSVParser values methods
     - Test for Entity Types
 */
-
-
 
 // TEST(CustomParser, Constructor)
 // {
@@ -82,7 +78,7 @@ class CSVParserTest : public TestTimer
 //         .type = "series",
 //          .row=0,
 //         .value_begin=1};
-           
+
 //     // !Example vector value insertion
 //     // here keyword is required for ambigous Constructor
 //     // it picks up date column and insert to each id under key group
@@ -108,7 +104,8 @@ class CSVParserTest : public TestTimer
 //         };
 
 //     // !Example single value insertion
-//     // !if keyword is file_name then opened filename will be inserted as single value
+//     // !if keyword is file_name then opened filename will be inserted as
+//     single value
 //     // if not keyword value will be inserted
 //     Entity single{
 //         .key = "inverter_mppt",
@@ -126,7 +123,6 @@ class CSVParserTest : public TestTimer
 //         }
 //     }
 // }
-
 
 // TEST(CustomParser, TestInputSize){
 
@@ -169,7 +165,7 @@ class CSVParserTest : public TestTimer
 //         .name = "Test_single_Value",
 //         .type = "entity",
 //         .keyword="test",
-//         }; 
+//         };
 //     pac.conditions = ent;
 //     pac1.conditions = ent1;
 //     CustomParser p(pac, single);
@@ -183,7 +179,6 @@ class CSVParserTest : public TestTimer
 //     }
 //     // p.to_csv(".");
 // }
-
 
 // TEST(CustomParser, TestContinousSize){
 
@@ -227,7 +222,7 @@ class CSVParserTest : public TestTimer
 //         .name = "Test_single_Value",
 //         .type = "entity",
 //         .keyword="test",
-//         }; 
+//         };
 //     pac.conditions = ent;
 //     pac1.conditions = ent1;
 //     CustomParser p(pac, single);
@@ -241,7 +236,6 @@ class CSVParserTest : public TestTimer
 //     }
 //     // p.to_csv(".");
 // }
-
 
 // TEST(CustomParser, TestIdConstructor){
 //     /* Test for CustomParser id insertion with variable
@@ -269,10 +263,8 @@ class CSVParserTest : public TestTimer
 //         .row = 0,
 //         .value_begin=1};
 
-    
 //     CustomParser p(ids, pac);
 //     p(TEST_CSV_INPUT_DIR + "test_id_input/" , ";",  0);
-
 
 //     for(auto t:p.tables){
 //         if(t.first == "inverter"){
@@ -280,7 +272,6 @@ class CSVParserTest : public TestTimer
 //         }
 //     }
 // }
-
 
 // TEST(CustomParser, TestTreatedInput){
 //     /* Test for CustomParser id insertion with multiple variable
@@ -310,7 +301,7 @@ class CSVParserTest : public TestTimer
 //         .type="series",
 //         .row=0,
 //         .value_begin=1
-//     }; 
+//     };
 
 //      Entity voltage{
 //         .key = "inverter",
@@ -319,7 +310,7 @@ class CSVParserTest : public TestTimer
 //         .type="series",
 //         .row=0,
 //         .value_begin=1
-//     }; 
+//     };
 //     CustomParser p(ids,pac_watt,time,voltage);
 //     p("tests/test_data/csv/", ";",  0);
 
@@ -330,8 +321,6 @@ class CSVParserTest : public TestTimer
 //     }
 
 // }
-
-
 
 // TEST(CustomParser, TestGroupId){
 //     /* Test for CustomParser group id parsing
@@ -379,20 +368,18 @@ class CSVParserTest : public TestTimer
 //             ASSERT_EQ(91166, t.second->max_size());
 //         }
 //     }
-//     //    p.to_csv("."); 
+//     //    p.to_csv(".");
 // }
 
 // TEST(CustomParser, TestHelperMethod){
-  
+
 //     /* Test for CustomParser Helper Methods
 //     */
 //     ASSERT_EQ(false, is_path_exist("foo/bar"));
-        
+
 // }
 
-
-
-TEST(CustomParser, test){
+TEST(CustomParser, test) {
     /* Test for CustomParser group id parsing
         - Load the file
         - Create table
@@ -402,81 +389,66 @@ TEST(CustomParser, test){
     */
     vector<map<string, string>> ent;
     ent.push_back({{"id", ".*Channel_(\\d+)_I_AvgMn.*"},
-                    {"name", ".*Channel_\\d+_(I_AvgMn).*"}
-                    });
+                   {"name", ".*Channel_\\d+_(I_AvgMn).*"}});
 
-    Entity first{
-        .key = "string",
-        .name = "I_AvgMn",
-        .orient ="row",
-        .type = "group",
-         .row=0,
-        .value_begin=1};
+    Entity first{.key = "string",
+                 .name = "I_AvgMn",
+                 .orient = "row",
+                 .type = "group",
+                 .row = 0,
+                 .value_begin = 1};
     first.conditions = ent;
 
+    Entity second{.key = "string",
+                  .name = "dcbox",
+                  .type = "entity",
+                  .keyword = "file_name"};
 
-    Entity second{
-        .key = "string",
-        .name = "dcbox",
-        .type ="entity",
-        .keyword = "file_name"};
+    Entity date_time{.key = "string",
+                     .name = "date_time",
+                     .orient = "column",
+                     .type = "vector",
+                     .keyword = "vector",
+                     .column = 0,
+                     .from = 1,
+                     .to = -1};
 
-        Entity date_time{
-        .key = "string",
-        .name = "date_time",
-        .orient = "column",
-        .type = "vector",
-        .keyword="vector",
-        .column=0,
-        .from=1,
-        .to=-1
-        };
+    Entity second2{.key = "inverter",
+                   .name = "Inverter",
+                   .type = "ids",
+                   .keyword = "file_name"};
 
+    Entity first2{.key = "inverter",
+                  .name = ".*I_DC_AvgMn.*",
+                  .orient = "row",
+                  .type = "series",
+                  .row = 0,
+                  .value_begin = 1};
 
- Entity second2{
-        .key = "inverter",
-        .name = "Inverter",
-        .type ="ids",
-        .keyword = "file_name"};
+    Entity first3{.key = "inverter",
+                  .name = ".*U_DC_AvgMn.*",
+                  .orient = "row",
+                  .type = "series",
+                  .row = 0,
+                  .value_begin = 1};
 
-    Entity first2{
-        .key = "inverter",
-        .name = ".*I_DC_AvgMn.*",
-        .orient ="row",
-        .type = "series",
-         .row=0,
-        .value_begin=1};
+    Entity date_time2{.key = "inverter",
+                      .name = "date_time",
+                      .orient = "column",
+                      .type = "vector",
+                      .keyword = "vector",
+                      .column = 0,
+                      .from = 1,
+                      .to = -1};
 
-        Entity first3{
-        .key = "inverter",
-        .name = ".*U_DC_AvgMn.*",
-        .orient ="row",
-        .type = "series",
-         .row=0,
-        .value_begin=1};
-   
-
-        Entity date_time2{
-        .key = "inverter",
-        .name = "date_time",
-        .orient = "column",
-        .type = "vector",
-        .keyword="vector",
-        .column=0,
-        .from=1,
-        .to=-1
-        };
-
-
- Entity second3{
-        .key = "inverter",
-        .name = "string",
-        .type ="entity",
-        .keyword = "file_name"};
+    Entity second3{.key = "inverter",
+                   .name = "string",
+                   .type = "entity",
+                   .keyword = "file_name"};
     // CustomParser p(first, second, date_time, second3);
     CustomParser p(second2, first2, first3, date_time2, second3);
     // p("tests/test_data/test01/dcbox/", ";",  0);
-p("tests/test_data/test02/inverter/", ";",  0);
+    p("tests/test_data/test02/inverter/", ";", 0);
     // for(auto t:p.tables){
     //     if(t.first == "inverter"){
     //         ASSERT_EQ(91166, t.second->get_size());
@@ -484,12 +456,10 @@ p("tests/test_data/test02/inverter/", ";",  0);
     //         ASSERT_EQ(91166, t.second->get_size());
     //     }
     // }
-       p.to_csv("."); 
+    p.to_csv(".");
 }
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

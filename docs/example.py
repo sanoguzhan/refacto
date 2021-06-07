@@ -24,7 +24,7 @@ test_csv0 = CSVParser([
                     "row" :"1",
                     "value_begin" :"3"}
             ])
-test_csv0("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
+# test_csv0("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
 # test_csv0.to_csv(".")
 
 
@@ -42,8 +42,8 @@ test_csv1 = CSVParser([
                         }
                  },
             ])
-test_csv1("qparsing/core/tests/test_data/csv/input/test_id_group/" , ";",  0)
-test_csv1.to_csv(".")
+# test_csv1("qparsing/core/tests/test_data/csv/input/test_id_group/" , ";",  0)
+# test_csv1.to_csv(".")
 
 test_csv2 = CSVParser([
                 {"key": "inverter",
@@ -106,7 +106,7 @@ test_csv2 = CSVParser([
                     "keyword" : "test",
                  }
             ])
-test_csv2("qparsing/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
+# test_csv2("qparsing/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
 # test.to_csv(".")
 
 
@@ -139,53 +139,140 @@ test_csv3 = CSVParser([
                     "value_begin":"1",
                  }
             ])
-test_csv3("qparsing/core/tests/test_data/csv/" , ";",  0)
+# test_csv3("qparsing/core/tests/test_data/csv/" , ";",  0)
 # test_csv3.to_csv(".")
 
+
+# --------------------- | ----------------------#
 
 # #XMLParser
 # # Expect number of dictionary as list
 # # Name in the dictionary will be used to catogorized to file
+# Example 0:
+# Values can be a single entity from XML Tree, in this case
+# All files searched and values converted to a table
+# Single search expect:
+#        name of the grouping
+#        node: XML node
+#        key: search variable
+#        degree: leaf of Key
+#        type: single
+#        output: New Column name
+#
+#! Note: if output value is given, type must be specified.
+
 kwargs = [{"name": "inverter",
             "node":"Key",
             "key":"Pac",
-            "degree":"Mean"},
+            "degree":"Mean",
+            "type":"single",
+            "output":"foobar"},
 
-            {"name": "inverter",
-            "node":"Key",
-            "key":"Seri",
-            "degree":"Mean"},
+            # {"name": "inverter",
+            # "node":"Key",
+            # "key":"Seri",
+            # "degree":"Mean",
+            # "type":"single"},
 
-            {"name": "inverter_mppt",
-            "node":"Key",
-            "key":"Amp",
-            "degree":"Mean"},
+            # {"name": "inverter_mppt",
+            # "node":"Key",
+            # "key":"Amp",
+            # "degree":"Mean",
+            # "type":"single"},
 
-            {"name": "inverter_mppt",
-            "node":"Key",
-            "key":"Vol",
-            "degree":"Mean"},
+            # {"name": "inverter_mppt",
+            # "node":"Key",
+            # "key":"Vol",
+            # "degree":"Mean",
+            # "type":"single"},
 
-            {"name": "inverter_mppt",
-            "node":"Key",
-            "key":"E-total",
-            "degree":"Mean"}
+            # {"name": "inverter_mppt",
+            # "node":"Key",
+            # "key":"E-total",
+            # "degree":"Mean",
+            # "type":"single"}
     ]
 
 xml_parser = XMLParser(kwargs)
 
-# # Here, pattern search for xml files are given, and the root name of each document
 # # Uncomment to run
-xml_parser("qparsing/core/tests/test_data/xml/", "WebBox");
+xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
+xml_parser.to_csv(".")
 
-# # Export location, it will write multiple files if there are more than one unique name in the kwargs dict
+# Example 1:
+# Values can be a group entity from XML Tree, in this case
+# Here, values are grouped based on given condition
+# Condition must include id and name keys
+# for each condition, value column created.
+#        name of the grouping
+#        node: XML node
+#        key: search variable
+#        degree: leaf of Key
+#        type: group
+#        condition: {}
+#
+#! Note: Key regex is used for search and condition is used for transforming data
 
+
+kwargs = [{"name": "inverter",
+            "node":"Key",
+            "key":"Pac",
+            "degree":"Mean",
+            "type": "single"},
+
+            {"name": "inverter",
+            "node":"Key",
+            "key":"^(.*?)Uac",
+            "degree":"Mean",
+            "type": "group",
+            "condition":{
+                "id": "(.*)Uac",
+                "name" :  ".*(Uac)"
+            }}
+    ]
+xml_parser = XMLParser(kwargs)
+
+# # Uncomment to run
+xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
+# xml_parser.to_csv(".")
+
+
+# Example 2:
+# Values can be multi columns from XML Tree, in this case
+# Here, values are searched with given regex and 
+# a column is created per found vairable
+#        name of the grouping
+#        node: XML node
+#        key: search variable
+#        degree: leaf of Key
+#        type: multi
+#
+#! Note: Output column name cannot be given
+
+kwargs = [{"name": "inverter",
+            "node":"Key",
+            "key":"Pac",
+            "degree":"Mean",
+            "type":"single"},
+
+            {"name": "inverter",
+            "node":"Key",
+            "key":"^(.*?).Ms.Amp",
+            "degree":"Mean",
+            "type": "multi",
+            },
+    ]
+xml_parser = XMLParser(kwargs)
+# # Uncomment to run
+# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
 # # Uncomment to run
 # xml_parser.to_csv(".");
 
-
+# --------------------- | ----------------------#
 # # Decompressdir, Compressdir, Cleandir examples
 
 # Decompressdir()("qparsing/core/tests/test_data/gz/")
+# --------------------- | ----------------------#
 # Cleandir()("qparsing/core/tests/test_data/gz/", "*.csv")
+# --------------------- | ----------------------#
 # Compressdir()("qparsing/core/tests/test_data/gz/", "test")

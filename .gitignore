@@ -75,3 +75,6 @@ qparsing/core/inverter.csv
 qparsing/core/inverter_mppt.csv
 qparsing/core/test_xml.csv
 qparsing/core/string.csv
+.devcontainer/
+inverter.csv
+qparsing/core/test2.csv
