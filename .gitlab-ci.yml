@@ -1,58 +1,62 @@
+
 include:
-  project: "exposed/template_ci"
-  file: "/python-package.yml"
+    project: 'exposed/template_ci'
+    file: '/python-package.yml'
 
 stages:
-  - pull-master-into-staging
-  - make-tag
-  - build-and-deploy-docker-image
-  - cppcheck
-  - build-and-deploy-package
-  - release
-  - pull-staging-into-production
-  - pull-production-into-staging
+    - pull-master-into-staging
+    - make-tag
+    - build-and-deploy-docker-image
+    - cppcheck
+    - build-and-deploy-package
+    - release
+    - pull-staging-into-production
+    - pull-production-into-staging
 
 pull-master-into-staging:
-  extends: .pull-master-into-staging-base
-  stage: pull-master-into-staging
+    extends: .pull-master-into-staging-base
+    stage: pull-master-into-staging
 
 build-docker:
-  extends: .build-and-deploy-docker-image
-  stage: build-and-deploy-docker-image
-  variables:
-    PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
-    PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
+    extends: .build-and-deploy-docker-image
+    stage: build-and-deploy-docker-image
+    variables:
+        PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
+        PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
 
 make-cpcheck:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
-  artifacts:
-    reports:
-      codequality: "cppcheck-result.xml"
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH-latest
+    artifacts:
+        reports:
+            codequality: "cppcheck-result.xml"
 
-  stage: cppcheck
-  script:
-    - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
-  only:
-    - staging
-    - production
+    stage: cppcheck
+    script:
+        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
+    only:
+        - staging
+        - production
 
 build-package:
-  extends: .build-and-deploy-package
-  stage: build-and-deploy-package
-  variables:
-    BUILD_CMD: CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
+    extends: .build-and-deploy-package
+    stage: build-and-deploy-package
+    variables:
+        BUILD_CMD: CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
 
 release:
-  extends: .release-base
-  stage: release
+    extends: .release-base
+    stage: release
 #    variables:
 #        additional_files: cppcheck-result.xml
 
 pull-staging-into-production:
-  extends: .pull-staging-into-production-base
-  stage: pull-staging-into-production
+    extends: .pull-staging-into-production-base
+    stage: pull-staging-into-production
 
 pull-production-into-staging:
-  extends: .pull-production-into-staging-base
-  stage: pull-production-into-staging
-  when: on_success
+    extends: .pull-production-into-staging-base
+    stage: pull-production-into-staging
+    when: on_success
+
+
+
