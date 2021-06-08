@@ -251,6 +251,6 @@ class XMLParserController : public XMLParser {
     void get(string dir, const string root) {
         XMLParser::operator()(dir, root);
     }
-    
+
 };
 #endif

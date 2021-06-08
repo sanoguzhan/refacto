@@ -10,6 +10,7 @@ services:
       - ./.env
     volumes:
       - ../:/code
+      # - data_pv:/code/qparsing/core/tests/test_data/data_pv/
 
     healthcheck:
       interval: 30s

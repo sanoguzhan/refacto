@@ -125,10 +125,10 @@ TEST(XMLParser, GroupElements) {
     XMLParser parser(tmp, stt, tmp2);
 
     parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
-
-    ASSERT_EQ(1, parser.data.size());
-
     // parser.to_csv(".");
+
+    ASSERT_EQ(3, parser.data.size());
+
 }
 
 TEST(XMLParser, WrongType) {
@@ -167,8 +167,6 @@ TEST(XMLParser, TestHighVolumeData) {
     };
 
 
-
-
     IDMap pac{.name = "inverter_mppt",
               .node = "Key",
               .key = "^(.*?)Pac",
@@ -189,7 +187,7 @@ TEST(XMLParser, TestHighVolumeData) {
 
     parser("tests/test_data/vihiers/", "WebBox");
 
-    ASSERT_EQ(1, parser.data.size());
+    ASSERT_EQ(4, parser.data.size());
 
     // parser.to_csv(".");
 }

@@ -1,8 +1,9 @@
 #include "xmlparser.hpp"
+
 static string DELIMETER = ";";
 
 vector<string> listdir(string pattern) {
-    string dir{pattern};
+    string cwdir = pattern;
     pattern += "*.xml";
     glob_t glob_result;
     glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
@@ -11,7 +12,7 @@ vector<string> listdir(string pattern) {
         files.push_back(string(glob_result.gl_pathv[i]));
     }
     globfree(&glob_result);
-    if(files.empty()) throw std::runtime_error("Files Not Found at " + dir);
+    if(files.empty()) throw std::runtime_error("Files Not Found at " + cwdir);
     return files;
 }
 
@@ -49,7 +50,6 @@ void XMLParser::transfrom_map(map<string, vector<IDMap>>& keys) {
 
 // Move to Class
 void transform_keys(IDMap& it, vector<IDMap>& args) {
-
     const vector<IDMap> ids = [&it]() {
         vector<IDMap> ids;
         for (auto& item : it.map_values) {
@@ -64,7 +64,6 @@ void transform_keys(IDMap& it, vector<IDMap>& args) {
 
 // Move to Class
 void rotate_keys(IDMap& it, vector<IDMap>& args) {
-
     svector ids, vars;
     if (it.conditions.find("id") == it.conditions.end() ||
         it.conditions.find("name") == it.conditions.end())
@@ -73,7 +72,6 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
     std::regex e_var(it.conditions.at("name"));
 
     std::smatch sm_id, sm_var;
-    if( it.map_values.empty())return; 
     for (auto p : it.map_values) {
         std::regex_match(p.first, sm_id, e_id,
                          std::regex_constants::match_default);
@@ -82,12 +80,9 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
         if (sm_id.size() > 0 && sm_var.size() > 0) {
             ids.insert(ids.end(), p.second.size(), sm_id[1]);
             vars.insert(vars.end(), p.second.begin(), p.second.end());
-        } else{
+        } else
             throw std::runtime_error("Regex grouping is not correct!");
-
-        }
     }
-    if(sm_id.size() > 0 && sm_var.size() > 0) return;
     const vector<IDMap> items = [&]() {
         vector<IDMap> items;
         auto id =
@@ -98,11 +93,9 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
             items.emplace_back(it.name, it.node, it.name + "_id", it.degree,
                                ids);
         }
-
         items.emplace_back(it.name, it.node, sm_var[1], it.degree, vars);
         return items;
     }();
-
     it.key = "NULL";
     args.insert(args.begin(), items.begin(), items.end());
 }
@@ -110,7 +103,6 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
 void validator(map<string, vector<IDMap>>& keys) {
     std::for_each(keys.begin(), keys.end(), [](auto& p) {
         vector<IDMap> items;
-
         std::for_each(p.second.begin(), p.second.end(),
                       [&p, &items](IDMap& key) {
                           if (key.type == "multi")
@@ -125,7 +117,6 @@ void validator(map<string, vector<IDMap>>& keys) {
                                       }),
                        p.second.end());
         p.second.insert(p.second.end(), items.begin(), items.end());
-        items.clear();
     });
 }
 
@@ -133,11 +124,10 @@ bool XMLParser::to_csv(string dir) {
     map<string, vector<IDMap>> keys;
     map<string, u_int32_t> key_sizes, level_sizes;
     transfrom_map(keys);
-
     validator(keys);
-
     size_t row = 0, col = 0;
     max_key_sizes(keys, key_sizes);
+
     std::stringstream ss;
     for (auto& key : keys) {
         level_sizes.insert(std::pair<std::string, u_int32_t>(

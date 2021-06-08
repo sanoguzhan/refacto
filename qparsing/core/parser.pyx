@@ -66,13 +66,17 @@ cdef class XMLParser:
         cdef vector[map[string, string]] entity
 
         for item in values:
-            print(item)
             if item["type"] == "group":
                 temp = item["condition"]
                 condition_name = item["key"] + item["name"]
                 item["condition"] = condition_name
                 entity.push_back(item)
                 condition[condition_name] = temp
+            elif item["type"] == "single" or item["type"] == "multi":
+                item["output"] = item.get("output", item["key"])
+                entity.push_back(item) 
+            else:
+                raise ValueError("Type not recognised.")
         self.thisptr = new XMLParserController(entity, condition)
 
     def __call__(self,str dir, str root):

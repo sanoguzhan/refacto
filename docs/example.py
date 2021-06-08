@@ -168,36 +168,36 @@ kwargs = [{"name": "inverter",
             "type":"single",
             "output":"foobar"},
 
-            # {"name": "inverter",
-            # "node":"Key",
-            # "key":"Seri",
-            # "degree":"Mean",
-            # "type":"single"},
+            {"name": "inverter",
+            "node":"Key",
+            "key":"Seri",
+            "degree":"Mean",
+            "type":"single"},
 
-            # {"name": "inverter_mppt",
-            # "node":"Key",
-            # "key":"Amp",
-            # "degree":"Mean",
-            # "type":"single"},
+            {"name": "inverter_mppt",
+            "node":"Key",
+            "key":"Amp",
+            "degree":"Mean",
+            "type":"single"},
 
-            # {"name": "inverter_mppt",
-            # "node":"Key",
-            # "key":"Vol",
-            # "degree":"Mean",
-            # "type":"single"},
+            {"name": "inverter_mppt",
+            "node":"Key",
+            "key":"Vol",
+            "degree":"Mean",
+            "type":"single"},
 
-            # {"name": "inverter_mppt",
-            # "node":"Key",
-            # "key":"E-total",
-            # "degree":"Mean",
-            # "type":"single"}
+            {"name": "inverter_mppt",
+            "node":"Key",
+            "key":"E-total",
+            "degree":"Mean",
+            "type":"single"}
     ]
 
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
 xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
-xml_parser.to_csv(".")
+# xml_parser.to_csv(".")
 
 # Example 1:
 # Values can be a group entity from XML Tree, in this case
@@ -263,8 +263,8 @@ kwargs = [{"name": "inverter",
             },
     ]
 xml_parser = XMLParser(kwargs)
-# # Uncomment to run
-# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
+# # Uncomment to run 
+xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
 # # Uncomment to run
 # xml_parser.to_csv(".");
 
