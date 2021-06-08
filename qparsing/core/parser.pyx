@@ -66,6 +66,7 @@ cdef class XMLParser:
         cdef vector[map[string, string]] entity
 
         for item in values:
+            print(item)
             if item["type"] == "group":
                 temp = item["condition"]
                 condition_name = item["key"] + item["name"]
