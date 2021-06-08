@@ -22,17 +22,17 @@
             <location file="src/table.cpp" line="164"/>
         </error>
         <error id="shadowVar" severity="style" msg="Local variable ids shadows outer variable" verbose="Local variable ids shadows outer variable" cwe="398">
-            <location file="src/xmlparser.cpp" line="53" info="Shadow variable"/>
-            <location file="src/xmlparser.cpp" line="52" info="Shadowed declaration"/>
+            <location file="src/xmlparser.cpp" line="54" info="Shadow variable"/>
+            <location file="src/xmlparser.cpp" line="53" info="Shadowed declaration"/>
             <symbol>ids</symbol>
         </error>
         <error id="shadowVar" severity="style" msg="Local variable items shadows outer variable" verbose="Local variable items shadows outer variable" cwe="398">
-            <location file="src/xmlparser.cpp" line="91" info="Shadow variable"/>
-            <location file="src/xmlparser.cpp" line="90" info="Shadowed declaration"/>
+            <location file="src/xmlparser.cpp" line="87" info="Shadow variable"/>
+            <location file="src/xmlparser.cpp" line="86" info="Shadowed declaration"/>
             <symbol>items</symbol>
         </error>
         <error id="useStlAlgorithm" severity="style" msg="Consider using std::transform algorithm instead of a raw loop." verbose="Consider using std::transform algorithm instead of a raw loop." cwe="398">
-            <location file="src/xmlparser.cpp" line="55"/>
+            <location file="src/xmlparser.cpp" line="56"/>
         </error>
         <error id="missingInclude" severity="information" msg="Cppcheck cannot find all the include files (use --check-config for details)" verbose="Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project&apos;s include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config."/>
     </errors>

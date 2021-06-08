@@ -185,11 +185,11 @@ TEST(XMLParser, TestHighVolumeData) {
     uac.conditions = ent1;
     XMLParser parser(value0, value1, pac,uac);
 
-    parser("tests/test_data/vihiers/", "WebBox");
+    parser("tests/test_data/ychoux/", "WebBox");
 
-    ASSERT_EQ(4, parser.data.size());
+    // ASSERT_EQ(4, parser.data.size());
 
-    // parser.to_csv(".");
+    parser.to_csv(".");
 }
 
 int main(int argc, char* argv[]) {

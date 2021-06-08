@@ -65,6 +65,7 @@ void transform_keys(IDMap& it, vector<IDMap>& args) {
 // Move to Class
 void rotate_keys(IDMap& it, vector<IDMap>& args) {
     svector ids, vars;
+    string column_name;
     if (it.conditions.find("id") == it.conditions.end() ||
         it.conditions.find("name") == it.conditions.end())
         throw std::runtime_error("Conditions missing 'id' or 'name' keys.");
@@ -78,6 +79,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
         std::regex_match(p.first, sm_var, e_var,
                          std::regex_constants::match_default);
         if (sm_id.size() > 0 && sm_var.size() > 0) {
+            column_name = sm_var[1];
             ids.insert(ids.end(), p.second.size(), sm_id[1]);
             vars.insert(vars.end(), p.second.begin(), p.second.end());
         } else
@@ -85,6 +87,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
     }
     const vector<IDMap> items = [&]() {
         vector<IDMap> items;
+
         auto id =
             std::find_if(args.begin(), args.end(), [&args](const IDMap& item) {
                 return item.key == item.name + "_id";
@@ -93,7 +96,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
             items.emplace_back(it.name, it.node, it.name + "_id", it.degree,
                                ids);
         }
-        items.emplace_back(it.name, it.node, sm_var[1], it.degree, vars);
+        items.emplace_back(it.name, it.node, column_name, it.degree, vars);
         return items;
     }();
     it.key = "NULL";
@@ -117,6 +120,7 @@ void validator(map<string, vector<IDMap>>& keys) {
                                       }),
                        p.second.end());
         p.second.insert(p.second.end(), items.begin(), items.end());
+        items.clear();
     });
 }
 
