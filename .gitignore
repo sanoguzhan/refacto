@@ -78,3 +78,4 @@ qparsing/core/string.csv
 .devcontainer/
 inverter.csv
 qparsing/core/test2.csv
+qparsing.egg-info
