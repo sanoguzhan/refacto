@@ -14,8 +14,15 @@ include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 include(CTest)
 
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Code Static Analysis
+
+# set(CMAKE_CXX_CLANG_TIDY 
+#   clang-tidy;
+#   -header-filter=.;
+#   -checks=*;
+#   --export-fixes=fixes.yml;)
+
 option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
 message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
 

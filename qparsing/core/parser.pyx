@@ -24,10 +24,10 @@ cdef class CSVParser:
     cdef CustomParserWrapper* thisptr
 
     
-    def __cinit__(self, list test):
+    def __cinit__(self, list vals):
         cdef vector[map[string, string]] entity
         cdef map[string, map[string, string]] condition
-        for i in test:
+        for i in vals:
             if (i["type"] == "series" or i["type"] == "group") and i.get("condition", False):
                 temp = i["condition"]
                 condition_name = i["key"] + i["name"]
@@ -52,7 +52,7 @@ cdef class CSVParser:
 #### XMLParser ####
 cdef extern from "include/controller.hpp":
     cdef cppclass XMLParserController:
-        XMLParserController(vector[map[string,string]]) nogil except +;
+        XMLParserController(vector[map[string,string]], map[string,map[string, string]]) nogil except +;
         bool to_csv(string) nogil except+;
         void operator()(string, const string) nogil except +;
 
@@ -60,8 +60,24 @@ cdef class XMLParser:
     """ Python Interface for XMLParserController
         Constructor expect dict with all parameters"""
     cdef XMLParserController* thisptr
-    def __cinit__(self, vector[map[string, string]] values):
-        self.thisptr = new XMLParserController(values)
+
+    def __cinit__(self, list values):
+        cdef map[string, map[string, string]] condition
+        cdef vector[map[string, string]] entity
+
+        for item in values:
+            if item["type"] == "group":
+                temp = item["condition"]
+                condition_name = item["key"] + item["name"]
+                item["condition"] = condition_name
+                entity.push_back(item)
+                condition[condition_name] = temp
+            elif item["type"] == "single" or item["type"] == "multi":
+                item["output"] = item.get("output", item["key"])
+                entity.push_back(item) 
+            else:
+                raise ValueError("Type not recognised.")
+        self.thisptr = new XMLParserController(entity, condition)
 
     def __call__(self,str dir, str root):
         return self.thisptr[0](ops._string(dir), ops._string(root))

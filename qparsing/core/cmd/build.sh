@@ -9,6 +9,7 @@ pushd $CODE_DIR
 export UBSAN_OPTIONS=suppressions=ubsan.supp
 mkdir -p build
 cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 src 2> cppcheck-result.xml
+
 cd build
 rm -rf *
 
