@@ -188,7 +188,7 @@ kwargs = [{"name": "inverter",
 
             {"name": "inverter_mppt",
             "node":"Key",
-            "key":"E-total",
+            "key":"E-Total",
             "degree":"Mean",
             "type":"single"}
     ]
@@ -265,7 +265,6 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 # # Uncomment to run 
 xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
-# # Uncomment to run
 # xml_parser.to_csv(".");
 
 # --------------------- | ----------------------#

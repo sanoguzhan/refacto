@@ -55,7 +55,7 @@ TEST(XMLParserController, TestInterfaceController) {
 
     XMLParser parser(inv_pac, inv_id, mppt_amp, mppt_etotal, mppt_vol);
 
-    parser("tests/test_data/xml/*.xml", "WebBox");
+    parser("tests/test_data/xml/single_variables", "WebBox");
 
     // parser.to_csv("tests/test_data/xml/");
     ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));

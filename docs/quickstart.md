@@ -109,6 +109,57 @@ Unlike CSVParser, XMLParser parameter's order not important
 
 ```
 
+There are 3 types of input type fpr XMLParser:
+
+1 - Single
+2 - Multi
+3 - Group
+
+### Single Input:
+
+Values can be a single entity from XML Tree, in this case. All files searched and values converted to a table. Single search value example below:
+
+```python
+{"name": "inverter",
+        "node":"Key",
+        "key":"Pac",
+        "degree":"Mean",
+        "type":"single",
+        "output":"foobar"}
+```
+
+### Multi Input:
+
+Values can be multi columns from XML Tree, in this case, values are searched with given regex and a column is created per found vairable. All values found with key condition are stored under column name and converted to a table when to_csv is invoked.
+
+Example for multi search:
+
+```python
+ {"name": "inverter",
+            "node":"Key",
+            "key":"^(.*?).Ms.Amp",
+            "degree":"Mean",
+            "type": "multi"}
+```
+
+### Group Input:
+
+Values can be a group of colu from XML Tree, in this case, values are grouped based on given condition
+Condition must include id and name keys
+for each condition, value column created
+
+Example:
+```python
+         {"name": "inverter",
+            "node":"Key",
+            "key":"^(.*?)Uac",
+            "degree":"Mean",
+            "type": "group",
+            "condition":{
+                "id": "(.*)Uac",
+                "name" :  ".*(Uac)"
+            }}
+```
 ## Decompressdir
 
 Uses shell command to decompress files in gzip, zip or tar extension

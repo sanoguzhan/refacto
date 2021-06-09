@@ -3,6 +3,9 @@
 static string DELIMETER = ";";
 
 vector<string> listdir(string pattern) {
+
+    if(pattern.compare(pattern.size()-1, 1, "/") != 0)
+        pattern += "/";
     string cwdir = pattern;
     pattern += "*.xml";
     glob_t glob_result;
@@ -48,24 +51,22 @@ void XMLParser::transfrom_map(map<string, vector<IDMap>>& keys) {
              [&](IDMap& id) { keys.at(id.name).emplace_back(id); });
 }
 
-// Move to Class
 void transform_keys(IDMap& it, vector<IDMap>& args) {
-    const vector<IDMap> ids = [&it]() {
+    const vector<IDMap> columns = [&it]() {
         vector<IDMap> ids;
-        for (auto& item : it.map_values) {
-            ids.emplace_back(it.name, it.node, item.first, it.degree,
-                             item.second);
-        }
+        std::transform(it.map_values.begin(), it.map_values.end(), 
+            std::back_inserter(ids), [&](auto item) ->IDMap{
+               return {it.name, it.node, item.first, it.degree,
+                             item.second}; 
+            });
         return ids;
     }();
     it.key = "NULL";
-    args.insert(args.begin(), ids.begin(), ids.end());
+    args.insert(args.begin(), columns.begin(), columns.end());
 }
 
-// Move to Class
 void rotate_keys(IDMap& it, vector<IDMap>& args) {
     svector ids, vars;
-    string column_name;
     if (it.conditions.find("id") == it.conditions.end() ||
         it.conditions.find("name") == it.conditions.end())
         throw std::runtime_error("Conditions missing 'id' or 'name' keys.");
@@ -79,15 +80,16 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
         std::regex_match(p.first, sm_var, e_var,
                          std::regex_constants::match_default);
         if (sm_id.size() > 0 && sm_var.size() > 0) {
-            column_name = sm_var[1];
             ids.insert(ids.end(), p.second.size(), sm_id[1]);
             vars.insert(vars.end(), p.second.begin(), p.second.end());
         } else
             throw std::runtime_error("Regex grouping is not correct!");
     }
-    const vector<IDMap> items = [&]() {
-        vector<IDMap> items;
+    if(ids.empty() && vars.empty()) return;
 
+    const string column_name{sm_var[1]};
+    const vector<IDMap> pair_item = [&]() {
+        vector<IDMap> items;
         auto id =
             std::find_if(args.begin(), args.end(), [&args](const IDMap& item) {
                 return item.key == item.name + "_id";
@@ -100,7 +102,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
         return items;
     }();
     it.key = "NULL";
-    args.insert(args.begin(), items.begin(), items.end());
+    args.insert(args.begin(), pair_item.begin(), pair_item.end());
 }
 
 void validator(map<string, vector<IDMap>>& keys) {

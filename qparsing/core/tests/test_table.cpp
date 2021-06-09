@@ -88,7 +88,7 @@ TEST(TableTests, TableSaveRowWise) {
     table.insert(pac_cols);
     table.insert(pdc_cols);
     table.insert("date", p.file_name);
-    table.save("test2.csv");
+    // table.save("test2.csv");
     for (const auto &p : table.values()) {
         ASSERT_EQ(p.second.size(), 3);
     }

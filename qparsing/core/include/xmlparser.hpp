@@ -43,6 +43,34 @@ using svector = std::vector<std::string>;
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
 
+
+/**
+ * @brief Creates IDMaps for given IDMap which contains multi variables
+ * 
+ * It transform IDMap map_values,
+ * For multi search operation, a IDMap stores data in the map_values attributes
+ * when to_csv method is invoked, values must be converted to vector and one column for IDMap
+ * This function creates IDMap for each key in map_values and inserts to IDMap vector
+ * 
+ * @param it: (IDMap) current id holds map_values
+ * @param args: (vector<IDMap>) created ids insterted  
+ */
+void transform_keys(IDMap& it, vector<IDMap>& args);
+
+/**
+ * @brief Creates id value IDMap for grouping operation
+ * 
+ * It transform IDMap map_values,
+ * For grouping operation, a IDMap stores data in the map_values attributes
+ * when to_csv invoke, values must be converted to vector and one column for IDMap
+ * This function uses given regex to group values as id and value
+ * Creates 2 IDMap and move the data to each assicated IDMap
+ * 
+ * @param it: (IDMap) current id holds map_values
+ * @param args: (vector<IDMap>) created ids insterted  
+ */
+void rotate_keys(IDMap& it, vector<IDMap>& args);
+
 /**
  * @brief Greps the list of file for given directory
  *
@@ -52,6 +80,8 @@ static bool CONTAINS = false;
  *
  * @return vector<string> as vector of matched files
  */
+
+
 vector<string> listdir(string);
 
 /**

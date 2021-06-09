@@ -148,6 +148,24 @@ TEST(XMLParser, WrongType) {
     }
 }
 
+
+TEST(XMLParser, WrongPath) {
+    IDMap amp{.name = "string",
+              .node = "Key",
+              .key = "^(.*?).Ms.Amp",
+              .degree = "Mean",
+              .type = "test"};
+
+    XMLParser parser(amp);
+    try {
+        parser("test", "WebBox");
+
+    } catch (std::exception& ex) {
+        EXPECT_EQ("Files Not Found at test/",
+                  (std::string)ex.what());
+    }
+}
+
 TEST(XMLParser, TestHighVolumeData) {
 
     IDMap value0{
@@ -167,7 +185,7 @@ TEST(XMLParser, TestHighVolumeData) {
     };
 
 
-    IDMap pac{.name = "inverter_mppt",
+    IDMap pac{.name = "inverter",
               .node = "Key",
               .key = "^(.*?)Pac",
               .degree = "Mean",
@@ -185,11 +203,11 @@ TEST(XMLParser, TestHighVolumeData) {
     uac.conditions = ent1;
     XMLParser parser(value0, value1, pac,uac);
 
-    parser("tests/test_data/ychoux/", "WebBox");
+    parser("tests/test_data/vihiers/", "WebBox");
 
-    // ASSERT_EQ(4, parser.data.size());
+    ASSERT_EQ(4, parser.data.size());
 
-    parser.to_csv(".");
+    // parser.to_csv(".");
 }
 
 int main(int argc, char* argv[]) {
