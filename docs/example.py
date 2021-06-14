@@ -145,7 +145,7 @@ test_csv3 = CSVParser([
 
 # --------------------- | ----------------------#
 
-# #XMLParser
+""" #XMLParser
 # # Expect number of dictionary as list
 # # Name in the dictionary will be used to catogorized to file
 # Example 0:
@@ -158,7 +158,7 @@ test_csv3 = CSVParser([
 #        degree: leaf of Key
 #        type: single
 #        output: New Column name
-#
+"""
 #! Note: if output value is given, type must be specified.
 
 kwargs = [{"name": "inverter",
@@ -196,10 +196,10 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
+# xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
 # xml_parser.to_csv(".")
 
-# Example 1:
+"""Example 1:
 # Values can be a group entity from XML Tree, in this case
 # Here, values are grouped based on given condition
 # Condition must include id and name keys
@@ -210,7 +210,7 @@ xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
 #        degree: leaf of Key
 #        type: group
 #        condition: {}
-#
+"""
 #! Note: Key regex is used for search and condition is used for transforming data
 
 
@@ -225,6 +225,7 @@ kwargs = [{"name": "inverter",
             "key":"^(.*?)Uac",
             "degree":"Mean",
             "type": "group",
+            "output": "test_name",
             "condition":{
                 "id": "(.*)Uac",
                 "name" :  ".*(Uac)"
@@ -233,11 +234,11 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
+# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
 # xml_parser.to_csv(".")
 
 
-# Example 2:
+"""Example 2:
 # Values can be multi columns from XML Tree, in this case
 # Here, values are searched with given regex and 
 # a column is created per found vairable
@@ -246,7 +247,7 @@ xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
 #        key: search variable
 #        degree: leaf of Key
 #        type: multi
-#
+"""
 #! Note: Output column name cannot be given
 
 kwargs = [{"name": "inverter",
@@ -264,7 +265,7 @@ kwargs = [{"name": "inverter",
     ]
 xml_parser = XMLParser(kwargs)
 # # Uncomment to run 
-xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+# xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
 # xml_parser.to_csv(".");
 
 # --------------------- | ----------------------#
@@ -275,3 +276,65 @@ xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox
 # Cleandir()("qparsing/core/tests/test_data/gz/", "*.csv")
 # --------------------- | ----------------------#
 # Compressdir()("qparsing/core/tests/test_data/gz/", "test")
+
+
+
+# kwargs = [
+#             {"name": "inverter",
+#             "node":"Key",
+#             "key":"Pac",
+#             "degree":"Mean",
+#             "type": "single"},
+
+#             {"name": "inverter",
+#             "node":"Key",
+#             "key":"Pac",
+#             "degree":"TimeStamp",
+#             "type": "single",
+#             "output":"date"},
+
+#             {"name": "inverter",
+#             "node":"Key",
+#             "key":"Seri",
+#             "degree":"Mean",
+#             "type": "single"},
+
+#             {"name": "inverter_mmpt",
+#             "node":"Key",
+#             "key":"Ipv",
+#             "degree":"TimeStamp",
+#             "type": "single",
+#             "output":"date"},
+
+#             {"name": "inverter_mmpt",
+#             "node":"Key",
+#             "key":"Ipv",
+#             "degree":"Mean",
+#             "type": "single"},
+#             {"name": "inverter_mmpt",
+#             "node":"Key",
+#             "key":"Upv-Ist",
+#             "degree":"Mean",
+#             "type": "single"},
+#             {"name": "inverter_mmpt",
+#             "node":"Key",
+#             "key":"Seri",
+#             "degree":"Mean",
+#             "type": "single"}
+#             # {"name": "inverter",
+#             # "node":"Key",
+#             # "key":"^(.*?)Uac",
+#             # "degree":"Mean",
+#             # "type": "group",
+#             # "output": "test_name",
+#             # "condition":{
+#             #     "id": "(.*)Uac",
+#             #     "name" :  ".*(Uac)"
+#             # }
+#             # }
+#     ]
+# xml_parser = XMLParser(kwargs)
+
+# # # Uncomment to run
+# xml_parser("vihiers", "WebBox");
+# xml_parser.to_csv(".")

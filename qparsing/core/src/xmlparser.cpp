@@ -98,7 +98,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
             items.emplace_back(it.name, it.node, it.name + "_id", it.degree,
                                ids);
         }
-        items.emplace_back(it.name, it.node, column_name, it.degree, vars);
+        items.emplace_back(it.name, it.node, column_name, it.degree, vars, it.output);
         return items;
     }();
     it.key = "NULL";

@@ -229,7 +229,7 @@ inline vector<IDMap> clean_values(vector<map<string, string>> kwargs,
             std::map<string, string> ent{{"id",  condition.at(p.at("condition")).at("id")},
                              {"name", condition.at(p.at("condition")).at("name")}};
              values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
-                                p.at("degree"), p.at("type")); 
+                                p.at("degree"), p.at("type"), p.at("output")); 
             values.back().conditions = ent;
         }
     }

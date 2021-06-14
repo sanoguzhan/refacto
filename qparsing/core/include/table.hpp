@@ -91,13 +91,12 @@ struct IDMap {
           type{type},
           output{output} {}
     IDMap(string name, string node, string key, string degree, svector values,
-          string type = "single", string output = "")
+          string output = "")
         : name{name},
           node{node},
           key{key},
           degree{degree},
           values{values},
-          type{type},
           output{output} {}
 
     friend bool operator>(const IDMap &right, const IDMap &left);
