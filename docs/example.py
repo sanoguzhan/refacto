@@ -193,7 +193,7 @@ kwargs = [{"name": "inverter",
             "type":"single"}
     ]
 
-xml_parser = XMLParser(kwargs)
+# xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
 # xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
@@ -234,8 +234,8 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox");
-# xml_parser.to_csv(".")
+xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox")
+xml_parser.to_csv(".")
 
 
 """Example 2:
