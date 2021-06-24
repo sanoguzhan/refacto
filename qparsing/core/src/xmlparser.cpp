@@ -70,11 +70,13 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
     if (it.conditions.find("id") == it.conditions.end() ||
         it.conditions.find("name") == it.conditions.end())
         throw std::runtime_error("Conditions missing 'id' or 'name' keys.");
-    std::regex e_id(it.conditions.at("id"));
-    std::regex e_var(it.conditions.at("name"));
+        
+    const std::regex e_id(it.conditions.at("id"));
+    const std::regex e_var(it.conditions.at("name"));
 
     std::smatch sm_id, sm_var;
-    for (auto p : it.map_values) {
+
+    for (const auto p : it.map_values) {
         std::regex_match(p.first, sm_id, e_id,
                          std::regex_constants::match_default);
         std::regex_match(p.first, sm_var, e_var,
@@ -90,7 +92,7 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
     const string column_name{sm_var[1]};
     const vector<IDMap> pair_item = [&]() {
         vector<IDMap> items;
-        auto id =
+        const auto id =
             std::find_if(args.begin(), args.end(), [&args](const IDMap& item) {
                 return item.key == item.name + "_id";
             });
@@ -232,7 +234,7 @@ void XMLParser::update(pugi::xml_node root, const IDMap& tag,
     root = (!COUNTER) ? root.first_child() : root;
     COUNTER++;
     string token, id, child_value;
-    regex re{tag.key};
+    const regex re{tag.key};
     smatch matches;
     for (pugi::xml_node panel = root.first_child(); panel;
          panel = panel.next_sibling()) {
