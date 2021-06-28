@@ -1,6 +1,6 @@
 include:
-    project: 'exposed/template_ci'
-    file: '/python-package.yml'
+    project: "exposed/template_ci"
+    file: "/python-package.yml"
 
 stages:
     - build-and-deploy-docker-test-image
@@ -54,15 +54,12 @@ release:
     extends: .release-base
     stage: release
 
-
 build-docker:
     extends: .build-and-deploy-docker-image-base
     stage: build-and-deploy-docker-image
     variables:
         PATH_DOCKER_FILE: ${CI_PROJECT_DIR}/docker/Dockerfile
         PATH_CONTEXT: ${CI_PROJECT_DIR}/docker
-
-
 
 build-package:
     extends: .build-and-deploy-package
@@ -71,11 +68,11 @@ build-package:
         BUILD_CMD: CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
 
 MR-staging-production:
-#    extends: .MR-staging-production-base
+    #    extends: .MR-staging-production-base
     extends: .pull-staging-into-production-base
     stage: MR-staging-production
 
 MR-production-staging:
-#    extends: .MR-production-staging-base
+    #    extends: .MR-production-staging-base
     extends: .pull-production-into-staging-base
     stage: MR-production-staging

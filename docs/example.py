@@ -234,8 +234,8 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox")
-xml_parser.to_csv(".")
+# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox")
+# xml_parser.to_csv(".")
 
 
 """Example 2:
@@ -277,64 +277,3 @@ xml_parser = XMLParser(kwargs)
 # --------------------- | ----------------------#
 # Compressdir()("qparsing/core/tests/test_data/gz/", "test")
 
-
-
-# kwargs = [
-#             {"name": "inverter",
-#             "node":"Key",
-#             "key":"Pac",
-#             "degree":"Mean",
-#             "type": "single"},
-
-#             {"name": "inverter",
-#             "node":"Key",
-#             "key":"Pac",
-#             "degree":"TimeStamp",
-#             "type": "single",
-#             "output":"date"},
-
-#             {"name": "inverter",
-#             "node":"Key",
-#             "key":"Seri",
-#             "degree":"Mean",
-#             "type": "single"},
-
-#             {"name": "inverter_mmpt",
-#             "node":"Key",
-#             "key":"Ipv",
-#             "degree":"TimeStamp",
-#             "type": "single",
-#             "output":"date"},
-
-#             {"name": "inverter_mmpt",
-#             "node":"Key",
-#             "key":"Ipv",
-#             "degree":"Mean",
-#             "type": "single"},
-#             {"name": "inverter_mmpt",
-#             "node":"Key",
-#             "key":"Upv-Ist",
-#             "degree":"Mean",
-#             "type": "single"},
-#             {"name": "inverter_mmpt",
-#             "node":"Key",
-#             "key":"Seri",
-#             "degree":"Mean",
-#             "type": "single"}
-#             # {"name": "inverter",
-#             # "node":"Key",
-#             # "key":"^(.*?)Uac",
-#             # "degree":"Mean",
-#             # "type": "group",
-#             # "output": "test_name",
-#             # "condition":{
-#             #     "id": "(.*)Uac",
-#             #     "name" :  ".*(Uac)"
-#             # }
-#             # }
-#     ]
-# xml_parser = XMLParser(kwargs)
-
-# # # Uncomment to run
-# xml_parser("vihiers", "WebBox");
-# xml_parser.to_csv(".")
