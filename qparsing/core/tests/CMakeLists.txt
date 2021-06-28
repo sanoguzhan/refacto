@@ -36,13 +36,13 @@ endif()
 endfunction()
 
 build_tests(test_dtables test_dtables.cpp)
-# build_tests(test_csv_cases test_csv_cases.cpp)
+build_tests(test_csv_cases test_csv_cases.cpp)
 
-# build_tests(test_csvparser test_csvparser.cpp)
-# build_tests(test_customparser test_customparser.cpp)
+build_tests(test_csvparser test_csvparser.cpp)
+build_tests(test_customparser test_customparser.cpp)
 
-# build_tests(test_table test_table.cpp)
-# build_tests(test_controller test_controller.cpp)
+build_tests(test_table test_table.cpp)
+build_tests(test_controller test_controller.cpp)
 build_tests(test_xmlparser test_xmlparser.cpp)
-# build_tests(test_cod test_cod.cpp)
+build_tests(test_cod test_cod.cpp)
 
