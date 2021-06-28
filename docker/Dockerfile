@@ -9,15 +9,15 @@ RUN apt-get -qq update; \
         llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
          swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\
         autoconf automake dpkg-dev file git make patch python3 python3-pip\
-        libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev libboost-all-dev\
+        libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev libboost-all-dev libre2-dev\
         dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5 nfs-common;\
     rm -rf /var/lib/apt/lists/*
 
 # Signing keys
-ENV GPG_KEYS 09C4E7007CB2EFFB A2C794A986419D8A B4468DF4E95C63DC D23DD2C20DD88BA2 8F0871F202119294 0FC3042E345AD05D
+# ENV GPG_KEYS 09C4E7007CB2EFFB A2C794A986419D8A B4468DF4E95C63DC D23DD2C20DD88BA2 8F0871F202119294 0FC3042E345AD05D
 
 # Retrieve keys
-RUN gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEYS
+# RUN gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEYS
 
 # Version info
 ENV LLVM_RELEASE 10

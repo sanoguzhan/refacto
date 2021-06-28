@@ -243,7 +243,8 @@ TEST(XMLParser, TestGroupingPerformance) {
               .node = "Key",
               .key = ".*\\w+.Ms.(Amp)",
               .degree = "TimeStamp",
-              .type = "group"};
+              .type = "group",
+              .output="date"};
     map<string, string> time_conditions{{"id", "(.*\\w+).Ms.Amp"},
                             {"name", ".*\\w+.Ms.(Amp)"}};
     time.conditions = time_conditions;
@@ -267,6 +268,9 @@ TEST(XMLParser, TestGroupingPerformance) {
     map<string, string> amp_conditions{{"id", "(.*\\w+).Ms.Amp"},
                             {"name", ".*\\w+.Ms.(Amp)"}};
     amp.conditions = amp_conditions;
+
+ //grouping
+    XMLParser parser(date_time, pac, seri, time, vol ,amp);
 
 
     IDMap time2{
@@ -299,8 +303,7 @@ TEST(XMLParser, TestGroupingPerformance) {
     };
 
 
-    //grouping
-    XMLParser parser(date_time, pac, seri, time, vol ,amp);
+   
     // no group
     // XMLParser parser(date_time, pac, seri, time2, vol2, amp2, seri2);
 
