@@ -15,7 +15,6 @@
 #define XMLPARSER_HPP
 
 #include <glob.h>
-
 #include <algorithm>
 #include <cstring>
 #include <filesystem>
@@ -100,7 +99,7 @@ class XMLParser {
      * @param lst List IDMap
      */
     template <typename... T>
-    XMLParser(T... lst) : data{lst...} {}
+    explicit XMLParser(T... lst) : data{lst...} {}
 
     /**
      * @brief Writes data to csv files
@@ -110,9 +109,9 @@ class XMLParser {
      * @param dir: (string) extraction directory
      * @return true on success
      */
-    bool to_csv(string dir);
+    auto to_csv(string dir) -> bool;
 
-    std::string inline write_header(std::pair<const string, vector<IDMap>> &p);
+    auto inline write_header(const std::pair<const string, vector<IDMap>> &p) ->string;
 
     /**
      * @brief Operator for xml file data search
@@ -122,7 +121,7 @@ class XMLParser {
      * @param path: (string) path to xml file directory
      * @param root_name : (string) root name in the xml files
      */
-    void operator()(string path, const string root_name);
+    void operator()(string path, string root_name);
 
    private:
     /**
@@ -133,7 +132,7 @@ class XMLParser {
      * @param doc : (pugi::xml_document) opened document
      * @return decltype(auto)
      */
-    inline decltype(auto) read(string path, const string root_name,
+    inline decltype(auto) read(string path, string root_name,
                                pugi::xml_document &doc);
 
     /**
@@ -146,7 +145,7 @@ class XMLParser {
      */
     void update(pugi::xml_node root, const IDMap &tag, svector &ids);
     void update(pugi::xml_node root, const IDMap &tag,
-                map<string, vector<string>> &ids);
+                map<string, vector<string>> &ids, const regex&);
     /**
      * @brief Map trasnformers to name-value map
      *      - Create map from IDMap for each unique name
