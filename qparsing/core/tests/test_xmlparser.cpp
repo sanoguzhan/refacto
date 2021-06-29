@@ -148,7 +148,6 @@ TEST(XMLParser, WrongType) {
     }
 }
 
-
 TEST(XMLParser, WrongPath) {
     IDMap amp{.name = "string",
               .node = "Key",
@@ -166,49 +165,140 @@ TEST(XMLParser, WrongPath) {
     }
 }
 
-TEST(XMLParser, TestHighVolumeData) {
+// TEST(XMLParser, TestHighVolumeData) {
 
-    IDMap value0{
-        .name = "inverter_mppt",
-        .node = "Key",
-        .key = "Seriennummer",
-        .degree = "Mean",
-    };
+//     IDMap value0{
+//         .name = "inverter_mppt",
+//         .node = "Key",
+//         .key = "Seriennummer",
+//         .degree = "Mean",
+//     };
 
-    IDMap value1{
-        .name = "inverter_mppt",
-        .node = "Key",
-        .key = "Seriennummer",
-        .degree = "TimeStamp",
-        .type="single",
-        .output="Date"
-    };
+//     IDMap value1{
+//         .name = "inverter_mppt",
+//         .node = "Key",
+//         .key = "Seriennummer",
+//         .degree = "TimeStamp",
+//         .type="single",
+//         .output="Date"
+//     };
 
+//     IDMap pac{.name = "inverter",
+//               .node = "Key",
+//               .key = "^(.*?)Pac",
+//               .degree = "Mean",
+//               .type = "group"};
+//     map<string, string> ent{{"id", "(.*)Pac"},
+//                             {"name", ".*(Pac)"}};
+//     IDMap uac{.name = "inverter_mppt",
+//               .node = "Key",
+//               .key = "^(.*?)Uac",
+//               .degree = "Mean",
+//               .type = "group"};
+//     map<string, string> ent1{{"id", "(.*)Uac"},
+//                             {"name", ".*(Uac)"}};
+//     pac.conditions = ent;
+//     uac.conditions = ent1;
+//     XMLParser parser(value0, value1, pac,uac);
 
-    IDMap pac{.name = "inverter",
-              .node = "Key",
-              .key = "^(.*?)Pac",
-              .degree = "Mean",
-              .type = "group"};
-    map<string, string> ent{{"id", "(.*)Pac"},
-                            {"name", ".*(Pac)"}};
-    IDMap uac{.name = "inverter_mppt",
-              .node = "Key",
-              .key = "^(.*?)Uac",
-              .degree = "Mean",
-              .type = "group"};
-    map<string, string> ent1{{"id", "(.*)Uac"},
-                            {"name", ".*(Uac)"}};
-    pac.conditions = ent;
-    uac.conditions = ent1;
-    XMLParser parser(value0, value1, pac,uac);
+//     parser("tests/test_data/vihiers/", "WebBox");
 
-    parser("tests/test_data/vihiers/", "WebBox");
+//     ASSERT_EQ(4, parser.data.size());
 
-    ASSERT_EQ(4, parser.data.size());
+//     // parser.to_csv(".");
+// }
+
+// TEST(XMLParser, TestGroupingPerformance) {
+//     // Inverter
+
+//     IDMap date_time{.name = "interter",
+//                     .node = "Key",
+//                     .key = "Seri",
+//                     .degree = "TimeStamp",
+//                     .type = "single",
+//                     .output = "date_time"};
+
+//     IDMap pac{
+//         .name = "interter",
+//         .node = "Key",
+//         .key = "Pac",
+//         .degree = "Mean",
+//     };
+
+//     IDMap seri{
+//         .name = "interter",
+//         .node = "Key",
+//         .key = "Seri",
+//         .degree = "Mean",
+//     };
+
+//     // Inverter Mppt
+
+//     IDMap time{.name = "inverter_mppt",
+//                .node = "Key",
+//                .key = ".*\\w+.Ms.(Amp)",
+//                .degree = "TimeStamp",
+//                .type = "group",
+//                .output = "date"};
+//     map<string, string> time_conditions{{"id", "(.*\\w+).Ms.Amp"},
+//                                         {"name", ".*\\w+.Ms.(Amp)"}};
+//     time.conditions = time_conditions;
+
+//     IDMap vol{.name = "inverter_mppt",
+//               .node = "Key",
+//               .key = ".*\\w+.Ms.(Vol)",
+//               .degree = "Mean",
+//               .type = "group"};
+//     map<string, string> vol_conditions{{"id", "(.*\\w+).Ms.Vol"},
+//                                        {"name", ".*\\w+.Ms.(Vol)"}};
+//     vol.conditions = vol_conditions;
+
+//     IDMap amp{.name = "inverter_mppt",
+//               .node = "Key",
+//               .key = ".*\\w+.Ms.(Amp)",
+//               .degree = "Mean",
+//               .type = "group"};
+//     map<string, string> amp_conditions{{"id", "(.*\\w+).Ms.Amp"},
+//                                        {"name", ".*\\w+.Ms.(Amp)"}};
+//     amp.conditions = amp_conditions;
+
+//     // grouping
+//     XMLParser parser(date_time, pac, seri, time, vol, amp);
+
+//     IDMap time2{.name = "interter_mppt",
+//                 .node = "Key",
+//                 .key = "Seri",
+//                 .degree = "TimeStamp",
+//                 .type = "single",
+//                 .output = "date_time"};
+
+//     IDMap vol2{
+//         .name = "interter_mppt",
+//         .node = "Key",
+//         .key = "Ipv",
+//         .degree = "Mean",
+//     };
+
+//     IDMap amp2{
+//         .name = "interter_mppt",
+//         .node = "Key",
+//         .key = "Upv-Ist",
+//         .degree = "Mean",
+//     };
+//     IDMap seri2{
+//         .name = "interter_mppt",
+//         .node = "Key",
+//         .key = "Seri",
+//         .degree = "Mean",
+//     };
+
+    // no group
+    // XMLParser parser(date_time, pac, seri, time2, vol2, amp2, seri2);
+
+    // parser("tests/test_data/chanzeaux/", "WebBox");
 
     // parser.to_csv(".");
-}
+// }
 
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);

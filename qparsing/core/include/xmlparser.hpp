@@ -43,33 +43,33 @@ using svector = std::vector<std::string>;
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
 
-
 /**
  * @brief Creates IDMaps for given IDMap which contains multi variables
- * 
+ *
  * It transform IDMap map_values,
  * For multi search operation, a IDMap stores data in the map_values attributes
- * when to_csv method is invoked, values must be converted to vector and one column for IDMap
- * This function creates IDMap for each key in map_values and inserts to IDMap vector
- * 
+ * when to_csv method is invoked, values must be converted to vector and one
+ * column for IDMap This function creates IDMap for each key in map_values and
+ * inserts to IDMap vector
+ *
  * @param it: (IDMap) current id holds map_values
- * @param args: (vector<IDMap>) created ids insterted  
+ * @param args: (vector<IDMap>) created ids insterted
  */
-void transform_keys(IDMap& it, vector<IDMap>& args);
+void transform_keys(IDMap &it, vector<IDMap> &args);
 
 /**
  * @brief Creates id value IDMap for grouping operation
- * 
+ *
  * It transform IDMap map_values,
  * For grouping operation, a IDMap stores data in the map_values attributes
- * when to_csv invoke, values must be converted to vector and one column for IDMap
- * This function uses given regex to group values as id and value
- * Creates 2 IDMap and move the data to each assicated IDMap
- * 
+ * when to_csv invoke, values must be converted to vector and one column for
+ * IDMap This function uses given regex to group values as id and value Creates
+ * 2 IDMap and move the data to each assicated IDMap
+ *
  * @param it: (IDMap) current id holds map_values
- * @param args: (vector<IDMap>) created ids insterted  
+ * @param args: (vector<IDMap>) created ids insterted
  */
-void rotate_keys(IDMap& it, vector<IDMap>& args);
+void rotate_keys(IDMap &it, vector<IDMap> &args);
 
 /**
  * @brief Greps the list of file for given directory
@@ -80,7 +80,6 @@ void rotate_keys(IDMap& it, vector<IDMap>& args);
  *
  * @return vector<string> as vector of matched files
  */
-
 
 vector<string> listdir(string);
 
@@ -100,7 +99,7 @@ class XMLParser {
      * @param lst List IDMap
      */
     template <typename... T>
-    XMLParser(T... lst) : data{lst...} {}
+    explicit XMLParser(T... lst) : data{lst...} {}
 
     /**
      * @brief Writes data to csv files
@@ -110,9 +109,10 @@ class XMLParser {
      * @param dir: (string) extraction directory
      * @return true on success
      */
-    bool to_csv(string dir);
+    auto to_csv(string dir) -> bool;
 
-    std::string inline write_header(std::pair<const string, vector<IDMap>> &p);
+    auto inline write_header(const std::pair<const string, vector<IDMap>> &p)
+        -> string;
 
     /**
      * @brief Operator for xml file data search
@@ -122,7 +122,7 @@ class XMLParser {
      * @param path: (string) path to xml file directory
      * @param root_name : (string) root name in the xml files
      */
-    void operator()(string path, const string root_name);
+    void operator()(string path, string root_name);
 
    private:
     /**
@@ -133,7 +133,7 @@ class XMLParser {
      * @param doc : (pugi::xml_document) opened document
      * @return decltype(auto)
      */
-    inline decltype(auto) read(string path, const string root_name,
+    inline decltype(auto) read(string path, string root_name,
                                pugi::xml_document &doc);
 
     /**
@@ -146,7 +146,7 @@ class XMLParser {
      */
     void update(pugi::xml_node root, const IDMap &tag, svector &ids);
     void update(pugi::xml_node root, const IDMap &tag,
-                map<string, vector<string>> &ids);
+                map<string, vector<string>> &ids, const regex &);
     /**
      * @brief Map trasnformers to name-value map
      *      - Create map from IDMap for each unique name

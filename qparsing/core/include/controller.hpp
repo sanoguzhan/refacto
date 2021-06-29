@@ -215,21 +215,22 @@ class CSVParserWrapper {
     void inline to_csv(string path) { table->save(path); }
 };
 
-inline vector<IDMap> clean_values(vector<map<string, string>> kwargs, 
-                     map<string, map<string, string>> condition) {
+inline vector<IDMap> clean_values(vector<map<string, string>> kwargs,
+                                  map<string, map<string, string>> condition) {
     vector<IDMap> values;
     for (const auto& p : kwargs) {
-        if(p.at("type") == "single"){
+        if (p.at("type") == "single") {
             values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
                                 p.at("degree"), p.at("type"), p.at("output"));
-        }else if(p.at("type") == "multi"){
-             values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
-                                p.at("degree"), p.at("type")); 
-        }else if(p.at("type") == "group"){
-            std::map<string, string> ent{{"id",  condition.at(p.at("condition")).at("id")},
-                             {"name", condition.at(p.at("condition")).at("name")}};
-             values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
-                                p.at("degree"), p.at("type"), p.at("output")); 
+        } else if (p.at("type") == "multi") {
+            values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
+                                p.at("degree"), p.at("type"));
+        } else if (p.at("type") == "group") {
+            std::map<string, string> ent{
+                {"id", condition.at(p.at("condition")).at("id")},
+                {"name", condition.at(p.at("condition")).at("name")}};
+            values.emplace_back(p.at("name"), p.at("node"), p.at("key"),
+                                p.at("degree"), p.at("type"), p.at("output"));
             values.back().conditions = ent;
         }
     }
@@ -244,13 +245,12 @@ inline vector<IDMap> clean_values(vector<map<string, string>> kwargs,
 //  can also validate input
 class XMLParserController : public XMLParser {
    public:
-    XMLParserController(vector<map<string, string>> lst, 
-         map<string, map<string, string>> condition)
+    XMLParserController(vector<map<string, string>> lst,
+                        map<string, map<string, string>> condition)
         : XMLParser{clean_values(lst, condition)} {}
 
     void get(string dir, const string root) {
         XMLParser::operator()(dir, root);
     }
-
 };
 #endif

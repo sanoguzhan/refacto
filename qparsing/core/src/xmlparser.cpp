@@ -1,11 +1,8 @@
 #include "xmlparser.hpp"
 
 static string DELIMETER = ";";
-
 vector<string> listdir(string pattern) {
-
-    if(pattern.compare(pattern.size()-1, 1, "/") != 0)
-        pattern += "/";
+    if (pattern.compare(pattern.size() - 1, 1, "/") != 0) pattern += "/";
     string cwdir = pattern;
     pattern += "*.xml";
     glob_t glob_result;
@@ -15,7 +12,7 @@ vector<string> listdir(string pattern) {
         files.push_back(string(glob_result.gl_pathv[i]));
     }
     globfree(&glob_result);
-    if(files.empty()) throw std::runtime_error("Files Not Found at " + cwdir);
+    if (files.empty()) throw std::runtime_error("Files Not Found at " + cwdir);
     return files;
 }
 
@@ -54,10 +51,10 @@ void XMLParser::transfrom_map(map<string, vector<IDMap>>& keys) {
 void transform_keys(IDMap& it, vector<IDMap>& args) {
     const vector<IDMap> columns = [&it]() {
         vector<IDMap> ids;
-        std::transform(it.map_values.begin(), it.map_values.end(), 
-            std::back_inserter(ids), [&](auto item) ->IDMap{
-               return {it.name, it.node, item.first, it.degree,
-                             item.second}; 
+        std::transform(
+            it.map_values.begin(), it.map_values.end(), std::back_inserter(ids),
+            [&](auto item) -> IDMap {
+                return {it.name, it.node, item.first, it.degree, item.second};
             });
         return ids;
     }();
@@ -70,27 +67,28 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
     if (it.conditions.find("id") == it.conditions.end() ||
         it.conditions.find("name") == it.conditions.end())
         throw std::runtime_error("Conditions missing 'id' or 'name' keys.");
-    std::regex e_id(it.conditions.at("id"));
-    std::regex e_var(it.conditions.at("name"));
+    const std::regex e_id(it.conditions.at("id"));
+    const std::regex e_var(it.conditions.at("name"));
 
     std::smatch sm_id, sm_var;
-    for (auto p : it.map_values) {
-        std::regex_match(p.first, sm_id, e_id,
-                         std::regex_constants::match_default);
-        std::regex_match(p.first, sm_var, e_var,
-                         std::regex_constants::match_default);
-        if (sm_id.size() > 0 && sm_var.size() > 0) {
-            ids.insert(ids.end(), p.second.size(), sm_id[1]);
-            vars.insert(vars.end(), p.second.begin(), p.second.end());
-        } else
-            throw std::runtime_error("Regex grouping is not correct!");
-    }
-    if(ids.empty() && vars.empty()) return;
+    std::for_each(
+        it.map_values.begin(), it.map_values.end(), [&](const auto p) {
+            std::regex_match(p.first, sm_id, e_id,
+                             std::regex_constants::match_default);
+            std::regex_match(p.first, sm_var, e_var,
+                             std::regex_constants::match_default);
+            if (sm_id.size() > 0 && sm_var.size() > 0) {
+                ids.insert(ids.end(), p.second.size(), sm_id[1]);
+                vars.insert(vars.end(), p.second.begin(), p.second.end());
+            } else
+                throw std::runtime_error("Regex grouping is not correct!");
+        });
+    if (ids.empty() && vars.empty()) return;
 
     const string column_name{sm_var[1]};
     const vector<IDMap> pair_item = [&]() {
         vector<IDMap> items;
-        auto id =
+        const auto id =
             std::find_if(args.begin(), args.end(), [&args](const IDMap& item) {
                 return item.key == item.name + "_id";
             });
@@ -98,7 +96,8 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
             items.emplace_back(it.name, it.node, it.name + "_id", it.degree,
                                ids);
         }
-        items.emplace_back(it.name, it.node, column_name, it.degree, vars, it.output);
+        items.emplace_back(it.name, it.node, column_name, it.degree, vars,
+                           it.output);
         return items;
     }();
     it.key = "NULL";
@@ -126,7 +125,7 @@ void validator(map<string, vector<IDMap>>& keys) {
     });
 }
 
-bool XMLParser::to_csv(string dir) {
+auto XMLParser::to_csv(string dir) -> bool {
     map<string, vector<IDMap>> keys;
     map<string, u_int32_t> key_sizes, level_sizes;
     transfrom_map(keys);
@@ -171,8 +170,8 @@ bool XMLParser::to_csv(string dir) {
     return true;
 }
 
-string inline XMLParser::write_header(
-    std::pair<const string, vector<IDMap>>& p) {
+auto inline XMLParser::write_header(
+    const std::pair<const string, vector<IDMap>>& p) -> string {
     return std::string(std::accumulate(
         p.second.begin(), p.second.end(), std::string("INITIAL"),
         [](string entry, IDMap id) {
@@ -217,7 +216,10 @@ void XMLParser::operator()(string path, const string root_name) {
             if (tag.type == "single") {
                 update(root, tag, tag.values);
             } else if (tag.type == "multi" || tag.type == "group") {
-                update(root, tag, tag.map_values);
+                const regex re{tag.key};
+
+                update(root, tag, tag.map_values, re);
+
             } else {
                 throw std::runtime_error(
                     "Wrong Type \n Defined Types: 'single', 'multi', 'group' ");
@@ -228,11 +230,10 @@ void XMLParser::operator()(string path, const string root_name) {
 }
 
 void XMLParser::update(pugi::xml_node root, const IDMap& tag,
-                       map<string, vector<string>>& ids) {
+                       map<string, vector<string>>& ids, const regex& re) {
     root = (!COUNTER) ? root.first_child() : root;
     COUNTER++;
     string token, id, child_value;
-    regex re{tag.key};
     smatch matches;
     for (pugi::xml_node panel = root.first_child(); panel;
          panel = panel.next_sibling()) {
@@ -253,5 +254,5 @@ void XMLParser::update(pugi::xml_node root, const IDMap& tag,
     }
     CONTAINS = false;
     root = root.next_sibling();
-    if (root) update(root, tag, ids);
+    if (root) update(root, tag, ids, re);
 }
