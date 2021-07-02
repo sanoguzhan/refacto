@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
+project(TestCases LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 17)
 
 add_compile_options("-std=gnu++17")
 add_compile_options("-fmax-errors=10")
 set(CMAKE_CXX_FLAGS "-O2")
-add_compile_definitions(LOG)
 add_compile_options("-Wno-deprecated-declarations")
-project(test_dtables)
 enable_testing()
 
 
@@ -28,7 +27,7 @@ function(build_tests target_name target_source)
         ${target_source})
   if(refacto_FOUND)
     target_link_libraries(${target_name} refacto)
-    target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+    target_link_libraries(${target_name} ${CONAN_LIBS})
     target_link_libraries(${target_name} GTest::GTest GTest::Main)
   else()
     message(FATAL_ERROR "refacto library not found")

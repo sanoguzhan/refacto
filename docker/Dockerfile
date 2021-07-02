@@ -5,7 +5,7 @@ FROM python:3.9.1
 RUN apt-get -qq update; \
     apt-get install -qqy --no-install-recommends \
         ca-certificates  pkg-config cppcheck\
-         libsasl2-dev python3-dev libldap2-dev libssl-dev gcc libpq-dev python-dev  python-pip\
+         libsasl2-dev python3-dev libldap2-dev libssl-dev gcc libpq-dev python-dev ninja-build\
         llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
          swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\
         autoconf automake dpkg-dev file git make patch python3 python3-pip\
