@@ -15,7 +15,7 @@ rm -rf *
 
 #  Enable Code Analysis -DENABLE_CODE_ANALYSIS=ON 
 conan install $CODE_DIR 
-cmake $CODE_DIR 
+cmake -G "Ninja" $CODE_DIR 
 make install
 
 # Compile tests
@@ -23,6 +23,6 @@ mkdir -p $CODE_DIR/tests/build
 cd $CODE_DIR/tests/build
 rm -rf *
 conan install $CODE_DIR
-cmake $CODE_DIR/tests -Wno-deprecated 
+cmake -G "Ninja" $CODE_DIR/tests -Wno-deprecated 
 
 popd
