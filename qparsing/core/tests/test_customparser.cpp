@@ -338,6 +338,73 @@ TEST(CustomParser, TestHelperMethod) {
     ASSERT_EQ(false, is_path_exist("foo/bar"));
 }
 
+
+
+// ----------------------------------------------------------------
+// TEST(CustomParser, TestInputSize) {
+    /* Test for CustomParser Conditional series insertion
+        - Load the file
+        - Create table
+        - Parse data from conditional series to table
+    */
+
+    // !Example of conditional series parsing
+    // ids as conditonal, and takes a regex
+    // vector<map<string, string>> ent;
+    // vector<map<string, string>> ent1;
+    // ent.push_back({{"name", "Id.*"}, {"orient", "row"}, {"row", "1"}});
+
+    // Entity pac{.key = "inverter",
+    //            .name = "P_AC",
+    //            .orient = "row",
+    //            .type = "series",
+    //            .row = 2,
+    //            .value_start = 3};
+
+    // ent1.push_back({{"name", "^2001.*98$"}, {"orient", "row"}, {"row", "0"}});
+
+    // Entity pac1{.key = "inverter",
+    //             .name = "Riso",
+    //             .orient = "row",
+    //             .type = "series",
+    //             .row = 1,
+    //             .value_start = 3};
+
+    //     vector<map<string, string>> ent;
+    // ent.push_back(
+    //     {{"id", "I_DC(\\w)"}, {"name", "I_(DC)\\w"}});
+
+    // Entity power{.key = "inverter",
+    //              .name = "I_DC\\w",
+    //              .orient = "row",
+    //              .type = "group",
+    //              .row = 2,
+    //              .value_begin = 3};
+    // power.conditions = ent;
+
+    // Entity date{.key = "inverter",
+    //             .name = "timestamp",
+    //             .orient = "column",
+    //             .type = "vector",
+    //             .keyword = "vector",
+    //             .column = 0,
+    //             .from = 3,
+    //             .to = -1};
+    // pac.conditions = ent;
+    // pac1.conditions = ent1;
+    // CustomParser p(pac, date);
+    //   CustomParser p(power);
+    // insert single values, and other entities
+    // p(TEST_CSV_INPUT_DIR + "test_custom/", ",", 0);
+
+    // for (auto t : p.tables) {
+    //     if (t.first == "inverter") {
+    //         ASSERT_EQ(75, t.second->max_size());
+    //     }
+    // }
+//     p.to_csv(".");
+// }
+
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

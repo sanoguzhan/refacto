@@ -212,10 +212,9 @@ class CustomParser {
     /**
      * @brief Get the variable name object
      *  - Search key name with regex
-     * @param mapping (map<string,string>) id value maps - id are the key
      * @return (string) found id
      */
-    string get_variable_name(map<string, string>) const;
+    string get_variable_name(const Entity &) const;
 
     /**
      * @brief Insert group ids with regex search
