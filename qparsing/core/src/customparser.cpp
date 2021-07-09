@@ -25,8 +25,6 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip) {
     for (auto file : files) {
 #ifdef LOG
         BOOST_LOG_TRIVIAL(info) << "Reading file: " << file << std::endl;
-#else
-        std::cout << "Reading file: " << file << "\n";
 #endif
         in_read(file, delimeter, skip);
         file_name = get_substring("/", ".", file);
@@ -39,11 +37,11 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip) {
     }
 }
 
-string CustomParser::get_variable_name(map<string, string> mapping) const {
-    std::regex e_name(mapping.at("name"));
+string CustomParser::get_variable_name(const Entity& item) const {
+    std::regex e_name(item.conditions.at(0).at("name"));
     std::cmatch cm_name;
-    for (size_t c = 0; c < data.at(0).size(); c++) {
-        std::regex_match(data.at(0).at(c).c_str(), cm_name, e_name,
+    for (size_t c = 0; c < data.at(item.row).size(); c++) {
+        std::regex_match(data.at(item.row).at(c).c_str(), cm_name, e_name,
                          std::regex_constants::match_default);
         if (cm_name.size() > 0) {
             return cm_name[1];
@@ -85,12 +83,14 @@ void CustomParser::from_group_series(Series &series, const Entity &item,
                                      shared_ptr<Table> tb) {
     std::regex e_id(item.conditions.at(0).at("id"));
     std::cmatch cm_id;
-    series.name = get_variable_name(item.conditions.at(0));
+    series.name = get_variable_name(item);
     vector<string> rows;
     for (size_t c = 0; c < data.at(0).size(); c++) {
-        std::regex_match(data.at(0).at(c).c_str(), cm_id, e_id,
+
+        std::regex_match(data.at(item.row).at(c).c_str(), cm_id, e_id,
                          std::regex_constants::match_default);
         if (cm_id.size() > 0) {
+
             for (size_t i = item.value_begin; i < data.size(); i++) {
                 rows.push_back(data.at(i).at(c));
             }
