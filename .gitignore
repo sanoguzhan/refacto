@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 qparsing/core/tests/csv/output/*
+*/.DS_Store
 # Compiled Object files
 *.slo
 *.lo

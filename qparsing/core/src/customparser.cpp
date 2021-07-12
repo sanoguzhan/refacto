@@ -23,9 +23,9 @@ void CustomParser::operator()(string dir_path, string delimeter, int skip) {
     vector<string> vec_values;
 
     for (auto file : files) {
-#ifdef LOG
+    #ifdef LOG
         BOOST_LOG_TRIVIAL(info) << "Reading file: " << file << std::endl;
-#endif
+    #endif
         in_read(file, delimeter, skip);
         file_name = get_substring("/", ".", file);
         for (auto p : tables) {
@@ -81,33 +81,38 @@ void CustomParser::in_insert(shared_ptr<Table> tb,
 
 void CustomParser::from_group_series(Series &series, const Entity &item,
                                      shared_ptr<Table> tb) {
-    std::regex e_id(item.conditions.at(0).at("id"));
-    std::cmatch cm_id;
+    const auto conditions = item.conditions.at(0);
+    const std::regex e_id(conditions.at("id"));
+
+    std::smatch cm_id;
     series.name = get_variable_name(item);
+    string _id;
+
     vector<string> rows;
     for (size_t c = 0; c < data.at(0).size(); c++) {
 
-        std::regex_match(data.at(item.row).at(c).c_str(), cm_id, e_id,
+        std::regex_match(data.at(item.row).at(c), cm_id, e_id,
                          std::regex_constants::match_default);
         if (cm_id.size() > 0) {
-
+            _id = cm_id[1];
+            if(conditions.find("parent_id_row") != conditions.end())
+                _id = data.at(stoi(conditions.at("parent_id_row"))).at(c) + "-" +_id;
             for (size_t i = item.value_begin; i < data.size(); i++) {
                 rows.push_back(data.at(i).at(c));
             }
-            if (!id_exist(series, cm_id[1])) {
-                series.values.insert(std::make_pair(cm_id[1], rows));
+            if (!id_exist(series,_id)) {
+                series.values.insert(std::make_pair(_id, rows));
 
             } else {
                 series.values.find(cm_id[1])->second.insert(
-                    std::end(series.values.find(cm_id[1])->second),
+                    std::end(series.values.find(_id)->second),
                     std::begin(rows), std::end(rows));
             }
             rows.clear();
         }
+        tb->insert(series);
+        clean_series(series);
     }
-
-    tb->insert(series);
-    clean_series(series);
 }
 
 void CustomParser::from_vector(vector<string> &vec_values, Entity &item) const {
@@ -227,7 +232,6 @@ void CustomParser::construct_series(Series &series, const Entity &item,
 
     std::vector<u_int32_t> data_idx;
     string current_id;
-    // Conditional id search
     find_ids(data, data_idx, target, item);
     for (const u_int32_t col : data_idx) {
         for (size_t i = item.value_begin; i < data.size(); i++) {
@@ -245,8 +249,8 @@ void CustomParser::construct_series(Series &series, const Entity &item,
         }
         rows.resize(0);
         tb->insert(series);
+        clean_series(series);
     }
-    clean_series(series);
 }
 
 void CustomParser::transform_keys(map<string, vector<Entity>> &keys) {
