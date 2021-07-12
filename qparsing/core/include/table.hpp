@@ -136,7 +136,6 @@ class Table {
      * @return bool true on success
      */
     bool insert(Series);
-
     /**
      * @brief Inserts given value to each id
      *
