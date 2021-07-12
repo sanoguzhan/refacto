@@ -132,9 +132,13 @@ class CustomParserWrapper {
                                vector<Entity>& entity,
                                map<string, string>& condition) {
         vector<map<string, string>> cond;
+         
+           
         cond.push_back(
             {{"id", condition.at("id")}, {"name", condition.at("name")}});
-
+        if( condition.find("parent_id_row") != condition.end()) {
+                    cond.back().insert(std::make_pair("parent_id_row", condition.at("parent_id_row")));
+            }
         check_keys_pyx(vals);
         entity.emplace_back(vals.at("key"), vals.at("name"), vals.at("orient"),
                             vals.at("type"), std::stoi(vals.at("row")),
