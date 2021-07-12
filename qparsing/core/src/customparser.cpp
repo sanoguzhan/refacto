@@ -97,6 +97,7 @@ void CustomParser::from_group_series(Series &series, const Entity &item,
             _id = cm_id[1];
             if(conditions.find("parent_id_row") != conditions.end())
                 _id = data.at(stoi(conditions.at("parent_id_row"))).at(c) + "-" +_id;
+
             for (size_t i = item.value_begin; i < data.size(); i++) {
                 rows.push_back(data.at(i).at(c));
             }
@@ -104,7 +105,7 @@ void CustomParser::from_group_series(Series &series, const Entity &item,
                 series.values.insert(std::make_pair(_id, rows));
 
             } else {
-                series.values.find(cm_id[1])->second.insert(
+                series.values.find(_id)->second.insert(
                     std::end(series.values.find(_id)->second),
                     std::begin(rows), std::end(rows));
             }
@@ -113,6 +114,7 @@ void CustomParser::from_group_series(Series &series, const Entity &item,
         tb->insert(series);
         clean_series(series);
     }
+
 }
 
 void CustomParser::from_vector(vector<string> &vec_values, Entity &item) const {
