@@ -371,7 +371,7 @@ TEST(CustomParser, TestHelperMethod) {
 
 //         vector<map<string, string>> ent1;
 //     ent1.push_back(
-//         {{"id", "I_DC(\\w)"}, {"name", "I_(DC)\\w"}, 
+//         {{"id", "I_DC(\\w)"}, {"name", "(I_DC)\\w"}, 
 //         {"parent_id_row", "1"}});
 
 //     Entity power{.key = "inverter_mppt",
@@ -380,6 +380,19 @@ TEST(CustomParser, TestHelperMethod) {
 //                  .type = "group",
 //                  .row = 2,
 //                  .value_begin = 3};
+//     vector<map<string, string>> ent_dc;
+//     ent_dc.push_back(
+//         {{"id", "U_DC(\\w)"}, {"name", "(U_DC)\\w"}, 
+//         {"parent_id_row", "1"}});
+
+//     Entity power_dc{.key = "inverter_mppt",
+//                  .name = "U_DC\\w",
+//                  .orient = "row",
+//                  .type = "group",
+//                  .row = 2,
+//                  .value_begin = 3};
+
+//     power_dc.conditions = ent_dc;
 //     power.conditions = ent1;
 //     pac.conditions = ent;
 //     Entity date{.key = "inverter_mppt",
@@ -392,7 +405,7 @@ TEST(CustomParser, TestHelperMethod) {
 //                 .to = -1};
 //     // pac1.conditions = ent1;
 //     // CustomParser p(pac, date);
-//     CustomParser p(power, date);
+//     CustomParser p(power,power_dc, date);
 
 
 //     p(TEST_CSV_INPUT_DIR + "test_custom/", ",", 0);
