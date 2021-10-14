@@ -54,7 +54,7 @@ release:
     extends: .release-base
     stage: release
 
-build-docker:
+build-and-deploy-docker-image:
     extends: .build-and-deploy-docker-image-base
     stage: build-and-deploy-docker-image
     variables:
