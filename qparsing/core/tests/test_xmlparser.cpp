@@ -91,25 +91,25 @@ TEST(XMLParser, RegexSearch) {
 }
 
 TEST(XMLParser, GroupElements) {
-    IDMap amp{.name = "sting",
+    IDMap amp{.name = "string",
               .node = "Key",
               .key = "^(.*?).Ms.Amp",
               .degree = "Mean",
               .type = "multi"};
 
-    IDMap tmp{.name = "sting",
+    IDMap tmp{.name = "string",
               .node = "Key",
               .key = "^(.*?).TmpLimStt",
               .degree = "Mean",
               .type = "group"};
 
-    IDMap stt{.name = "sting",
+    IDMap stt{.name = "string",
               .node = "Key",
               .key = "^(.*?)InvCtl.Stt",
               .degree = "Mean",
               .type = "group"};
     IDMap tmp2{
-        .name = "sting",
+        .name = "string",
         .node = "Key",
         .key = "WRTP4Q44:2110070939:Inv.TmpLimStt",
         .degree = "Mean",
