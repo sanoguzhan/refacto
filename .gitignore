@@ -67,7 +67,7 @@ parsing.egg-info
 dist
 qparsing/lib.log
 
-qparsing/utils/__pycache__
+__pycache__
 
 .idea/
 .vscode/launch.json
