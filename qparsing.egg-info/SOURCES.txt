@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.py
+qparsing/__init__.py
+qparsing.egg-info/PKG-INFO
+qparsing.egg-info/SOURCES.txt
+qparsing.egg-info/dependency_links.txt
+qparsing.egg-info/requires.txt
+qparsing.egg-info/top_level.txt
+qparsing/core/__init__.py
+qparsing/core/parser.cpp

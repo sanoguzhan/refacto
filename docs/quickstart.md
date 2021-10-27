@@ -168,7 +168,7 @@ Extension is searched in the given directory so the directory should be uniform
 _Example:_
 
 ```python
-            Decompressdir()("qparsing/core/tests/test_data/gz/")
+            Decompressdir()("parsing/core/tests/test_data/gz/")
 ```
 
 ## Compressdir
@@ -178,7 +178,7 @@ Uses shell command to compress files in zip format
 _Example:_
 
 ```python
-    Compressdir()("qparsing/core/tests/test_data/gz/", "test")
+    Compressdir()("parsing/core/tests/test_data/gz/", "test")
 ```
 
 ### Cleandir

@@ -1,3 +1,24 @@
+Metadata-Version: 2.1
+Name: qparsing
+Version: 0.0.0
+Summary: UNKNOWN
+Home-page: UNKNOWN
+Author: Oguzhan San
+License: UNKNOWN
+Keywords: Cython,Parsing,C++,Refacto
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Requires-Python: >=3.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 # Refacto & Parsing Library
 
 [![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
@@ -18,13 +39,13 @@ Run the project:
     cd docker
     docker-compose build
     docker-compose run clang bash
-    ./parsing/core/cmd/build.sh
+    ./qparsing/core/cmd/build.sh
 ```
 
 For Tests:
 
 ```sh
-    ./parsing/core/cmd/test.sh
+    ./qparsing/core/cmd/test.sh
 ```
 
 This will compile all the code, build the c++ library and run the tests.
@@ -62,3 +83,5 @@ Import the modules and run
 ```
 
 see code examples at [example.py](https://github.com/sanoguzhan/refacto/blob/master/docs/example.py)
+
+

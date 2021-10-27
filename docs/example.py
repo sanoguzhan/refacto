@@ -1,6 +1,6 @@
-from qparsing.engine import CSVParser
-from qparsing.engine import XMLParser
-from qparsing.engine import Decompressdir, Cleandir, Compressdir
+from parsing.engine import CSVParser
+from parsing.engine import XMLParser
+from parsing.engine import Decompressdir, Cleandir, Compressdir
 
 """ CSV PARSER Examples"""
 # Conditional id search
@@ -24,7 +24,7 @@ test_csv0 = CSVParser([
                     "row" :"1",
                     "value_begin" :"3"}
             ])
-# test_csv0("qparsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
+# test_csv0("parsing/core/tests/test_data/csv/input/test_one_input/" , ";",  3)
 # test_csv0.to_csv(".")
 
 
@@ -42,7 +42,7 @@ test_csv1 = CSVParser([
                         }
                  },
             ])
-# test_csv1("qparsing/core/tests/test_data/csv/input/test_id_group/" , ";",  0)
+# test_csv1("parsing/core/tests/test_data/csv/input/test_id_group/" , ";",  0)
 # test_csv1.to_csv(".")
 
 test_csv2 = CSVParser([
@@ -106,7 +106,7 @@ test_csv2 = CSVParser([
                     "keyword" : "test",
                  }
             ])
-# test_csv2("qparsing/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
+# test_csv2("parsing/core/tests/test_data/csv/input/test_id_input/" , ";",  0)
 # test.to_csv(".")
 
 
@@ -139,7 +139,7 @@ test_csv3 = CSVParser([
                     "value_begin":"1",
                  }
             ])
-# test_csv3("qparsing/core/tests/test_data/csv/" , ";",  0)
+# test_csv3("parsing/core/tests/test_data/csv/" , ";",  0)
 # test_csv3.to_csv(".")
 
 
@@ -196,7 +196,7 @@ kwargs = [{"name": "inverter",
 # xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-# xml_parser("qparsing/core/tests/test_data/xml/single_variables/", "WebBox");
+# xml_parser("parsing/core/tests/test_data/xml/single_variables/", "WebBox");
 # xml_parser.to_csv(".")
 
 """Example 1:
@@ -234,7 +234,7 @@ kwargs = [{"name": "inverter",
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-# xml_parser("qparsing/core/tests/test_data/vihiers/", "WebBox")
+# xml_parser("parsing/core/tests/test_data/vihiers/", "WebBox")
 # xml_parser.to_csv(".")
 
 
@@ -265,15 +265,15 @@ kwargs = [{"name": "inverter",
     ]
 xml_parser = XMLParser(kwargs)
 # # Uncomment to run 
-# xml_parser("qparsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+# xml_parser("parsing/core/tests/test_data/xml/multi-variables/sciheco/", "WebBox");
 # xml_parser.to_csv(".");
 
 # --------------------- | ----------------------#
 # # Decompressdir, Compressdir, Cleandir examples
 
-# Decompressdir()("qparsing/core/tests/test_data/gz/")
+# Decompressdir()("parsing/core/tests/test_data/gz/")
 # --------------------- | ----------------------#
-# Cleandir()("qparsing/core/tests/test_data/gz/", "*.csv")
+# Cleandir()("parsing/core/tests/test_data/gz/", "*.csv")
 # --------------------- | ----------------------#
-# Compressdir()("qparsing/core/tests/test_data/gz/", "test")
+# Compressdir()("parsing/core/tests/test_data/gz/", "test")
 
