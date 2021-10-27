@@ -34,7 +34,7 @@ cppcheck:
             - "cppcheck-result.xml"
     stage: cppcheck
     script:
-        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 qparsing 2> cppcheck-result.xml
+        - cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2> cppcheck-result.xml
     only:
         - branches
     except:

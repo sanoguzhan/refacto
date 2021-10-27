@@ -1,14 +1,14 @@
 # Prerequisites
 *.d
-qparsing/core/tests/csv/output/*
+parsing/core/tests/csv/output/*
 */.DS_Store
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
-qparsing/core/tests/test_data/chanzeaux/
-qparsing/core/tests/test_data/
+parsing/core/tests/test_data/chanzeaux/
+parsing/core/tests/test_data/
 # Precompiled Headers
 *.gch
 *.pch
@@ -59,25 +59,25 @@ tests/test_data/csv/output/*.csv
 
 docker/.env
 
-qparsing/core/usr/
-qparsing/core/parser.cpp
+parsing/core/usr/
+parsing/core/parser.cpp
 
 parsing.egg-info
 .eggs
 dist
-qparsing/lib.log
+parsing/lib.log
 
 __pycache__
 
 .idea/
 .vscode/launch.json
 foo.csv
-qparsing/core/inverter.csv
-qparsing/core/inverter_mppt.csv
-qparsing/core/test_xml.csv
-qparsing/core/string.csv
+parsing/core/inverter.csv
+parsing/core/inverter_mppt.csv
+parsing/core/test_xml.csv
+parsing/core/string.csv
 .devcontainer/
 inverter.csv
-qparsing/core/test2.csv
-qparsing.egg-info
+parsing/core/test2.csv
+parsing.egg-info
 vihiers

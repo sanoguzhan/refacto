@@ -1,4 +1,4 @@
-from qparsing.engine import XMLParser
+from parsing.engine import XMLParser
 import time
 kwargs = [{"name": "inverter",
             "node":"Key",
@@ -52,7 +52,7 @@ kwargs = [{"name": "inverter",
 #     xml_parser = XMLParser(kwargs)
 
 #     # # Uncomment to run
-#     xml_parser("qparsing/core/tests/test_data/chanzeaux/", "WebBox")
+#     xml_parser("parsing/core/tests/test_data/chanzeaux/", "WebBox")
 #     xml_parser.to_csv(".")
 #     print("Time without group: %f" % (time.time() -a))
 
@@ -124,7 +124,7 @@ b = time.time()
 xml_parser = XMLParser(kwargs)
 
 # # Uncomment to run
-xml_parser("qparsing/core/tests/test_data/chanzeaux/", "WebBox")
+xml_parser("parsing/core/tests/test_data/chanzeaux/", "WebBox")
 
 xml_parser.to_csv(".")
 print("Time with grouping: %f" % (time.time() -b))
