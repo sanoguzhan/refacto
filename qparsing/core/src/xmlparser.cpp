@@ -40,7 +40,7 @@ void XMLParser::transfrom_map(map<string, vector<IDMap>>& keys) {
     vector<string> names;
     std::sort(data.begin(), data.end());
     std::transform(data.begin(), data.end(), back_inserter(names),
-                   [](IDMap& id) { return id.name; });
+                   [](const IDMap& id) { return id.name; });
     names.erase(unique(names.begin(), names.end()), names.end());
     transform(names.begin(), names.end(), std::inserter(keys, keys.end()),
               [](string& key) { return std::make_pair(key, vector<IDMap>()); });
@@ -90,10 +90,10 @@ void rotate_keys(IDMap& it, vector<IDMap>& args) {
         vector<IDMap> items;
         const auto id =
             std::find_if(args.begin(), args.end(), [&args](const IDMap& item) {
-                return item.key == item.name + "_id";
+                return item.key == "id";
             });
         if (id == args.end()) {
-            items.emplace_back(it.name, it.node, it.name + "_id", it.degree,
+            items.emplace_back(it.name, it.node, "id", it.degree,
                                ids);
         }
         items.emplace_back(it.name, it.node, column_name, it.degree, vars,
@@ -116,7 +116,7 @@ void validator(map<string, vector<IDMap>>& keys) {
                       });
 
         p.second.erase(std::remove_if(p.second.begin(), p.second.end(),
-                                      [&p, &items](IDMap& key) {
+                                      [&p, &items](const IDMap& key) {
                                           return key.key == "NULL";
                                       }),
                        p.second.end());
