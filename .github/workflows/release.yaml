@@ -76,7 +76,7 @@ jobs:
           cache-to: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${{ steps.branch.outputs.name}},mode=max
 
   build: 
-    needs: [ deploy-docker] 
+    needs: [ tag, deploy-docker] 
     container: 
       image: ${{ needs.deploy-docker.outputs.image }}:${{ needs.deploy-docker.outputs.branch }}
       credentials:
@@ -95,11 +95,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install .
     - name: Build packages
       run: |
         pip install -U twine wheel
-        python setup.py sdist bdist_wheel
+        CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
         twine check dist/*
     - name: Upload packages
       uses: actions/upload-artifact@v2
