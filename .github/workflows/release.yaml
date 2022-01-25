@@ -40,7 +40,7 @@ jobs:
     needs:
       - tag
     outputs:
-      pushed_tag: ${{needs.tag.outputs.new_tag}}
+      image: ${{ steps.image_registry_lower.outputs.lowercase}}
 
     steps:
       - name: Checkout repository
@@ -86,7 +86,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+      uses: ${{ needs.deploy-docker.outputs.image }}
       with:
         python-version: 3.8
     - name: Set version
