@@ -25,9 +25,8 @@ jobs:
     outputs: 
       version : ${{ steps.service_url.outputs.value}}
     steps:
-      - name: Patch service url
+      - name: Fix versioning
         uses: haya14busa/action-cond@v1
-        id: service_url
         with:
           cond: ${{ github.ref_name == 'staging'}}
           if_true:  '${{ needs.tag.outputs.new_version }}.dev'
@@ -44,7 +43,7 @@ jobs:
         python-version: 3.8
     - name: Set version
       run: |
-        echo "::set-env name=LIB_VERSION::${{ needs.versioning.outputs.version }}"
+        echo "name=LIB_VERSION::${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
     - name: Change Log
       run: |
         echo ${{ needs.tag.outputs.changelog }} | cat - docs/versions.md > temp && mv temp docs/versions.md
