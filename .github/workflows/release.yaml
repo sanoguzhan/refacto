@@ -2,7 +2,7 @@ name: Release
 
 on: 
   push:
-    branches: [ staging, production ]
+    branches: [ dev, master ]
 
 jobs:
   tag:
@@ -19,18 +19,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  versioning:
-    runs-on: ubuntu-latest
-    needs: tag
-    outputs: 
-      version : ${{ steps.service_url.outputs.value}}
-    steps:
-      - name: Fix versioning
-        uses: haya14busa/action-cond@v1
-        with:
-          cond: ${{ github.ref_name == 'staging'}}
-          if_true:  '${{ needs.tag.outputs.new_version }}.dev'
-          if_false: ${{ needs.tag.outputs.new_version }}
 
   deploy-docker:
     runs-on: ubuntu-latest
@@ -72,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v2
         id: build
         with:
-          context: ..
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -81,7 +69,7 @@ jobs:
           cache-to: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${{ steps.branch.outputs.name}},mode=max
 
   build: 
-    needs: [ versioning, deploy-docker] 
+    needs: [ deploy-docker] 
     container: ${{ needs.deploy-docker.outputs.image }}
     runs-on: ubuntu-latest
     steps:
@@ -89,7 +77,7 @@ jobs:
 
     - name: Set version
       run: |
-        echo "LIB_VERSION=${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
+        echo "LIB_VERSION=${{ needs.tag.outputs.new_version }}" >> $GITHUB_ENV
     - name: Change Log
       run: |
         echo '${{ needs.tag.outputs.changelog }}' | cat - docs/versions.md > temp && mv temp docs/versions.md
