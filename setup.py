@@ -122,7 +122,7 @@ class InstallCppLib(distutils.cmd.Command):
    
     with Pwd(self.path_to_build) as shell:
       shell.run(["mkdir", "-p", "build"],  stdout=open(os.devnull, 'wb'))
-      shell.run(["conan", "profile", "update", "settings.compiler.libcxx=libstdc++11", "default"],  stdout=open(os.devnull, 'wb'))
+      # shell.run(["conan", "profile", "update", "settings.compiler.libcxx=libstdc++11", "default"],  stdout=open(os.devnull, 'wb'))
       with Pwd('parsing/core/build') as shell:
         shell.run(["conan", "install", "..", "--build=missing"],  stdout=open(os.devnull, 'wb'))
         shell.run(["cmake", ".."],
