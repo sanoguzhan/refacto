@@ -43,7 +43,7 @@ jobs:
         python-version: 3.8
     - name: Set version
       run: |
-        echo "name=LIB_VERSION::${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
+        echo "LIB_VERSION=${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
     - name: Change Log
       run: |
         echo ${{ needs.tag.outputs.changelog }} | cat - docs/versions.md > temp && mv temp docs/versions.md
