@@ -54,7 +54,7 @@ cf = ColoredFormatter("[%(name)s][%(levelname)s]  %(message)s (%(filename)s:%(li
 ch.setFormatter(cf)
 log.addHandler(ch)
 
-fh = logging.FileHandler('qparsing/lib.log')
+fh = logging.FileHandler('parsing/lib.log')
 fh.setLevel(logging.DEBUG)
 ff = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(ff)
@@ -65,11 +65,11 @@ log.setLevel(logging.DEBUG)
 
 # Linking C++ Refacto Library to Cython Parser.Pyx
 
-os.environ['LD_LIBRARY_PATH'] = "qparsing/core/usr/local/lib/"
+os.environ['LD_LIBRARY_PATH'] = "parsing/core/usr/local/lib/"
 os.environ["CC"] = "clang"
 _path = "/core/usr/local/lib/"
-ext_modules = [Extension("qparsing.engine",
-                     ["qparsing/core/parser.pyx",],
+ext_modules = [Extension("parsing.engine",
+                     ["parsing/core/parser.pyx",],
                      language='c++',
                      include_dirs= ["/include", ],
                       extra_compile_args=['-std=c++17'],
@@ -107,7 +107,7 @@ class InstallCppLib(distutils.cmd.Command):
 
   def initialize_options(self):
     """Set default values for options."""
-    self.path_to_build = 'qparsing/core'
+    self.path_to_build = 'parsing/core'
 
   def finalize_options(self):
     """Post-process options."""
@@ -122,7 +122,7 @@ class InstallCppLib(distutils.cmd.Command):
     with Pwd(self.path_to_build) as shell:
       shell.run(["mkdir", "-p", "build"],  stdout=open(os.devnull, 'wb'))
       shell.run(["conan", "profile", "update", "settings.compiler.libcxx=libstdc++11", "default"],  stdout=open(os.devnull, 'wb'))
-      with Pwd('qparsing/core/build') as shell:
+      with Pwd('parsing/core/build') as shell:
         shell.run(["conan", "install", "..", "--build=missing"],  stdout=open(os.devnull, 'wb'))
         shell.run(["cmake", ".."],
         stdout=open(os.devnull, 'wb'))
@@ -138,7 +138,7 @@ class InstallCppLib(distutils.cmd.Command):
 
 
 setup(
-  name = "qparsing",
+  name = "parsing",
   version = __version__,
   author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
