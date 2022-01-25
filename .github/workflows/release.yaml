@@ -77,7 +77,12 @@ jobs:
 
   build: 
     needs: [ deploy-docker] 
-    container: ${{ needs.deploy-docker.outputs.image }}
+    container: 
+      image: ${{ needs.deploy-docker.outputs.image }}
+      credentials:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
