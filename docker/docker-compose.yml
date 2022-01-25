@@ -3,11 +3,11 @@ version: "3.3"
 services:
   clang:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
+      dockerfile: ./docker/Dockerfile
     restart: always
     env_file:
-      - ./.env
+      - .env
     volumes:
       - ../:/code
       # - data_pv:/code/parsing/core/tests/test_data/data_pv/
