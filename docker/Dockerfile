@@ -29,17 +29,17 @@ RUN python3 -m pip install --upgrade pip && pip install wheel
 RUN pip3 install -U pip setuptools wheel
 RUN pip3 install conan 
 
-COPY install.sh .
+COPY docker/install.sh .
 RUN chmod +x install.sh 
 RUN ./install.sh
 
 #Install Required packages
-COPY requires.sh .
+COPY docker/requires.sh .
 RUN chmod +x requires.sh 
 RUN ./requires.sh
 
 RUN mkdir /code && mkdir /data
-COPY conanfile.txt .
+COPY docker/conanfile.txt .
 RUN conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default && conan install . --build=missing
 
 WORKDIR /code
