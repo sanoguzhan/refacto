@@ -82,11 +82,11 @@ jobs:
 
   build: 
     needs: [ versioning, deploy-docker] 
+    container: ${{ needs.deploy-docker.outputs.image }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
-      uses: ghcr.io/sanoguzhan/refacto
       with:
         python-version: 3.8
     - name: Set version
