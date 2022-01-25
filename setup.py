@@ -21,6 +21,7 @@ README = ( BASE_DIR / "README.md").read_text()
 __version__ = os.getenv('LIB_VERSION')
 
 
+
 MAPPING = {
     'DEBUG'   : 37, # white
     'INFO'    : 36, # cyan
