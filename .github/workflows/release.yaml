@@ -98,7 +98,7 @@ jobs:
 
     - name: setup conan profile
       run: |
-        conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default && conan install . --build=missing
+        conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default && conan install .. --build=missing
 
     - name: Build packages
       run: |
