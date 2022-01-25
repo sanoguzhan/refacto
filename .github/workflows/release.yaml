@@ -98,7 +98,7 @@ jobs:
 
     - name: test
       run: |
-        conan profile list
+        ls 
     - name: Build packages
       run: |
         pip install -U twine wheel
