@@ -95,6 +95,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+
+    - name: test
+      run: |
+        conan profile list
     - name: Build packages
       run: |
         pip install -U twine wheel
