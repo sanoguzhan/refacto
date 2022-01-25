@@ -78,7 +78,7 @@ jobs:
   build: 
     needs: [ deploy-docker] 
     container: 
-      image: ${{ needs.deploy-docker.outputs.image }}:{{ needs.deploy-docker.outputs.branch }}
+      image: ${{ needs.deploy-docker.outputs.image }}:${{ needs.deploy-docker.outputs.branch }}
       credentials:
           username: ${{ github.actor }}
           password: ${{ secrets.ACCESS_TOKEN }}
