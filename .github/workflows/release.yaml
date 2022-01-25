@@ -46,7 +46,7 @@ jobs:
         echo "LIB_VERSION=${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
     - name: Change Log
       run: |
-        echo ${{ needs.tag.outputs.changelog }} | cat - docs/versions.md > temp && mv temp docs/versions.md
+        echo '${{ needs.tag.outputs.changelog }}' | cat - docs/versions.md > temp && mv temp docs/versions.md
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
