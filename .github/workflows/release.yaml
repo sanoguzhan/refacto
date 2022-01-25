@@ -95,7 +95,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-
     - name: Build packages
       run: |
         pip install -U twine wheel
