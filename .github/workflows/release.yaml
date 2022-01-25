@@ -29,7 +29,7 @@ jobs:
       - tag
     outputs:
       image: ${{ steps.image_registry_lower.outputs.lowercase}}
-
+      branch: ${{ steps.branch.outputs.name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
   build: 
     needs: [ deploy-docker] 
     container: 
-      image: ${{ needs.deploy-docker.outputs.image }}
+      image: ${{ needs.deploy-docker.outputs.image }}:{{ needs.deploy-docker.outputs.branch }}
       credentials:
           username: ${{ github.actor }}
           password: ${{ secrets.ACCESS_TOKEN }}
