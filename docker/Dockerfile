@@ -23,6 +23,8 @@ RUN apt-get -qq update; \
 ENV LLVM_RELEASE 10
 ENV LLVM_VERSION 10.0.0
 
+WORKDIR /code
+
 # Install Clang and LLVM
 RUN chmod -R 700 /bin/sh
 RUN python3 -m pip install --upgrade pip && pip install wheel
@@ -42,7 +44,6 @@ RUN mkdir /code && mkdir /data
 COPY docker/conanfile.txt .
 RUN conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default && conan install . --build=missing
 
-WORKDIR /code
 
 
 
