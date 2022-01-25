@@ -80,7 +80,6 @@ jobs:
     container: 
       image: ${{ needs.deploy-docker.outputs.image }}
       credentials:
-          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.ACCESS_TOKEN }}
     runs-on: ubuntu-latest
