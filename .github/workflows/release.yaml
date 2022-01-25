@@ -45,6 +45,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Get branch name
+        id: branch
+        run: echo ::set-output name=name::${GITHUB_REF#refs/*/}
 
       - id: image_registry_lower
         uses: ASzc/change-string-case-action@v2
@@ -57,12 +60,6 @@ jobs:
           driver-opts: |
             image=moby/buildkit:master
             network=host
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-   
-
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@e5622373a38e60fb6d795a4421e56882f2d7a681
@@ -71,7 +68,6 @@ jobs:
           tags: |
             type=semver, pattern={{raw}}, value=${{needs.tag.outputs.new_tag}}
             type=ref, event=branch
-      # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         id: build
@@ -81,11 +77,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: docker/Dockerfile
-          cache-from: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${GITHUB_REF##*/}
-          cache-to: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${GITHUB_REF##*/},mode=max
+          cache-from: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${{ steps.branch.outputs.name}}
+          cache-to: type=registry,ref=${{ steps.image_registry_lower.outputs.lowercase }}:buildcache-${{ steps.branch.outputs.name}},mode=max
 
   build: 
-    needs: [ tag, versioning, deploy-docker] 
+    needs: [ versioning, deploy-docker] 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
