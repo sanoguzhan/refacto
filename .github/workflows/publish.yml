@@ -40,7 +40,7 @@ jobs:
                 run: |
                     export LIB_VERSION=${{ needs.tag.outputs.new_tag }}
                     CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist
-                    python3 check_ext dist/*
+                    twine check dist/*
             -   uses: actions/upload-artifact@v2
                 with:
                     name: 'dist-result'
