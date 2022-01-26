@@ -1,16 +1,16 @@
 
-name: test
+name: Test
 
 on: [push, pull_request]
 
 jobs:
-    build:
+    test:
         runs-on: ubuntu-latest
         container:
             image: ghcr.io/sanoguzhan/refacto:master
             credentials:
                 username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
+                password: ${{ secrets.ACCESS_TOKEN }}
         steps:
             -   uses: actions/checkout@v2
             -   name: Cpp Check
