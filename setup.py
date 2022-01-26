@@ -126,6 +126,8 @@ class InstallCppLib(distutils.cmd.Command):
       
       shell.run(["conan", "profile", "update", "settings.compiler.libcxx=libstdc++11", "default"],  stdout=open(os.devnull, 'wb'))
       with Pwd('parsing/core/build') as shell:
+        shell.run(["conan", "install", "..", "--build=missing"],  stdout=open(os.devnull, 'wb'))
+
         shell.run(["cmake", ".."],
         stdout=open(os.devnull, 'wb'))
         log.info("Building static library...",)
