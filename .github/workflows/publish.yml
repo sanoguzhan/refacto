@@ -56,6 +56,9 @@ jobs:
                     name: 'dist-result'
                     path: dist/
             -   uses: actions/checkout@v2
+            -   name: Install Twine
+                run: |
+                    pip install twine
             -   name: Configure AWS Credentials
                 uses: aws-actions/configure-aws-credentials@v1
                 with:
