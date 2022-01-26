@@ -1,5 +1,5 @@
 Metadata-Version: 2.1
-Name: qparsing
+Name: parsing
 Version: 0.0.0
 Summary: UNKNOWN
 Home-page: UNKNOWN
@@ -39,13 +39,13 @@ Run the project:
     cd docker
     docker-compose build
     docker-compose run clang bash
-    ./qparsing/core/cmd/build.sh
+    ./parsing/core/cmd/build.sh
 ```
 
 For Tests:
 
 ```sh
-    ./qparsing/core/cmd/test.sh
+    ./parsing/core/cmd/test.sh
 ```
 
 This will compile all the code, build the c++ library and run the tests.

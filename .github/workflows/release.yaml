@@ -104,8 +104,9 @@ jobs:
         pip install -U twine wheel
         CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist bdist_wheel
         twine check dist/*
-    - name: Upload packages
-      uses: actions/upload-artifact@v2
+
+
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@master
       with:
-        name: parsing
-        path: dist/*
+        password: ${{ secrets.PYPI_API_TOKEN }}
