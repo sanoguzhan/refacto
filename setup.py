@@ -138,7 +138,7 @@ class InstallCppLib(distutils.cmd.Command):
 
 
 setup(
-  name = "parsing",
+  name = "qparsing",
   version = __version__,
   author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
