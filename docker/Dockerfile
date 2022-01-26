@@ -40,9 +40,6 @@ COPY docker/requires.sh .
 RUN chmod +x requires.sh 
 RUN ./requires.sh
 
-COPY docker/conanfile.txt ./conanfile.txt
-RUN conan install . && conan profile update settings.compiler.libcxx=libstdc++11 default && conan install . --build=missing
-
 
 
 
