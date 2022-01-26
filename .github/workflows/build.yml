@@ -24,13 +24,13 @@ jobs:
                 with:
                     registry: ghcr.io
                     username: ${{ github.actor }}
-                    password: ${{ secrets.ACCESS_TOKEN }}
+                    password: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Extract Docker metadata
                 id: meta
                 uses: docker/metadata-action@e5622373a38e60fb6d795a4421e56882f2d7a681
                 with:
-                    github-token: ${{ secrets.ACCESS_TOKEN }}
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
                     images: ${{ steps.image_registry_lower.outputs.lowercase }}
                     tags: |
                         type=ref, event=branch
