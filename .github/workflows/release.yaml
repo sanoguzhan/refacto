@@ -2,7 +2,7 @@ name: Release
 
 on: 
   push:
-    branches: [ dev, master ]
+    branches: [ staging production ]
 
 jobs:
   tag:
@@ -85,7 +85,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
     - name: Set version
       run: |
         echo "LIB_VERSION=${{ needs.tag.outputs.new_version }}" >> $GITHUB_ENV
@@ -101,15 +100,4 @@ jobs:
         pip install -U twine wheel
         CFLAGS="-Wno-everything" python3 setup.py install_library build_ext sdist
         twine check dist/*
-
-    - name: manylinux
-      uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux2014_x86_64
-      with:
-        python-versions: 'cp36-cp36m cp37-cp37m'
-        build-requirements: 'cython numpy'
-
-    - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__ 
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      
