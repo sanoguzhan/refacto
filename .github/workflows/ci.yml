@@ -16,6 +16,9 @@ jobs:
             -   name: Cpp Check
                 run: |
                     cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2
+            -   name: Build Refacto Tests
+                run: |
+                    ./parsing/core/cmd/build.sh 
             -   name: Cpp Library Test
                 run: |
                     ./parsing/core/cmd/test.sh 
