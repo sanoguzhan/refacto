@@ -40,7 +40,9 @@ COPY docker/requires.sh .
 RUN chmod +x requires.sh 
 RUN ./requires.sh
 
-
-
+# Install aws CLI for github action
+COPY docker/install_for_actions.sh .
+RUN chmod +x install_for_actions.sh
+RUN ./install_for_actions.sh
 
 
