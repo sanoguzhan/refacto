@@ -7,7 +7,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         container:
-            image: ghcr.io/feedgy/refacto:master
+            image: ghcr.io/sanoguzhan/refacto:master
             credentials:
                 username: ${{ github.actor }}
                 password: ${{ secrets.GITHUB_TOKEN }}
@@ -15,10 +15,7 @@ jobs:
             -   uses: actions/checkout@v2
             -   name: Cpp Check
                 run: |
-                    cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2> cppcheck-result.xml
-            -   name: Cpp Check
-                run: |
-                    cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2> cppcheck-result.xml
+                    cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2
             -   name: Cpp Library Test
                 run: |
                     ./parsing/core/cmd/test.sh 

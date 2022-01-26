@@ -5,11 +5,6 @@ on:
     push:
         branches: [ staging, production ]
 
-    workflow_run:
-        workflows: ["test"]
-        branches: [master]
-        types:
-        - completed
 
 jobs:
     tag:
