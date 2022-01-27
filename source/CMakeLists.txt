@@ -1,5 +1,6 @@
 
 cmake_minimum_required(VERSION 3.2)
+project(refacto VERSION 0.0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3 -fPIC -funroll-loops")
 add_compile_options("-fmax-errors=10")
@@ -7,7 +8,6 @@ add_compile_options("-fmax-errors=10")
 add_compile_options("-Wno-deprecated-declarations")
 link_libraries(stdc++fs)
 
-project(refacto VERSION 0.0.1 LANGUAGES CXX)
 include(CMakePackageConfigHelpers)
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
@@ -24,11 +24,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #   --export-fixes=fixes.yml;)
 
 option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
-message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+message(STATUS "ENABLE_CODE_ANALYSIS ${ENABLE_CODE_ANALYSIS}")
 
 if(ENABLE_CODE_ANALYSIS)
     find_program(cppcheck cppcheck)
-    message(STATUS "cppcheck                   ${cppcheck}")
+    message(STATUS "cppcheck ${cppcheck}")
     if(NOT (cppcheck MATCHES "NOTFOUND"))
         # Notes:
         # - unmatchedSuppression needed since not all source files are
