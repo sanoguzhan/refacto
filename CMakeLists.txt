@@ -1,29 +1,27 @@
 
 cmake_minimum_required(VERSION 3.2)
 project(refacto VERSION 0.0.1 LANGUAGES CXX)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "")
+	set(CMAKE_BUILD_TYPE Release CACHE STRING
+		"Type of build, options are: Debug, Release" FORCE)
+endif()
+
+add_compile_options(-Wall -Wextra -fPIC -funroll-loops -fmax-errors=10)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-O3 -fPIC -funroll-loops")
-add_compile_options("-fmax-errors=10")
-# add_compile_definitions(LOG)
-add_compile_options("-Wno-deprecated-declarations")
+
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g2 -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+
+#Code dynamic analysis Memory - Debug
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
 link_libraries(stdc++fs)
 
-include(CMakePackageConfigHelpers)
-include(CMakeDependentOption)
-include(CheckCXXCompilerFlag)
-include(GNUInstallDirs)
-include(CTest)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# Code Static Analysis
-
-# set(CMAKE_CXX_CLANG_TIDY 
-#   clang-tidy;
-#   -header-filter=.;
-#   -checks=*;
-#   --export-fixes=fixes.yml;)
-
-option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
+set(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
 message(STATUS "ENABLE_CODE_ANALYSIS ${ENABLE_CODE_ANALYSIS}")
 
 if(ENABLE_CODE_ANALYSIS)
@@ -48,15 +46,9 @@ if(ENABLE_CODE_ANALYSIS)
             "--suppress=unusedFunction"
             "--template='{file}:{line}: warning: {id} ({severity}): {message}'")
     endif()
-endif(ENABLE_CODE_ANALYSIS)
+endif()
 
-#Code dynamic analysis Memory - Debug
-set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
-set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 
-#Code dynamic analysis: Enable Undefined Behaviour Sanitizer (UBSan) for GCC/Clang
-# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
-# set (CMAKE_EXELINKER_FLAGS "${CMAKE_EXELINKER_FLAGS} -fsanitize=undefined")
 
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
@@ -84,8 +76,12 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
 
 file(GLOB HEADERS include/*.hpp)
-install(FILES ${HEADERS} DESTINATION  ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 install(FILES ${CMAKE_BINARY_DIR}/refacto.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 install(EXPORT ${PROJECT_NAME} FILE refacto-config.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+
+string(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_UCASE)
+message(STATUS ">> CXX Compile Flags (For ${CMAKE_BUILD_TYPE}):\
+ ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE_UCASE}}")
