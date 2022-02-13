@@ -1,6 +1,6 @@
-#include "table.hpp"
+#include "refacto/table.hpp"
 
-#include "dtables.hpp"
+#include "refacto/dtables.hpp"
 using namespace table;
 
 typedef std::map<std::string,
