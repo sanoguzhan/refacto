@@ -1,47 +1,84 @@
-cmake_minimum_required(VERSION 3.2)
-project(TestCases LANGUAGES CXX)
-set (CMAKE_CXX_STANDARD 17)
+cmake_minimum_required(VERSION 3.15)
 
-add_compile_options("-std=gnu++17")
-add_compile_options("-fmax-errors=10")
-set(CMAKE_CXX_FLAGS "-O2")
-add_compile_options("-Wno-deprecated-declarations")
-enable_testing()
+#
+# Project details
+#
 
+project(
+  ${CMAKE_PROJECT_NAME}Tests
+  LANGUAGES CXX
+)
 
-find_package(refacto)
-find_package(GTest REQUIRED)
+verbose_message("Adding tests under ${CMAKE_PROJECT_NAME}Tests...")
 
-include_directories(${GTEST_INCLUDE_DIR})
-link_libraries(stdc++fs)
+foreach(file ${test_sources})
+  string(REGEX REPLACE "(.*/)([a-zA-Z0-9_ ]+)(\.cpp)" "\\2" test_name ${file}) 
+  add_executable(${test_name}_Tests ${file})
 
-option(ENABLE_CODE_ANALYSIS "Run code analysis" OFF)
-message(STATUS "ENABLE_CODE_ANALYSIS       ${ENABLE_CODE_ANALYSIS}")
+  #
+  # Set the compiler standard
+  #
 
+  target_compile_features(${test_name}_Tests PUBLIC cxx_std_17)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+  #
+  # Setup code coverage if enabled
+  #
 
-function(build_tests target_name target_source)
-  add_executable(${target_name} 
-        ${target_source})
-  if(refacto_FOUND)
-    target_link_libraries(${target_name} refacto)
-    target_link_libraries(${target_name} ${CONAN_LIBS})
-    target_link_libraries(${target_name} GTest::GTest GTest::Main)
+  if (${CMAKE_PROJECT_NAME}_ENABLE_CODE_COVERAGE)
+    target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
+    target_link_options(${CMAKE_PROJECT_NAME} PUBLIC -fprofile-arcs -ftest-coverage)
+    verbose_message("Code coverage is enabled and provided with GCC.")
+  endif()
+
+  #
+  # Load the desired unit testing framework
+  #
+  # Currently supported: GoogleTest (and GoogleMock), Catch2.
+
+  if(${CMAKE_PROJECT_NAME}_BUILD_EXECUTABLE)
+    set(${CMAKE_PROJECT_NAME}_TEST_LIB ${CMAKE_PROJECT_NAME}_LIB)
   else()
-    message(FATAL_ERROR "refacto library not found")
-endif()
-endfunction()
+    set(${CMAKE_PROJECT_NAME}_TEST_LIB ${CMAKE_PROJECT_NAME})
+  endif()
 
-build_tests(test_dtables test_dtables.cpp)
-build_tests(test_csv_cases test_csv_cases.cpp)
-# 
-build_tests(test_csvparser test_csvparser.cpp)
-build_tests(test_customparser test_customparser.cpp)
+  if(${CMAKE_PROJECT_NAME}_USE_GTEST)
+    find_package(GTest REQUIRED)
 
-build_tests(test_table test_table.cpp)
-build_tests(test_controller test_controller.cpp)
-build_tests(test_xmlparser test_xmlparser.cpp)
-build_tests(test_cod test_cod.cpp)
+    if(${CMAKE_PROJECT_NAME}_USE_GOOGLE_MOCK)
+      set(GOOGLE_MOCK_LIBRARIES GTest::gmock GTest::gmock_main)
+    endif()
 
+    target_link_libraries(
+      ${test_name}_Tests
+      PUBLIC
+        GTest::GTest
+        GTest::Main
+        ${GOOGLE_MOCK_LIBRARIES}
+        ${${CMAKE_PROJECT_NAME}_TEST_LIB}
+    )
+  elseif(${CMAKE_PROJECT_NAME}_USE_CATCH2)
+    find_package(Catch2 REQUIRED)
+    target_link_libraries(
+      ${test_name}_Tests
+      PUBLIC
+        Catch2::Catch2
+        ${${CMAKE_PROJECT_NAME}_TEST_LIB}
+    )
+  else()
+    message(FATAL_ERROR "Unknown testing library. Please setup your desired unit testing library by using `target_link_libraries`.")  
+  endif()
+
+  #
+  # Add the unit tests
+  #
+
+  add_test(
+    NAME
+      ${test_name}
+    COMMAND
+      ${test_name}_Tests
+  )
+endforeach()
+
+verbose_message("Finished adding unit tests for ${CMAKE_PROJECT_NAME}.")
