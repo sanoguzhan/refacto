@@ -20,7 +20,7 @@
 #include <algorithm>
 
 #include "table.hpp"
-#include "yaml-cpp/yaml.h"
+// #include "yaml-cpp/yaml.h"
 using string = std::string;
 using namespace table;
 
@@ -53,7 +53,7 @@ class [[deprecated(
     "Use Table Class, configuration files will be removed")]] Tables {
    public:
     string path;      // path to file
-    YAML::Node file;  // opened file as YML::Node
+    // YAML::Node file;  // opened file as YML::Node
     std::vector<std::shared_ptr<DataRow>>
         data;  // Data contains each column as DataRow Obj
 
@@ -154,7 +154,7 @@ class [[deprecated(
      *
      * @return YML::Node of opened yml file
      */
-    YAML::Node open_yaml(std::string);
+    // YAML::Node open_yaml(std::string);
 
     /**
      * @brief Validator for column token (for constructor)

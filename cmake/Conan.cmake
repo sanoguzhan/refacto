@@ -1,4 +1,4 @@
-if(${PROJECT_NAME}_ENABLE_CONAN)
+# if(${PROJECT_NAME}_ENABLE_CONAN)
   #
   # Setup Conan requires and options here:
   #
@@ -29,18 +29,32 @@ if(${PROJECT_NAME}_ENABLE_CONAN)
     https://api.bintray.com/conan/bincrafters/public-conan
   )
 
-  conan_cmake_run(
-    REQUIRES
-    ${${PROJECT_NAME}_CONAN_REQUIRES}
-    OPTIONS
-    ${${PROJECT_NAME}_CONAN_OPTIONS}
-    BASIC_SETUP
-    CMAKE_TARGETS # Individual targets to link to
-    BUILD
-    missing
-  )
+  # conan_cmake_run(
+  #   REQUIRES
+  #   ${${PROJECT_NAME}_CONAN_REQUIRES}
+  #   OPTIONS
+  #   ${${PROJECT_NAME}_CONAN_OPTIONS}
+  #   SETTINGS compiler.libcxx=libstdc++11
+  #   BASIC_SETUP
+  #   CMAKE_TARGETS # Individual targets to link to
+  #   BUILD
+  #   missing
+  # )
+  # conan_cmake_autodetect(settings BUILD_TYPE ${TYPE})
 
-  conan_basic_setup()
+  # PATH_OR_REFERENCE ${CMAKE_SOURCE_DIR} is used to tell conan to process
+  # the external "conanfile.py" provided with the project
+  # Alternatively a conanfile.txt could be used
+  conan_cmake_install(
+    PATH_OR_REFERENCE ${CMAKE_SOURCE_DIR}
+    BUILD missing
+    # Pass compile-time configured options into conan
+    OPTIONS ${ProjectOptions_CONAN_OPTIONS}
+    # Pass CMake compilers to Conan
+    ENV "CC=${CMAKE_C_COMPILER}" "CXX=${CMAKE_CXX_COMPILER}"
+    SETTINGS ${settings})
+    
+  # conan_basic_setup()
 
   verbose_message("Conan is setup and all requires have been installed.")
-endif()
+# endif()

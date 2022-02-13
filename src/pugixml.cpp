@@ -14,7 +14,7 @@
 #ifndef SOURCE_PUGIXML_CPP
 #define SOURCE_PUGIXML_CPP
 
-#include "refacto/"
+#include "refacto/pugixml.hpp"
 
 #include <assert.h>
 #include <limits.h>
