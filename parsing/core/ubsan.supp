@@ -1,2 +1,0 @@
-# Suppress error for third-party libraries
-undefined:pugixml.cpp
