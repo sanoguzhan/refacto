@@ -1,6 +1,6 @@
 #include "test_header.hpp"
 
-class DtableTests : public TestTimer {};
+class TableTests : public TestTimer {};
 
 /* Test for Table Class
     - Test with CSV Parser

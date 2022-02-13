@@ -15,10 +15,8 @@
 #include "refacto/controller.hpp"
 #include "refacto/csvparser.hpp"
 #include "refacto/customparser.hpp"
-#include "refacto/dtables.hpp"
 #include "refacto/xmlparser.hpp"
 using namespace std;
-using namespace dtable;
 namespace fs = std::filesystem;
 
 class TestTimer : public testing::Test {

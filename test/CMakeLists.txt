@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 #
 # Project details
 #
-
+add_compile_options("-std=gnu++17")
 project(
   ${CMAKE_PROJECT_NAME}Tests
   LANGUAGES CXX
@@ -20,7 +20,11 @@ foreach(file ${test_sources})
   #
 
   target_compile_features(${test_name}_Tests PUBLIC cxx_std_17)
-
+  link_libraries(stdc++fs)
+  include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+  message(${CMAKE_CURRENT_SOURCE_DIR})  
   #
   # Setup code coverage if enabled
   #

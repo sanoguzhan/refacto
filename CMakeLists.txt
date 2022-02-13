@@ -21,7 +21,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 message(STATUS "Started CMake for ${PROJECT_NAME} v${PROJECT_VERSION}...\n")
-
+add_compile_options("-std=gnu++17")
 
 
 #
@@ -292,7 +292,7 @@ install(
 #
 # Install the `include` directory
 #
-
+link_libraries(stdc++fs)
 install(
   DIRECTORY
   include/${PROJECT_NAME_LOWERCASE}
