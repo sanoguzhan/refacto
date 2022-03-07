@@ -87,82 +87,78 @@ vector<string> listdir(string);
  * @brief XMLParser Class for XML file search and value transform
  *  Keeps arbitary number of IDMaps and construct Vector with Initializer List
  */
-class XMLParser {
-   public:
-    std::vector<IDMap> data;
+class XMLParser
+{
+public:
+  std::vector<IDMap> data;
 
-    /**
-     * @brief XMLParser Constructer
-     *      - Takes arbitary number of IDMaps
-     *      - Construct a Vector and classify with the name of IDMap
-     *
-     * @param lst List IDMap
-     */
-    template <typename... T>
-    explicit XMLParser(T... lst) : data{lst...} {}
+  /**
+   * @brief XMLParser Constructer
+   *      - Takes arbitary number of IDMaps
+   *      - Construct a Vector and classify with the name of IDMap
+   *
+   * @param lst List IDMap
+   */
+  template<typename... T> explicit XMLParser(T... lst) : data{ lst... } {}
 
-    /**
-     * @brief Writes data to csv files
-     *      - Writes each key variable to diffirent
-     *      - appends the file names to given directory path
-     *
-     * @param dir: (string) extraction directory
-     * @return true on success
-     */
-    auto to_csv(string dir) -> bool;
+  /**
+   * @brief Writes data to csv files
+   *      - Writes each key variable to diffirent
+   *      - appends the file names to given directory path
+   *
+   * @param dir: (string) extraction directory
+   * @return true on success
+   */
+  auto to_csv(string dir) -> bool;
 
-    auto inline write_header(const std::pair<const string, vector<IDMap>> &p)
-        -> string;
+  auto inline write_header(const std::pair<const string, vector<IDMap>> &p) -> string;
 
-    /**
-     * @brief Operator for xml file data search
-     *         - Takes directory as input and looks for pattern match
-     *         - Search for variables for each IDMap
-     *
-     * @param path: (string) path to xml file directory
-     * @param root_name : (string) root name in the xml files
-     */
-    void operator()(string path, string root_name);
+  /**
+   * @brief Operator for xml file data search
+   *         - Takes directory as input and looks for pattern match
+   *         - Search for variables for each IDMap
+   *
+   * @param path: (string) path to xml file directory
+   * @param root_name : (string) root name in the xml files
+   */
+  void operator()(string path, string root_name);
 
-   private:
-    /**
-     * @brief Read for operator()
-     *      - Reader for xml files
-     * @param path : (string) path to file
-     * @param root_name : (string) xml root name
-     * @param doc : (pugi::xml_document) opened document
-     * @return decltype(auto)
-     */
-    inline decltype(auto) read(string path, string root_name,
-                               pugi::xml_document &doc);
+private:
+  /**
+   * @brief Read for operator()
+   *      - Reader for xml files
+   * @param path : (string) path to file
+   * @param root_name : (string) xml root name
+   * @param doc : (pugi::xml_document) opened document
+   * @return decltype(auto)
+   */
+  inline decltype(auto) read(string path, string root_name, pugi::xml_document &doc);
 
-    /**
-     * @brief Update ids vector from xml tree
-     *      - Recursive function to tree-traversal
-     *
-     * @param root : (pugi::xml_node) root node
-     * @param tag : (IDMap) search IDMap
-     * @param ids : (vector<string>) id vector which filled up
-     */
-    void update(pugi::xml_node root, const IDMap &tag, svector &ids);
-    void update(pugi::xml_node root, const IDMap &tag,
-                map<string, vector<string>> &ids, const regex &);
-    /**
-     * @brief Map trasnformers to name-value map
-     *      - Create map from IDMap for each unique name
-     *      - Classify IDMap vector to unique name and values
-     * @param keys key-value pairs
-     */
-    void transfrom_map(map<string, vector<IDMap>> &keys);
+  /**
+   * @brief Update ids vector from xml tree
+   *      - Recursive function to tree-traversal
+   *
+   * @param root : (pugi::xml_node) root node
+   * @param tag : (IDMap) search IDMap
+   * @param ids : (vector<string>) id vector which filled up
+   */
+  void update(pugi::xml_node root, const IDMap &tag, svector &ids);
+  void update(pugi::xml_node root, const IDMap &tag, map<string, vector<string>> &ids, const regex &);
+  /**
+   * @brief Map trasnformers to name-value map
+   *      - Create map from IDMap for each unique name
+   *      - Classify IDMap vector to unique name and values
+   * @param keys key-value pairs
+   */
+  void transfrom_map(map<string, vector<IDMap>> &keys);
 
-    /**
-     * @brief Create variable size map for writing
-     *
-     * @param keys key-value map for each unique IDMap
-     * @param sizes size key-value map for name+key values
-     */
-    void inline max_key_sizes(map<string, vector<IDMap>> &keys,
-                              map<string, u_int32_t> &sizes);
+  /**
+   * @brief Create variable size map for writing
+   *
+   * @param keys key-value map for each unique IDMap
+   * @param sizes size key-value map for name+key values
+   */
+  void inline max_key_sizes(map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes);
 };
 
 #endif
