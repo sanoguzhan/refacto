@@ -1,48 +1,65 @@
+ARG VARIANT="20.04"
 
-FROM python:3.9.1
+FROM ubuntu:${VARIANT}
 
-# Install dependencies
-RUN apt-get -qq update; \
-    apt-get install -qqy --no-install-recommends \
-        ca-certificates  pkg-config cppcheck\
-         libsasl2-dev python3-dev libldap2-dev libssl-dev gcc libpq-dev python-dev ninja-build\
-        llvm  binutils git autoconf automake build-essential libhdf5-serial-dev vim cmake \
-         swig libncurses5-dev libedit-dev libpthread-stubs0-dev g++ make python3-venv python3-wheel\
-        autoconf automake dpkg-dev file git make patch python3 python3-pip\
-        libc-dev libc++-dev libgcc-8-dev libstdc++-8-dev libboost-all-dev libre2-dev\
-        dirmngr gnupg2 lbzip2 wget xz-utils libtinfo5 nfs-common;\
-    rm -rf /var/lib/apt/lists/*
 
-# Signing keys
-# ENV GPG_KEYS 09C4E7007CB2EFFB A2C794A986419D8A B4468DF4E95C63DC D23DD2C20DD88BA2 8F0871F202119294 0FC3042E345AD05D
+# Install necessary packages available from standard repos
+RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y --no-install-recommends \
+        software-properties-common wget apt-utils file zip \
+        openssh-client gpg-agent socat rsync \
+        doxygen graphviz ccache cppcheck \
+        make ninja-build git clang-tidy \
+        python3 python3-pip \
+    && apt-get autoremove -yqq --purge \
+    && apt-get clean \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /tmp/* \
+        /var/tmp/*
 
-# Retrieve keys
-# RUN gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys $GPG_KEYS
+# Install conan
+RUN python3 -m pip install --upgrade pip setuptools && \
+    python3 -m pip install conan && \
+    conan --version
 
-# Version info
-ENV LLVM_RELEASE 10
-ENV LLVM_VERSION 10.0.0
 
-WORKDIR /code
+# By default, anything you run in Docker is done as superuser.
+# Conan runs some install commands as superuser, and will prepend `sudo` to
+# these commands, unless `CONAN_SYSREQUIRES_SUDO=0` is in your env variables.
+ENV CONAN_SYSREQUIRES_SUDO 0
+# Some packages request that Conan use the system package manager to install
+# a few dependencies. This flag allows Conan to proceed with these installations;
+# leaving this flag undefined can cause some installation failures.
+ENV CONAN_SYSREQUIRES_MODE enabled
 
-# Install Clang and LLVM
-RUN chmod -R 700 /bin/sh
-RUN python3 -m pip install --upgrade pip && pip install wheel
-RUN pip3 install -U pip setuptools wheel
-RUN pip3 install conan 
+ARG GCC_VER="11"
+# Add gcc-${GCC_VER}
+RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
+    apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y --no-install-recommends \
+        gcc-${GCC_VER} g++-${GCC_VER} gdb
 
-COPY docker/install.sh .
-RUN chmod +x install.sh 
-RUN ./install.sh
+# Set gcc-${GCC_VER} as default gcc
+RUN update-alternatives --install /usr/bin/gcc gcc $(which gcc-${GCC_VER}) 100
+RUN update-alternatives --install /usr/bin/g++ g++ $(which g++-${GCC_VER}) 100
 
-#Install Required packages
-COPY docker/requires.sh .
-RUN chmod +x requires.sh 
-RUN ./requires.sh
 
-# Install aws CLI for github action
-COPY docker/install_for_actions.sh .
-RUN chmod +x install_for_actions.sh
-RUN ./install_for_actions.sh
 
+# Add current cmake/ccmake, from Kitware
+RUN apt install -y wget tar build-essential libssl-dev && \
+			wget https://github.com/Kitware/CMake/releases/download/v3.15.0/cmake-3.15.0.tar.gz && \
+			tar -zxvf cmake-3.15.0.tar.gz && \
+			cd cmake-3.15.0 && \
+			./bootstrap && \
+			make && \
+			make install 
+
+ARG APP_HOME=/code
+WORKDIR ${APP_HOME}
+RUN addgroup --system refacto \
+    && adduser --system --ingroup refacto refacto
+    
+COPY --chown=refacto:refacto . ${APP_HOME}
+RUN chown refacto:refacto ${APP_HOME}
 
