@@ -12,7 +12,7 @@ parsing/core/tests/test_data/
 # Precompiled Headers
 *.gch
 *.pch
-
+docs/html
 # Compiled Dynamic libraries
 *.so
 *.dylib

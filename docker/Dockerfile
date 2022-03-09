@@ -55,11 +55,17 @@ RUN apt install -y wget tar build-essential libssl-dev && \
 			make && \
 			make install 
 
+RUN git clone https://github.com/google/googletest.git --branch release-1.10.0 && \
+        cd googletest && \
+        cmake -Bbuild -Dgtest_disable_pthreads=1 && \
+        cmake --build build --config Release && \
+        cmake --build build --target install --config Release
+        
 ARG APP_HOME=/code
 WORKDIR ${APP_HOME}
 RUN addgroup --system refacto \
     && adduser --system --ingroup refacto refacto
-    
+
 COPY --chown=refacto:refacto . ${APP_HOME}
 RUN chown refacto:refacto ${APP_HOME}
 
