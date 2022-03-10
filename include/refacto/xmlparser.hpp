@@ -132,7 +132,7 @@ private:
    * @param doc : (pugi::xml_document) opened document
    * @return decltype(auto)
    */
-  inline decltype(auto) read(string path, string root_name, pugi::xml_document &doc);
+  inline auto read(const string &path,const string &root_name, pugi::xml_document &doc);
 
   /**
    * @brief Update ids vector from xml tree
@@ -158,7 +158,7 @@ private:
    * @param keys key-value map for each unique IDMap
    * @param sizes size key-value map for name+key values
    */
-  void inline max_key_sizes(map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes);
+  static void max_key_sizes(const map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes);
 };
 
 #endif

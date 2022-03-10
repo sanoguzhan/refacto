@@ -1,32 +1,34 @@
 #include "refacto/xmlparser.hpp"
 
-static string DELIMETER = ";";
+const static string DELIMETER = ";";
+
+
 vector<string> listdir(string pattern)
 {
-  if (pattern.compare(pattern.size() - 1, 1, "/") != 0) pattern += "/";
-  string cwdir = pattern;
+  if (pattern.compare(pattern.size() - 1, 1, "/") != 0) {pattern += "/";}
+  string cwdir{pattern};
   pattern += "*.xml";
   glob_t glob_result;
-  glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
+  glob(pattern.c_str(), GLOB_TILDE, nullptr, &glob_result);
   vector<string> files;
-  for (unsigned int i = 0; i < glob_result.gl_pathc; ++i) { files.push_back(string(glob_result.gl_pathv[i])); }
+  for (unsigned int i = 0; i < glob_result.gl_pathc; ++i) { files.emplace_back(string(glob_result.gl_pathv[i])); }
   globfree(&glob_result);
-  if (files.empty()) throw std::runtime_error("Files Not Found at " + cwdir);
+  if (files.empty()) {throw std::runtime_error("Files Not Found at " + cwdir);}
   return files;
 }
 
-void XMLParser::max_key_sizes(map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes)
+void XMLParser::max_key_sizes(const map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes)
 {
-  for (auto &p : keys) {
+  for (const auto &p : keys) {
     for (const auto &id : p.second) { sizes.insert(std::pair<string, u_int32_t>(id.name + id.key, id.values.size())); }
   }
 }
 
-decltype(auto) XMLParser::read(string path, const string root_name, pugi::xml_document &doc)
+auto XMLParser::read(const string &path, const string &root_name, pugi::xml_document &doc)
 {
-  if (!doc.load_file(path.c_str())) throw std::runtime_error("File not exist at " + path);
+  if (!doc.load_file(path.c_str())) {throw std::runtime_error("File not exist at " + path);}
   pugi::xml_node _node = doc.child(root_name.c_str());
-  if (!_node) throw std::runtime_error("Root name is not correct " + root_name);
+  if (!_node) {throw std::runtime_error("Root name is not correct " + root_name);}
   return _node;
 }
 
@@ -57,23 +59,25 @@ void transform_keys(IDMap &it, vector<IDMap> &args)
 
 void rotate_keys(IDMap &it, vector<IDMap> &args)
 {
-  svector ids, vars;
+  std::vector<std::string> ids;
+  std::vector<std::string> vars;
   if (it.conditions.find("id") == it.conditions.end() || it.conditions.find("name") == it.conditions.end())
-    throw std::runtime_error("Conditions missing 'id' or 'name' keys.");
+    {throw std::runtime_error("Conditions missing 'id' or 'name' keys.");}
   const std::regex e_id(it.conditions.at("id"));
   const std::regex e_var(it.conditions.at("name"));
 
-  std::smatch sm_id, sm_var;
+  std::smatch sm_id;
+  std::smatch sm_var;
   std::for_each(it.map_values.begin(), it.map_values.end(), [&](const auto p) {
     std::regex_match(p.first, sm_id, e_id, std::regex_constants::match_default);
     std::regex_match(p.first, sm_var, e_var, std::regex_constants::match_default);
-    if (sm_id.size() > 0 && sm_var.size() > 0) {
+    if (!sm_id.empty() && !sm_var.empty()) {
       ids.insert(ids.end(), p.second.size(), sm_id[1]);
       vars.insert(vars.end(), p.second.begin(), p.second.end());
     } else
-      throw std::runtime_error("Regex grouping is not correct!");
+      {throw std::runtime_error("Regex grouping is not correct!");}
   });
-  if (ids.empty() && vars.empty()) return;
+  if (ids.empty() && vars.empty()) {return;}
 
   const string column_name{ sm_var[1] };
   const vector<IDMap> pair_item = [&]() {
