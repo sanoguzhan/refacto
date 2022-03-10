@@ -5,7 +5,7 @@
 
   set(${PROJECT_NAME}_CONAN_REQUIRES "")
   set(${PROJECT_NAME}_CONAN_OPTIONS "")
-
+  set(CONAN_SYSTEM_INCLUDES ON)
   #
   # If `conan.cmake` (from https://github.com/conan-io/cmake-conan) does not exist, download it.
   #
