@@ -9,8 +9,12 @@ project(
   LANGUAGES CXX
 )
 
-verbose_message("Adding tests under ${CMAKE_PROJECT_NAME}Tests...")
 
+
+
+
+verbose_message("Adding tests under ${CMAKE_PROJECT_NAME}Tests...")
+include_directories(include)
 foreach(file ${test_sources})
   string(REGEX REPLACE "(.*/)([a-zA-Z0-9_ ]+)(\.cpp)" "\\2" test_name ${file}) 
   add_executable(${test_name}_Tests ${file})
@@ -24,6 +28,7 @@ foreach(file ${test_sources})
   include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
+
   message(${CMAKE_CURRENT_SOURCE_DIR})  
   #
   # Setup code coverage if enabled
@@ -73,10 +78,7 @@ foreach(file ${test_sources})
     message(FATAL_ERROR "Unknown testing library. Please setup your desired unit testing library by using `target_link_libraries`.")  
   endif()
 
-  #
-  # Add the unit tests
-  #
-
+ 
   add_test(
     NAME
       ${test_name}
