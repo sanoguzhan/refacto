@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "refacto/cod.hpp"
+// #include "refacto/cod.hpp"
 #include "refacto/controller.hpp"
 #include "refacto/csvparser.hpp"
 #include "refacto/customparser.hpp"
@@ -57,25 +57,25 @@ std::string readFile(fs::path path) {
  * @brief Constant with the csv test directory
  *
  */
-const static string TEST_CSV_DIR = "tests/test_data/csv/";
+const static string TEST_CSV_DIR = "data/csv/";
 /**
  * @brief Constant directory for test with input csv data
  *
  */
-const static string TEST_CSV_INPUT_DIR = "tests/test_data/csv/input/";
+const static string TEST_CSV_INPUT_DIR = "data/csv/input/";
 /**
  * @brief Constant directory for outputs of csv tests
  *
  */
-const static string TEST_CSV_OUTPUT_DIR = "tests/test_data/csv/expected/";
+const static string TEST_CSV_OUTPUT_DIR = "data/csv/expected/";
 /**
  * @brief Constant directory for expected results of csv tests
  *
  */
-const static string TEST_CSV_EXPECTED_DIR = "tests/test_data/csv/expected/";
+const static string TEST_CSV_EXPECTED_DIR = "data/csv/expected/";
 /**
  * @brief Constant directory for expected results of xml tests
  *
  */
-const static string TEST_XML_OUTPUT_DIR = "tests/test_data/";
+const static string TEST_XML_OUTPUT_DIR = "data/";
 #endif
