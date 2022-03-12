@@ -32,7 +32,7 @@ using namespace table;
 // namespace fs = std::filesystem;
 using u_vector = const std::vector<u_int32_t>;
 /**
- * @brief Loc struct for parameterization of variables
+ * @brief Loc struct for paramaterization of variables
  *
  * Loc Struct
  *
@@ -58,7 +58,7 @@ struct Loc
  *  Takes one or two loc object as condition
  *
  *  @param vector: (vector<vector<string&>>) opened csv file data
- *  @param loc: initialized and constructed Loc objects
+ *  @param loc: initilized and constructed Loc objects
  *
  * @return found indexes
  */
@@ -117,7 +117,7 @@ public:
    */
   Series operator()(string orient, u_int32_t idx, const Loc &target, const Loc &cond1) const;
   /**
-   * @brief Get a Series of data
+   * @brief Get a Serie of data
    *
    * @param orient orientation to seach the data (row or column)
    * @param target searching target condition
