@@ -352,6 +352,11 @@ message(STATUS "Finished building requirements for installing the package.\n")
 #
 # Unit testing setup
 #
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+file(COPY test/data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+# add_custom_target(copy_data
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/test/data ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/data
+# )
 
 if(${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   enable_testing()
