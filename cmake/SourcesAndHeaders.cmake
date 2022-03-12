@@ -27,4 +27,5 @@ set(test_sources
   src/test_customparser.cpp
   src/test_table.cpp
   src/test_xmlparser.cpp
+  src/test_csvparser.cpp
 )
