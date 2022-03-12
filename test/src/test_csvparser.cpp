@@ -17,7 +17,7 @@ TEST(CSVParser, WrongPath) {
     /* Test for CSV reader
     - wrong path should rise error
     */
-    string p("tests/test_data/test.csv");
+    string p("test/test/test.csv");
     try {
         CSVParser csv = CSVParser(p);
     } catch (std::exception &ex) {
