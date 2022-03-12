@@ -83,7 +83,7 @@ void rotate_keys(IDMap &it, vector<IDMap> &args)
   const vector<IDMap> pair_item = [&]() {
     vector<IDMap> items;
     const auto id =
-      std::find_if(args.begin(), args.end(), [&args](const IDMap &item) { return item.key == item.name; });
+      std::find_if(args.begin(), args.end(), [](const IDMap &item) { return item.key == item.name; });
     if (id == args.end()) { items.emplace_back(it.name, it.node, it.name, it.degree, ids); }
     items.emplace_back(it.name, it.node, column_name, it.degree, vars, it.output);
     return items;
@@ -97,12 +97,13 @@ void validator(map<string, vector<IDMap>> &keys)
   std::for_each(keys.begin(), keys.end(), [](auto &p) {
     vector<IDMap> items;
     std::for_each(p.second.begin(), p.second.end(), [&p, &items](IDMap &key) {
-      if (key.type == "multi")
+      if (key.type == "multi"){
         transform_keys(key, items);
-      else if (key.type == "group")
+      }
+      else if (key.type == "group"){
         rotate_keys(key, items);
+      }
     });
-
     p.second.erase(
       std::remove_if(p.second.begin(), p.second.end(), [&p, &items](const IDMap &key) { return key.key == "NULL"; }),
       p.second.end());
@@ -111,13 +112,15 @@ void validator(map<string, vector<IDMap>> &keys)
   });
 }
 
-auto XMLParser::to_csv(string dir) -> bool
+auto XMLParser::to_csv(const string& dir) -> bool
 {
   map<string, vector<IDMap>> keys;
-  map<string, u_int32_t> key_sizes, level_sizes;
+  map<string, u_int32_t> key_sizes;
+  map<string, u_int32_t> level_sizes;
+  
   transfrom_map(keys);
   validator(keys);
-  size_t row = 0, col = 0;
+
   max_key_sizes(keys, key_sizes);
 
   std::stringstream ss;
@@ -129,6 +132,8 @@ auto XMLParser::to_csv(string dir) -> bool
   }
 
   for (auto &p : keys) {
+    size_t row = 0;
+    size_t col = 0;
     std::ofstream ofs(dir + "/" + p.first + ".csv", std::ofstream::out);
     ss << write_header(p) << "\n";
     for (row = 0; row < level_sizes.at(p.first); row++) {
@@ -155,37 +160,38 @@ auto XMLParser::to_csv(string dir) -> bool
 auto inline XMLParser::write_header(const std::pair<const string, vector<IDMap>> &p) -> string
 {
   return std::string(
-    std::accumulate(p.second.begin(), p.second.end(), std::string("INITIAL"), [](string entry, IDMap id) {
+    std::accumulate(p.second.begin(), p.second.end(), std::string("INITIAL"), [](const string &entry, IDMap id) {
       string name;
-      if (id.output.empty())
+      if (id.output.empty()){
         name = id.key;
-      else
+      }
+      else{
         name = id.output;
-      return entry != "INITIAL" ? entry + ";" + name : name;
+      }
+      return entry != static_cast<std::string>("INITIAL") ? entry + ";" + name : name;
     }));
 }
 
-void XMLParser::update(pugi::xml_node root, const IDMap &tag, svector &ids)
+void XMLParser::update(pugi::xml_node root, const IDMap &tag, std::vector<std::string> &ids)
 {
-  root = (!COUNTER) ? root.first_child() : root;
+  root = (COUNTER == 0) ? root.first_child() : root;
   COUNTER++;
-  string token, id;
-  for (pugi::xml_node panel = root.first_child(); panel; panel = panel.next_sibling()) {
+  string token;
+  for (pugi::xml_node panel = root.first_child(); panel != nullptr; panel = panel.next_sibling()) {
     token = panel.name();
     if (token == tag.node && string(panel.child_value()).find(tag.key) != string::npos) {
       CONTAINS = true;
-      id = panel.child_value();
     }
     if (CONTAINS) {
-      if (token.find(tag.degree) != string::npos) { ids.push_back(panel.child_value()); }
+      if (token.find(tag.degree) != string::npos) { ids.emplace_back(panel.child_value()); }
     }
   }
   CONTAINS = false;
   root = root.next_sibling();
-  if (root) update(root, tag, ids);
+  if (root != nullptr){update(root, tag, ids);}
 }
 
-void XMLParser::operator()(string path, const string root_name)
+void XMLParser::operator()(const string& path, const string& root_name)
 {
   for (const auto &file : listdir(path)) {
     pugi::xml_document doc;
@@ -209,24 +215,28 @@ void XMLParser::operator()(string path, const string root_name)
 
 void XMLParser::update(pugi::xml_node root, const IDMap &tag, map<string, vector<string>> &ids, const regex &re)
 {
-  root = (!COUNTER) ? root.first_child() : root;
+  root = (COUNTER == 0) ? root.first_child() : root;
   COUNTER++;
-  string token, id, child_value;
+  string token;
+  string id; 
+  string child_value;
   smatch matches;
-  for (pugi::xml_node panel = root.first_child(); panel; panel = panel.next_sibling()) {
+  for (pugi::xml_node panel = root.first_child(); panel != nullptr; panel = panel.next_sibling()) {
     token = panel.name();
     child_value = static_cast<string>(panel.child_value());
 
     if (token == tag.node && regex_match(child_value, matches, re)) {
       CONTAINS = true;
       id = panel.child_value();
-      if (ids.find(id) == ids.end()) ids.insert(std::make_pair(id, vector<string>()));
+      if (ids.find(id) == ids.end()) {
+        ids.insert(std::make_pair(id, vector<string>()));
+        }
     }
     if (CONTAINS) {
-      if (token.find(tag.degree) != string::npos) { ids.find(id)->second.push_back(panel.child_value()); }
+      if (token.find(tag.degree) != string::npos) { ids.find(id)->second.emplace_back(panel.child_value()); }
     }
   }
   CONTAINS = false;
   root = root.next_sibling();
-  if (root) update(root, tag, ids, re);
+  if (root != nullptr ) {update(root, tag, ids, re);}
 }
