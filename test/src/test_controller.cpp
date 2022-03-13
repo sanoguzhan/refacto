@@ -5,7 +5,7 @@ class ControllerTest : public TestTimer {};
 TEST(Controller, TestConstructor) {
     dict kwargs = {
         {"csvparser",
-         {{"path", "tests/test_data/csv/input/test_id_input/min200611.csv"},
+         {{"path", "data/csv/input/test_id_input/min200611.csv"},
           {"delim", ";"},
           {"skip", "0"}}}};
     CSVParserWrapper c(kwargs);
@@ -53,13 +53,12 @@ TEST(XMLParserController, TestInterfaceController) {
         .degree = "Mean",
     };
 
-    XMLParser parser(inv_pac, inv_id, mppt_amp, mppt_etotal, mppt_vol);
+    // XMLParser parser(inv_pac, inv_id, mppt_amp, mppt_etotal, mppt_vol);
 
-    parser("tests/test_data/xml/single_variables", "WebBox");
+    // parser("data/xml/single_variables", "WebBox");
 
-    // parser.to_csv("tests/test_data/xml/");
-    ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
-    ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter_mppt.csv"));
+    // ASSERT_TRUE(fs::exists("data/xml/inverter.csv"));
+    // ASSERT_TRUE(fs::exists("data/xml/inverter_mppt.csv"));
 }
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
