@@ -1,0 +1,90 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.154.0/containers/docker-from-docker-compose
+{
+	"name": "Refacto",
+	"dockerComposeFile": "../docker/docker-compose.yml",
+	"service": "refacto",
+	"workspaceFolder": "/code",
+
+	// Use this environment variable if you need to bind mount your local source code into a new container.
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+	},
+	
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+    "13xforever.language-x86-64-assembly",
+    "aaron-bond.better-comments",
+    "austin.code-gnu-global",
+    "betwo.vscode-linux-binary-preview",
+    "christian-kohler.path-intellisense",
+    "codezombiech.gitignore",
+    "cschlosser.doxdocgen",
+    "DavidAnson.vscode-markdownlint",
+    "donjayamanne.githistory",
+    "dunstontc.dark-plus-syntax",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ExarGD.vsblack",
+    "fabiospampinato.vscode-diff",
+    "felipecaputo.git-project-manager",
+    "formulahendry.code-runner",
+    "formulahendry.docker-explorer",
+    "formulahendry.github-actions",
+    "formulahendry.terminal",
+    "GitHub.github-vscode-theme",
+    "GitHub.vscode-pull-request-github",
+    "gitkraken.gitkraken-authentication",
+    "hbenl.vscode-test-explorer",
+    "Heron.firefox-devtools-theme",
+    "HookyQR.beautify",
+    "HyunKyunMoon.gzipdecompressor",
+    "jbenden.c-cpp-flylint",
+    "jbockle.jbockle-format-files",
+    "jebbs.plantuml",
+    "jeff-hykin.better-cpp-syntax",
+    "k--kato.intellij-idea-keybindings",
+    "KnisterPeter.vscode-github",
+    "ldez.ignore-files",
+    "mhutchie.git-graph",
+    "mindaro-dev.file-downloader",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cpptools-themes",
+    "ms-vscode.test-adapter-converter",
+    "njpwerner.autodocstring",
+    "notskm.clang-tidy",
+    "PKief.material-icon-theme",
+    "prb28.amiga-assembly",
+    "RandomFractalsInc.vscode-data-preview",
+    "redhat.vscode-xml",
+    "slevesque.vscode-zipexplorer",
+    "streetsidesoftware.code-spell-checker",
+    "thomaspink.theme-github",
+    "tht13.html-preview-vscode",
+    "tht13.rst-vscode",
+    "twxs.cmake",
+    "VisualStudioExptTeam.vscodeintellicode",
+    "vscodevim.vim",
+    "wopian.agc-assembly",
+    "xaver.clang-format",
+    "ZainChen.json",
+    "matepek.vscode-catch2-test-adapter"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "docker --version",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	//"remoteUser": "vscode"
+}
