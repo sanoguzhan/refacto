@@ -138,7 +138,7 @@ TEST(CSVParser, CleanData) {
         - save it
         - compare to the saved expected file
     */
-    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", 4, ",");
     p.erase_data("column", 1, 4);
     p.to_csv(TEST_CSV_OUTPUT_DIR + "CleanData.csv");
     ASSERT_EQ(readFile(TEST_CSV_EXPECTED_DIR + "CleanData.csv"),
@@ -153,7 +153,7 @@ TEST(CSVParser, ErasePattern) {
         - save it
         - compare to the saved expected file
     */
-    CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", ";", 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", 4, ";");
     p.erase_data("row", 1, 3);
     p.erase_pattern("row", "Info;Time");
     p.erase_pattern("column", ".*C_0.*");
@@ -169,7 +169,7 @@ TEST(CSVParser, EraseDiverge) {
         - clear diverged data
         - check if the cleaned has been performed
     */
-    CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv", ",");
+    CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv", 0,",");
     ASSERT_EQ(20558, p.data.size());
     p.erase_diverge_row();
     ASSERT_EQ(20557, p.data.size());
