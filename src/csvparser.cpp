@@ -97,8 +97,6 @@ Series CSVParser::operator()(const string& orient, u_int32_t idx, const Loc &tar
       series.values.insert({ data.at(target.row).at(col), rows });
       rows.resize(0);
     }
-  } else if (orient == "column") {
-    //
   }
   return series;
 }
@@ -160,9 +158,10 @@ std::vector<std::string> CSVParser::operator()(const std::string& orient, int32_
   return row;
 }
 
-const std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1, const Loc &cond2)
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1, const Loc &cond2)
 {
-  string lookup1, lookup2;
+  string lookup1 = NULL;
+  string lookup2 = NULL;
   std::vector<u_int32_t> indexes;
 
   for (size_t c = 0; c < data.at(0).size(); c++) {
@@ -173,9 +172,9 @@ const std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &
   return indexes;
 }
 
-const std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1)
+ std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1)
 {
-  string lookup1;
+  string lookup1 = NULL;
   const std::vector<u_int32_t> indexes = [&]() {
     std::vector<u_int32_t> index_values;
     for (size_t c = 0; c < data.at(0).size(); c++) {
@@ -207,7 +206,7 @@ bool CSVParser::to_csv(string path) const
 {
   std::ofstream ofs(path, std::ofstream::out);
   for (const auto &row_data : data) {
-    ofs << std::accumulate(row_data.begin(), row_data.end(), std::string("START/FILE"), [](auto &a, auto &b) {
+    ofs << std::accumulate(row_data.begin(), row_data.end(), std::string("START/FILE"), [](const auto &a, const auto &b) {
       return a != "START/FILE" ? a + ";" + b : b;
     }) << std::endl;
   }

@@ -60,8 +60,8 @@ struct Loc
  *
  * @return found indexes
  */
-const std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &, const Loc &);
-const std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &);
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &, const Loc &);
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &);
 /**
  * @brief CSVParser Class for CSV Data Search
  *  CSVParser Class
@@ -73,7 +73,7 @@ class [[deprecated("Csvparser will be removed, use CustomParser")]] CSVParser
 private:
   string file_path;
   std::ifstream f;
-  int skip_rows;
+  unsigned int skip_rows;
   csv::CsvParser parser;
   std::string delim;
 
