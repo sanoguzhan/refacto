@@ -88,7 +88,8 @@ void CSVParser::erase_pattern(const string& orient, string pattern)
 Series CSVParser::operator()(const string& orient, u_int32_t idx, const Loc &target, const Loc &cond1, const Loc &cond2) const
 {
   std::vector<string> rows;
-  Series series{ .name = cond1.name };
+  Series series;
+  series.name = cond1.name;
 
   if (orient == "row") {
     std::vector<u_int32_t> data_idx{ row_search(data, cond1, cond2) };
@@ -142,7 +143,7 @@ std::vector<std::string> CSVParser::operator()(const std::string& orient, int32_
   std::vector<string> row;
   int32_t counter = 0;
   if (orient == "row") {
-    if (to == -1) to = data.at(idx).size();
+    if (to == -1) to = static_cast<int32_t>(data.at(idx).size());
     std::vector<string> cols(data.at(idx).begin() + from, data.at(idx).begin() + to);
     return cols;
   } else if (orient == "column") {
@@ -160,8 +161,8 @@ std::vector<std::string> CSVParser::operator()(const std::string& orient, int32_
 
 std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1, const Loc &cond2)
 {
-  string lookup1 = NULL;
-  string lookup2 = NULL;
+  string lookup1;
+  string lookup2;
   std::vector<u_int32_t> indexes;
 
   for (size_t c = 0; c < data.at(0).size(); c++) {
@@ -174,7 +175,7 @@ std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, 
 
  std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1)
 {
-  string lookup1 = NULL;
+  string lookup1;
   const std::vector<u_int32_t> indexes = [&]() {
     std::vector<u_int32_t> index_values;
     for (size_t c = 0; c < data.at(0).size(); c++) {

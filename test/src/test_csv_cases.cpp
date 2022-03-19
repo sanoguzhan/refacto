@@ -190,7 +190,7 @@ TEST(CSVParserCases, Solarlog_ABB__Mppt) {
 }
 
 TEST(CSVParserCases, SolarMax__Inverter) {
-    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", 4, ",");
     p.erase_data("column", 1, 4);
     p.erase_data("column", 6, 8);
     p.to_csv(TEST_CSV_OUTPUT_DIR + "SolarMax__Inverter.csv");
@@ -199,7 +199,7 @@ TEST(CSVParserCases, SolarMax__Inverter) {
 }
 
 TEST(CSVParserCases, SolarMax__Mppt) {
-    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", ",", 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "SolarMax.csv", 4, ",");
     p.erase_data("column", 1, 7);
     p.erase_data("column", 8, 9);
     p.to_csv(TEST_CSV_OUTPUT_DIR + "SolarMax__Mppt.csv");
@@ -208,7 +208,7 @@ TEST(CSVParserCases, SolarMax__Mppt) {
 }
 
 TEST(CSVParserCases, RCD_Inverter) {
-    CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", ";", 4);
+    CSVParser p(TEST_CSV_INPUT_DIR + "RCD_int_kwr_180223.txt", 4, ";");
     p.erase_data("row", 1, 3);
     p.erase_pattern("row", "Info;Time");
     p.to_csv(TEST_CSV_OUTPUT_DIR + "RCD_int_kwr_180223_inverter.csv");
@@ -218,7 +218,7 @@ TEST(CSVParserCases, RCD_Inverter) {
 }
 
 TEST(CSVParserCases, Meteocontrol_Inverter) {
-    CSVParser p(TEST_CSV_INPUT_DIR + "Meteocontrol.csv", ",", 1);
+    CSVParser p(TEST_CSV_INPUT_DIR + "Meteocontrol.csv", 1, ",");
     Table table;
     auto datetime{p("column", 0, 2, -1)};
 
@@ -240,7 +240,7 @@ TEST(CSVParserCases, Meteocontrol_Inverter) {
 }
 
 TEST(CSVParserCases, Maulevrier_Inverter) {
-    CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv", ",", 2);
+    CSVParser p(TEST_CSV_INPUT_DIR + "Maulevrier.csv",  2, ",");
     Table table;
 
     p.erase_data("row", 1, 5);
