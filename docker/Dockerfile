@@ -10,7 +10,9 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
         openssh-client gpg-agent socat rsync \
         doxygen graphviz ccache cppcheck \
         make ninja-build git clang-tidy \
-        python3 python3-pip \
+        python3 python3-pip  python-dev \
+        libpython3.8-dev pkgconf libpkgconf \
+        python3-pkgconfig python3-dev \ 
     && apt-get autoremove -yqq --purge \
     && apt-get clean \
     && rm -rf \
