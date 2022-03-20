@@ -75,7 +75,7 @@ void CSVParser::erase_pattern(const string& orient, string pattern)
       auto itrColToRm = colToRemove.begin();
       row.erase(std::remove_if(row.begin(),
                   row.end(),
-                  [&itrColToRm](auto data) {
+                  [&itrColToRm](auto values) {
                     bool res = *itrColToRm;
                     itrColToRm++;
                     return res;
