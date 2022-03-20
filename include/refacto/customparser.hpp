@@ -17,7 +17,6 @@
 #include <sys/stat.h>
 
 #include <algorithm>
-#include <boost/log/trivial.hpp>
 #include <cctype>
 #include <deque>
 #include <filesystem>
