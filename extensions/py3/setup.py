@@ -11,12 +11,13 @@ from setuptools import setup
 from distutils.extension import Extension
 from distutils.command.sdist import sdist as _sdist
 from logging import log
-import pathlib
+from pathlib import Path
 setuptools.dist.Distribution().fetch_build_eggs(['Cython'])
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize 
 
-BASE_DIR = pathlib.Path(__file__).parent
+ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
+
 __version__ = os.getenv('LIB_VERSION')
 
 
@@ -54,28 +55,20 @@ cf = ColoredFormatter("[%(name)s][%(levelname)s]  %(message)s (%(filename)s:%(li
 ch.setFormatter(cf)
 log.addHandler(ch)
 
-fh = logging.FileHandler('parsing/lib.log')
-fh.setLevel(logging.DEBUG)
-ff = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(ff)
-log.addHandler(fh)
-
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 
 
 # Linking C++ Refacto Library to Cython Parser.Pyx
 
-os.environ['LD_LIBRARY_PATH'] = "parsing/core/usr/local/lib/"
-os.environ["CC"] = "clang"
-_path = "/core/usr/local/lib/"
-ext_modules = [Extension("parsing.engine",
-                     ["parsing/core/parser.pyx",],
+os.environ['LD_LIBRARY_PATH'] = "/usr/local/lib"
+_path = "/usr/local/lib"
+ext_modules = [Extension("qparsing",
+                     ["parser.pyx",],
                      language='c++',
-                     include_dirs= ["/include", ],
-                      extra_compile_args=['-std=c++17'],
-                     libraries= ["refacto"],
+                     include_dirs= ["/usr/local/include" ],
+                      extra_compile_args=['-std=c++14'],
+                     libraries= ["Refacto"],
                      library_dirs= [_path],
-                     runtime_library_dirs=[_path]
                      )]
 
 # Running Cmake and Make as Subprocess 
@@ -107,7 +100,11 @@ class InstallCppLib(distutils.cmd.Command):
 
   def initialize_options(self):
     """Set default values for options."""
-    self.path_to_build = 'parsing/core'
+    if not os.path.exists(ROOT_DIR / "build"):
+      with Pwd(ROOT_DIR) as shell:
+        shell.run(["mkdir", "-p", f"{ROOT_DIR / 'build'}"],  stdout=open(os.devnull, 'wb'))
+    self.path_to_build = ROOT_DIR / "build"
+    
 
   def finalize_options(self):
     """Post-process options."""
@@ -118,20 +115,22 @@ class InstallCppLib(distutils.cmd.Command):
   def run(self):
     """Run command."""
     log.info("Compiling the code at %s..." % (self.path_to_build))
-   
+
     with Pwd(self.path_to_build) as shell:
-      shell.run(["mkdir", "-p", "build"],  stdout=open(os.devnull, 'wb'))
-      with Pwd('parsing/core/build') as shell:
-        shell.run(["conan", "install", "..", "--build=missing" ,"-s", "compiler=clang",
-                    "-s", "compiler.libcxx=libstdc++11", '-s', "build_type=Release"],  stdout=open(os.devnull, 'wb'))
-        shell.run(["cmake", "..", "-DCMAKE_C_COMPILER=clang", "-DCMAKE_CXX_COMPILER=clang++" ],
-        stdout=open(os.devnull, 'wb'))
-        log.info("Building static library...",)
-       
-        shell.run(["make", "install"],  
-                ) 
-        shell.run(["make", "install", "DESTDIR=.."],  
-                stdout=open(os.devnull, 'wb'))  
+
+      # with Pwd('parsing/core/build') as shell:
+      #   shell.run(["conan", "install", "..", "--build=missing" ,"-s", "compiler=clang",
+      #               "-s", "compiler.libcxx=libstdc++11", '-s', "build_type=Release"],  stdout=open(os.devnull, 'wb'))
+      shell.run(["cmake", "..", "-DBUILD_SHARED_LIBS=ON", "-DRefacto_ENABLE_UNIT_TESTING=OFF"])
+    with Pwd(ROOT_DIR) as shell:
+      shell.run(["cmake", "--build", "build", "--target", "install"],
+   )
+      log.info("Building static library...")
+      
+      # shell.run(["make", "install"],  
+                # ) 
+      # shell.run(["make", "install", "DESTDIR=.."],  
+                # stdout=open(os.devnull, 'wb'))  
     log.info("Refacto Library Installed!")  
     self.announce("Done!",
         level=distutils.log.INFO)
@@ -142,8 +141,7 @@ setup(
   version = __version__,
   author='Oguzhan San',
   package_data={'': ["*.so",'*.pyx', '*.pxd', '*.h', '*.cpp', '*.hpp']},
-  long_description=open("README.md").read() + "\n\n" +
-                       open(os.path.join("docs", "versions.md")).read(),
+  long_description=open("README.md").read(),
   long_description_content_type="text/markdown",
   packages=setuptools.find_packages(exclude=[ "tests/*", "utils"]),
   include_package_data=True,

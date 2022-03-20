@@ -1,0 +1,8 @@
+README.md
+parser.cpp
+setup.py
+qparsing.egg-info/PKG-INFO
+qparsing.egg-info/SOURCES.txt
+qparsing.egg-info/dependency_links.txt
+qparsing.egg-info/requires.txt
+qparsing.egg-info/top_level.txt
