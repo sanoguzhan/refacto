@@ -66,7 +66,7 @@ ext_modules = [Extension("qparsing",
                      ["parser.pyx",],
                      language='c++',
                      include_dirs= ["/usr/local/include" ],
-                      extra_compile_args=['-std=c++14'],
+                      extra_compile_args=['-std=c++11'],
                      libraries= ["Refacto"],
                      library_dirs= [_path],
                      )]
