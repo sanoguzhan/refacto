@@ -25,12 +25,12 @@ jobs:
         steps:
         
             -   uses: actions/checkout@v2
-            -   name: Cpp Check
+            -   name: Create Build Directory 
                 run: |
-                    cppcheck -i/pugixml.cpp --language=c++ --enable=all --xml --xml-version=2 parsing 2
-            -   name: Build Refacto Tests
+                    mkdir build && cd build 
+           -   name: Build Project 
                 run: |
-                    ./parsing/core/cmd/build.sh 
-            -   name: Cpp Library Test
+                    cmake .. && cmake --build . --target install 
+            -   name: Run Tests
                 run: |
-                    ./parsing/core/cmd/test.sh 
+                    ctest -C Release
