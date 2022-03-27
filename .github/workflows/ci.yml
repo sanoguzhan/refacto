@@ -28,7 +28,7 @@ jobs:
             -   name: Create Build Directory 
                 run: |
                     mkdir build && cd build 
-           -   name: Build Project 
+            -   name: Build Project 
                 run: |
                     cmake .. && cmake --build . --target install 
             -   name: Run Tests
