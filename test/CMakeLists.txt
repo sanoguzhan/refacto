@@ -29,7 +29,6 @@ foreach(file ${test_sources})
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   )
 
-  message(${CMAKE_CURRENT_SOURCE_DIR})  
   #
   # Setup code coverage if enabled
   #

@@ -22,6 +22,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Started CMake for ${PROJECT_NAME} v${PROJECT_VERSION}...\n")
 add_compile_options("-std=gnu++17")
+add_compile_options("-w")
 
 
 #
@@ -352,7 +353,7 @@ message(STATUS "Finished building requirements for installing the package.\n")
 #
 # Unit testing setup
 #
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 file(COPY test/data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 
