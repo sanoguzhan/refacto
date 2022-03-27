@@ -134,7 +134,7 @@ private:
    * @param doc : (pugi::xml_document) opened document
    * @return decltype(auto)
    */
-  static auto read(const string &path,const string &root_name, pugi::xml_document &doc);
+  static pugi::xml_node read(const string &path,const string &root_name, pugi::xml_document &doc);
 
   /**
    * @brief Update ids vector from xml tree

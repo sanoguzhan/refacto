@@ -159,7 +159,7 @@ public:
    *
    * @return data
    */
-  inline auto values() { return data; }
+  inline std::map<std::string, std::vector<std::pair<std::string, std::vector<string>>>> values() { return data; }
 
   size_t max_size() const;
   size_t get_size(string, string) const;

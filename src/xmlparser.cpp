@@ -24,7 +24,7 @@ void XMLParser::max_key_sizes(const map<string, vector<IDMap>> &keys, map<string
   }
 }
 
-auto XMLParser::read(const string &path, const string &root_name, pugi::xml_document &doc)
+pugi::xml_node XMLParser::read(const string &path, const string &root_name, pugi::xml_document &doc)
 {
   if (!doc.load_file(path.c_str())) {throw std::runtime_error("File not exist at " + path);}
   pugi::xml_node _node = doc.child(root_name.c_str());
