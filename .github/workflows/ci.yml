@@ -30,7 +30,7 @@ jobs:
                     mkdir build && cd build 
             -   name: Build Project 
                 run: |
-                    cd build && cmake .. && cmake --build . --target install 
+                     cmake . -B build && cmake --build . --target install 
             -   name: Run Tests
                 run: |
                     ctest -C Release
