@@ -6,27 +6,9 @@
 #include <regex>
 #include <vector>
 
-using s_vector = const std::vector<std::vector<string>>;
 
-CSVParser::CSVParser(string path, string delim, int skip_rows)
-  : file_path{ path }, f(validate_f(path)), skip_rows{ skip_rows }, parser{ f }, delim{ delim }, data{ read(skip_rows) }
-{
-  file_name = get_substring(NAV, ".", path);
-}
-
-CSVParser::CSVParser(string path, string delim)
-  : file_path{ path }, f(validate_f(path)), parser{ f }, delim{ delim }, data{ read(skip_rows) }
-{
-  file_name = get_substring(NAV, ".", path);
-}
-
-CSVParser::CSVParser(string path, int skip_rows)
-  : file_path{ path }, f(validate_f(path)), skip_rows{ skip_rows }, parser{ f }, data{ read(skip_rows) }
-{
-  file_name = get_substring(NAV, ".", path);
-}
-
-CSVParser::CSVParser(string path) : file_path{ path }, f(validate_f(path)), parser{ f }, data{ read(skip_rows) }
+CSVParser::CSVParser(const string& path, unsigned int skip_rows_, const string& delim_)
+  : file_path{ path }, f(validate_f(path)), skip_rows{ skip_rows_ }, parser{ f }, delim{ delim_ }, data{ read(skip_rows_) }
 {
   file_name = get_substring(NAV, ".", path);
 }
@@ -54,7 +36,7 @@ std::vector<std::vector<string>> CSVParser::read(int skip)
   return vec;
 }
 
-void CSVParser::erase_data(string orient, int32_t start, int32_t end)
+void CSVParser::erase_data(const string &orient, int32_t start, int32_t end)
 {
   if (orient == "row") {
     data.erase(data.begin() + start, data.begin() + end);
@@ -72,7 +54,7 @@ void CSVParser::erase_diverge_row()
     data.end());
 }
 
-void CSVParser::erase_pattern(string orient, string pattern)
+void CSVParser::erase_pattern(const string& orient, string pattern)
 {
   std::regex re(pattern);
   std::smatch matches;
@@ -93,7 +75,7 @@ void CSVParser::erase_pattern(string orient, string pattern)
       auto itrColToRm = colToRemove.begin();
       row.erase(std::remove_if(row.begin(),
                   row.end(),
-                  [&itrColToRm](auto data) {
+                  [&itrColToRm](auto values) {
                     bool res = *itrColToRm;
                     itrColToRm++;
                     return res;
@@ -103,10 +85,11 @@ void CSVParser::erase_pattern(string orient, string pattern)
   }
 }
 
-Series CSVParser::operator()(string orient, u_int32_t idx, const Loc &target, const Loc &cond1, const Loc &cond2) const
+Series CSVParser::operator()(const string& orient, u_int32_t idx, const Loc &target, const Loc &cond1, const Loc &cond2) const
 {
   std::vector<string> rows;
-  Series series{ .name = cond1.name };
+  Series series;
+  series.name = cond1.name;
 
   if (orient == "row") {
     std::vector<u_int32_t> data_idx{ row_search(data, cond1, cond2) };
@@ -115,16 +98,15 @@ Series CSVParser::operator()(string orient, u_int32_t idx, const Loc &target, co
       series.values.insert({ data.at(target.row).at(col), rows });
       rows.resize(0);
     }
-  } else if (orient == "column") {
-    //
   }
   return series;
 }
 
-Series CSVParser::operator()(string orient, u_int32_t idx, const Loc &target, const Loc &cond1) const
+Series CSVParser::operator()(const string& orient, u_int32_t idx, const Loc &target, const Loc &cond1) const
 {
   std::vector<string> rows;
-  Series series{ .name = cond1.name };
+  Series series;
+  series.name = cond1.name;
 
   if (orient == "row") {
     std::vector<u_int32_t> data_idx{ row_search(data, cond1) };
@@ -134,39 +116,34 @@ Series CSVParser::operator()(string orient, u_int32_t idx, const Loc &target, co
       series.values.insert({ data.at(target.row).at(col), rows });
       rows.resize(0);
     }
-  } else if (orient == "column") {
-    //
-  }
-  return series;
+  }  return series;
 }
 
-Series CSVParser::operator()(string orient, const Loc &target, u_int32_t idx) const
+Series CSVParser::operator()(const string& orient, const Loc &target, u_int32_t idx) const
 {
   std::vector<string> rows;
-  Series series{ .name = target.name };
+  Series series;
+  series.name = target.name;
   u_int32_t id_counter = 1;
 
   if (orient == "row") {
     std::vector<u_int32_t> data_idx{ row_search(data, target) };
     for (const u_int32_t col : data_idx) {
       for (size_t i = idx; i < data.size(); i++) { rows.push_back(data.at(i).at(col)); }
-      series.values.insert({ to_string(id_counter), rows });
+      series.values.insert({ std::to_string(id_counter), rows });
       rows.resize(0);
       id_counter++;
     }
-  } else if (orient == "column") {
-    //
   }
-
   return series;
 }
 
-std::vector<std::string> CSVParser::operator()(std::string orient, int32_t idx, int32_t from, int32_t to) const
+std::vector<std::string> CSVParser::operator()(const std::string& orient, int32_t idx, int32_t from, int32_t to) const
 {
   std::vector<string> row;
   int32_t counter = 0;
   if (orient == "row") {
-    if (to == -1) to = data.at(idx).size();
+    if (to == -1) to = static_cast<int32_t>(data.at(idx).size());
     std::vector<string> cols(data.at(idx).begin() + from, data.at(idx).begin() + to);
     return cols;
   } else if (orient == "column") {
@@ -182,9 +159,10 @@ std::vector<std::string> CSVParser::operator()(std::string orient, int32_t idx, 
   return row;
 }
 
-u_vector row_search(s_vector &data, const Loc &cond1, const Loc &cond2)
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1, const Loc &cond2)
 {
-  string lookup1, lookup2;
+  string lookup1;
+  string lookup2;
   std::vector<u_int32_t> indexes;
 
   for (size_t c = 0; c < data.at(0).size(); c++) {
@@ -195,7 +173,7 @@ u_vector row_search(s_vector &data, const Loc &cond1, const Loc &cond2)
   return indexes;
 }
 
-u_vector row_search(s_vector &data, const Loc &cond1)
+ std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &data, const Loc &cond1)
 {
   string lookup1;
   const std::vector<u_int32_t> indexes = [&]() {
@@ -229,7 +207,7 @@ bool CSVParser::to_csv(string path) const
 {
   std::ofstream ofs(path, std::ofstream::out);
   for (const auto &row_data : data) {
-    ofs << std::accumulate(row_data.begin(), row_data.end(), std::string("START/FILE"), [](auto &a, auto &b) {
+    ofs << std::accumulate(row_data.begin(), row_data.end(), std::string("START/FILE"), [](const auto &a, const auto &b) {
       return a != "START/FILE" ? a + ";" + b : b;
     }) << std::endl;
   }

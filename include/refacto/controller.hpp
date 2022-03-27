@@ -197,7 +197,7 @@ public:
   void inline init_csvparser(map<string, string> &vars)
   {
     csvparser.reset();
-    csvparser = make_shared<CSVParser>(vars.at("path"), vars.at("delim"), stoi(vars.at("skip")));
+    csvparser = make_shared<CSVParser>(vars.at("path"), stoi(vars.at("skip")),  vars.at("delim"));
   }
 
   void inline from_csv0(string orient, const Loc &target, u_int32_t idx)

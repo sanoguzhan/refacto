@@ -1,7 +1,7 @@
 # cython: c_string_type=unicode, c_string_encoding=utf8
 # distutils: language = c++
 
-from parsing.core cimport ops
+cimport ops
 from libcpp cimport bool
 from libcpp.map cimport map
 from libcpp.vector cimport vector
@@ -11,7 +11,7 @@ from cython.operator cimport dereference as deref
 cdef bint boolean_variable = True
 
 #### CSVParser ####
-cdef extern from "include/controller.hpp":
+cdef extern from "refacto/controller.hpp":
      cpdef cppclass CustomParserWrapper:
          CustomParserWrapper(vector[map[string, string]], map[string,map[string,string]]) nogil except+;
          void save(string) nogil except+;
@@ -50,7 +50,7 @@ cdef class CSVParser:
             del self.thisptr
     
 #### XMLParser ####
-cdef extern from "include/controller.hpp":
+cdef extern from "refacto/controller.hpp":
     cdef cppclass XMLParserController:
         XMLParserController(vector[map[string,string]], map[string,map[string, string]]) nogil except +;
         bool to_csv(string) nogil except+;
@@ -95,7 +95,7 @@ cdef class XMLParser:
 
 
 #### Decompressdir ####
-cdef extern from "include/cod.hpp":
+cdef extern from "refacto/cod.hpp":
     cdef cppclass DECOMPRESSDIR:
         DECOMPRESSDIR(string) nogil except +;
         void operator()(string) nogil except +;
@@ -122,7 +122,7 @@ cdef class Decompressdir:
             del self.thisptr
 
 #### Compressdir ####
-cdef extern from "include/cod.hpp":
+cdef extern from "refacto/cod.hpp":
     cdef cppclass COMPRESSDIR:
         void operator()(string,string) nogil except +;
 
@@ -144,7 +144,7 @@ cdef class Compressdir:
             del self.thisptr
 
 #### Cleandir ####
-cdef extern from "include/cod.hpp":
+cdef extern from "refacto/cod.hpp":
     cdef cppclass CLEANFILES:
         void operator()(string,string) nogil except +;
 
@@ -167,13 +167,13 @@ cdef class Cleandir:
 
 
 
-cdef extern from "include/table.hpp" namespace "table":
+cdef extern from "refacto/table.hpp" namespace "table":
     cdef cppclass Series:
         string name;
         map[string,vector[string]] values;
 
 
-cdef extern from "include/table.hpp" namespace "table":
+cdef extern from "refacto/table.hpp" namespace "table":
     cdef cppclass Table:
         bool save(string) except +;
         bool insert(Series) except +;
@@ -197,7 +197,7 @@ cdef class _Table:
             del self.thisptr
 
 
-cdef extern from "include/csvparser.hpp":
+cdef extern from "refacto/csvparser.hpp":
     cdef cppclass Loc:
         string name;
         string orient;

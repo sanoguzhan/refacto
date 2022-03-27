@@ -10,7 +10,8 @@
  * This work is based on the pugxml parser, which is:
  * Copyright (C) 2003, by Kristen Wegner (kristen@tima.net)
  */
-
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wuseless-cast"
 #ifndef PUGIXML_VERSION
 // Define version macro; evaluates to major * 1000 + minor * 10 + patch so that
 // it's safe to use in less-than comparisons Note: pugixml used major * 100 +
@@ -24,6 +25,8 @@
 
 #ifndef HEADER_PUGIXML_HPP
 #define HEADER_PUGIXML_HPP
+
+
 
 // Include stddef.h for size_t and ptrdiff_t
 #include <stddef.h>

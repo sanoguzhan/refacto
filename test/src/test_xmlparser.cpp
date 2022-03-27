@@ -50,17 +50,17 @@ TEST(XMLParser, IncludeDir) {
 
     XMLParser parser(inv_pac, inv_id, mppt_amp, mppt_etotal, mppt_vol);
 
-    parser("tests/test_data/xml/single_variables/", "WebBox");
+    parser("data/xml/single_variables/", "WebBox");
 
-    parser.to_csv("tests/test_data/xml/");
-    ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter.csv"));
-    ASSERT_TRUE(fs::exists("tests/test_data/xml/inverter_mppt.csv"));
+    parser.to_csv("data/xml/");
+    ASSERT_TRUE(fs::exists("data/xml/inverter.csv"));
+    ASSERT_TRUE(fs::exists("data/xml/inverter_mppt.csv"));
 }
 
 TEST(XMLParser, TestGlobVector) {
     /* Test for file search with pattern
      */
-    auto files{listdir("tests/test_data/xml/single_variables/")};
+    auto files{listdir("data/xml/single_variables/")};
     EXPECT_EQ(3, files.size());
 }
 
@@ -83,7 +83,7 @@ TEST(XMLParser, RegexSearch) {
     // Single should be always the last one
     XMLParser parser(amp, tmp);
 
-    parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+    parser("data/xml/multi-variables/sciheco/", "WebBox");
 
     ASSERT_EQ(2, parser.data.size());
 
@@ -124,7 +124,7 @@ TEST(XMLParser, GroupElements) {
 
     XMLParser parser(tmp, stt, tmp2);
 
-    parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+    parser("data/xml/multi-variables/sciheco/", "WebBox");
     // parser.to_csv(".");
 
     ASSERT_EQ(3, parser.data.size());
@@ -140,7 +140,7 @@ TEST(XMLParser, WrongType) {
 
     XMLParser parser(amp);
     try {
-        parser("tests/test_data/xml/multi-variables/sciheco/", "WebBox");
+        parser("data/xml/multi-variables/sciheco/", "WebBox");
 
     } catch (std::exception& ex) {
         EXPECT_EQ("Wrong Type \n Defined Types: 'single', 'multi', 'group' ",
@@ -165,142 +165,7 @@ TEST(XMLParser, WrongPath) {
     }
 }
 
-// TEST(XMLParser, TestHighVolumeData) {
-
-//     IDMap value0{
-//         .name = "inverter_mppt",
-//         .node = "Key",
-//         .key = "Seriennummer",
-//         .degree = "Mean",
-//     };
-
-//     IDMap value1{
-//         .name = "inverter_mppt",
-//         .node = "Key",
-//         .key = "Seriennummer",
-//         .degree = "TimeStamp",
-//         .type="single",
-//         .output="Date"
-//     };
-
-//     IDMap pac{.name = "inverter",
-//               .node = "Key",
-//               .key = "^(.*?)Pac",
-//               .degree = "Mean",
-//               .type = "group"};
-//     map<string, string> ent{{"id", "(.*)Pac"},
-//                             {"name", ".*(Pac)"}};
-//     IDMap uac{.name = "inverter_mppt",
-//               .node = "Key",
-//               .key = "^(.*?)Uac",
-//               .degree = "Mean",
-//               .type = "group"};
-//     map<string, string> ent1{{"id", "(.*)Uac"},
-//                             {"name", ".*(Uac)"}};
-//     pac.conditions = ent;
-//     uac.conditions = ent1;
-//     XMLParser parser(value0, value1, pac,uac);
-
-//     parser("tests/test_data/vihiers/", "WebBox");
-
-//     ASSERT_EQ(4, parser.data.size());
-
-//     // parser.to_csv(".");
-// }
-
-// TEST(XMLParser, TestGroupingPerformance) {
-//     // Inverter
-
-//     IDMap date_time{.name = "interter",
-//                     .node = "Key",
-//                     .key = "Seri",
-//                     .degree = "TimeStamp",
-//                     .type = "single",
-//                     .output = "date_time"};
-
-//     IDMap pac{
-//         .name = "interter",
-//         .node = "Key",
-//         .key = "Pac",
-//         .degree = "Mean",
-//     };
-
-//     IDMap seri{
-//         .name = "interter",
-//         .node = "Key",
-//         .key = "Seri",
-//         .degree = "Mean",
-//     };
-
-//     // Inverter Mppt
-
-//     IDMap time{.name = "inverter_mppt",
-//                .node = "Key",
-//                .key = ".*\\w+.Ms.(Amp)",
-//                .degree = "TimeStamp",
-//                .type = "group",
-//                .output = "date"};
-//     map<string, string> time_conditions{{"id", "(.*\\w+).Ms.Amp"},
-//                                         {"name", ".*\\w+.Ms.(Amp)"}};
-//     time.conditions = time_conditions;
-
-//     IDMap vol{.name = "inverter_mppt",
-//               .node = "Key",
-//               .key = ".*\\w+.Ms.(Vol)",
-//               .degree = "Mean",
-//               .type = "group"};
-//     map<string, string> vol_conditions{{"id", "(.*\\w+).Ms.Vol"},
-//                                        {"name", ".*\\w+.Ms.(Vol)"}};
-//     vol.conditions = vol_conditions;
-
-//     IDMap amp{.name = "inverter_mppt",
-//               .node = "Key",
-//               .key = ".*\\w+.Ms.(Amp)",
-//               .degree = "Mean",
-//               .type = "group"};
-//     map<string, string> amp_conditions{{"id", "(.*\\w+).Ms.Amp"},
-//                                        {"name", ".*\\w+.Ms.(Amp)"}};
-//     amp.conditions = amp_conditions;
-
-//     // grouping
-//     XMLParser parser(date_time, pac, seri, time, vol, amp);
-
-//     IDMap time2{.name = "interter_mppt",
-//                 .node = "Key",
-//                 .key = "Seri",
-//                 .degree = "TimeStamp",
-//                 .type = "single",
-//                 .output = "date_time"};
-
-//     IDMap vol2{
-//         .name = "interter_mppt",
-//         .node = "Key",
-//         .key = "Ipv",
-//         .degree = "Mean",
-//     };
-
-//     IDMap amp2{
-//         .name = "interter_mppt",
-//         .node = "Key",
-//         .key = "Upv-Ist",
-//         .degree = "Mean",
-//     };
-//     IDMap seri2{
-//         .name = "interter_mppt",
-//         .node = "Key",
-//         .key = "Seri",
-//         .degree = "Mean",
-//     };
-
-    // no group
-    // XMLParser parser(date_time, pac, seri, time2, vol2, amp2, seri2);
-
-    // parser("tests/test_data/chanzeaux/", "WebBox");
-
-    // parser.to_csv(".");
-// }
-
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    // return RUN_ALL_TESTS();
 }

@@ -26,13 +26,11 @@
 #include "parser.hpp"
 #include "table.hpp"
 
-using namespace std;
 using namespace aria;
 using namespace table;
-// namespace fs = std::filesystem;
-using u_vector = const std::vector<u_int32_t>;
+
 /**
- * @brief Loc struct for paramaterization of variables
+ * @brief Loc struct for parameterization of variables
  *
  * Loc Struct
  *
@@ -47,8 +45,8 @@ struct Loc
 {
   string name;
   string orient;
-  int row;
-  int column;
+  unsigned int row;
+  unsigned int column;
 };
 /**
  * @brief Search Methods (Internal)
@@ -58,12 +56,12 @@ struct Loc
  *  Takes one or two loc object as condition
  *
  *  @param vector: (vector<vector<string&>>) opened csv file data
- *  @param loc: initilized and constructed Loc objects
+ *  @param loc: initialized and constructed Loc objects
  *
  * @return found indexes
  */
-u_vector row_search(const std::vector<std::vector<string>> &, const Loc &, const Loc &);
-u_vector row_search(const std::vector<std::vector<string>> &, const Loc &);
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &, const Loc &);
+std::vector<u_int32_t> row_search(const std::vector<std::vector<string>> &, const Loc &);
 /**
  * @brief CSVParser Class for CSV Data Search
  *  CSVParser Class
@@ -75,9 +73,9 @@ class [[deprecated("Csvparser will be removed, use CustomParser")]] CSVParser
 private:
   string file_path;
   std::ifstream f;
-  int skip_rows = 0;
+  unsigned int skip_rows;
   csv::CsvParser parser;
-  std::string delim = ";";
+  std::string delim;
 
 public:
   /**
@@ -85,18 +83,15 @@ public:
    * as row and 2nd as column
    *
    */
-  std::vector<std::vector<string>> data;
+  std::vector<std::vector<std::string>> data;
   /**
    * @brief filename of the parsed csv file
    *
    */
   std::string file_name;
-  CSVParser(string path, string delim, int skip_rows);
-  CSVParser(string path, string delim);
-  CSVParser(string path, int skip_rows);
-  CSVParser(string path);
+  explicit CSVParser(const std::string& path, unsigned int skip_rows_=0, const std::string& delim_=";");
   /**
-   * @brief Get a Serie of data
+   * @brief Get a Series of data
    *
    * @param orient orientation to seach the data (row or column)
    * @param idx start index to begin the search
@@ -105,9 +100,9 @@ public:
    * @param cond2 second constraint target condition
    * @return Series
    */
-  Series operator()(string orient, u_int32_t idx, const Loc &target, const Loc &cond1, const Loc &cond2) const;
+  Series operator()(const std::string& orient, u_int32_t idx, const Loc &target, const Loc &cond1, const Loc &cond2) const;
   /**
-   * @brief Get a Serie of data
+   * @brief Get a Series of data
    *
    * @param orient orientation to seach the data (row or column)
    * @param idx start index to begin the search
@@ -115,16 +110,16 @@ public:
    * @param cond1 constraint target condition
    * @return Series
    */
-  Series operator()(string orient, u_int32_t idx, const Loc &target, const Loc &cond1) const;
+  Series operator()(const std::string& orient, u_int32_t idx, const Loc &target, const Loc &cond1) const;
   /**
-   * @brief Get a Serie of data
+   * @brief Get a Series of data
    *
    * @param orient orientation to seach the data (row or column)
    * @param target searching target condition
    * @param idx start index to begin the search
    * @return Series
    */
-  Series operator()(string orient, const Loc &target, u_int32_t idx = 0) const;
+  Series operator()(const std::string& orient, const Loc &target, u_int32_t idx = 0) const;
   /**
    * @brief Get a vector of range data
    *
@@ -134,7 +129,7 @@ public:
    * @param to end index of the other axis
    * @return std::vector<string>
    */
-  std::vector<string> operator()(std::string orient, int32_t idx, int32_t from, int32_t to) const;
+  std::vector<string> operator()(const std::string& orient, int32_t idx, int32_t from, int32_t to) const;
   /**
    * @brief Get value of at the precised location (row + column)
    *
@@ -150,14 +145,14 @@ public:
    * @param start first index to erase (include)
    * @param end  last index to erase (not include)
    */
-  void erase_data(string orient, int32_t start, int32_t end);
+  void erase_data(const std::string& orient, int32_t start, int32_t end);
   /**
    * @brief Erase multiple rows or columns to clean pattern
    *
    * @param orient orientation [row or column] to erase the data
    * @param pattern pattern to search and erase
    */
-  void erase_pattern(string orient, string pattern);
+  void erase_pattern(const std::string& orient, std::string pattern);
   /**
    * @brief Erase row with not the same number column as the header
    *
@@ -170,7 +165,7 @@ public:
    * @return true
    * @return false
    */
-  bool to_csv(string path) const;
+  bool to_csv(std::string path) const;
 
 private:
   /**
@@ -178,7 +173,7 @@ private:
    *
    * @return string
    */
-  string validate_f(string) const;
+  string validate_f(std::string) const;
   /**
    * @brief read a csv file and parse it to data attribute format
    *

@@ -1,4 +1,3 @@
-
 /** @file xmlparser.hpp
  *
  *  This file contains the refacto's xmlparser
@@ -13,6 +12,10 @@
 
 #ifndef XMLPARSER_HPP
 #define XMLPARSER_HPP
+
+#pragma GCC diagnostic ignored "-Wcomment"
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+
 
 #include <glob.h>
 
@@ -38,7 +41,6 @@ using std::regex_match;
 using std::smatch;
 using std::string;
 using std::vector;
-using svector = std::vector<std::string>;
 
 static u_int32_t COUNTER = 0;
 static bool CONTAINS = false;
@@ -71,7 +73,7 @@ void transform_keys(IDMap &it, vector<IDMap> &args);
  */
 void rotate_keys(IDMap &it, vector<IDMap> &args);
 
-/**
+/*
  * @brief Greps the list of file for given directory
  *
  * @param dir: (string) directory with pattern match
@@ -109,9 +111,9 @@ public:
    * @param dir: (string) extraction directory
    * @return true on success
    */
-  auto to_csv(string dir) -> bool;
+  auto to_csv(const string& dir) -> bool;
 
-  auto inline write_header(const std::pair<const string, vector<IDMap>> &p) -> string;
+  static auto write_header(const std::pair<const string, vector<IDMap>> &p) -> string;
 
   /**
    * @brief Operator for xml file data search
@@ -121,7 +123,7 @@ public:
    * @param path: (string) path to xml file directory
    * @param root_name : (string) root name in the xml files
    */
-  void operator()(string path, string root_name);
+  void operator()(const string& path, const string& root_name);
 
 private:
   /**
@@ -132,7 +134,7 @@ private:
    * @param doc : (pugi::xml_document) opened document
    * @return decltype(auto)
    */
-  inline decltype(auto) read(string path, string root_name, pugi::xml_document &doc);
+  static pugi::xml_node read(const string &path,const string &root_name, pugi::xml_document &doc);
 
   /**
    * @brief Update ids vector from xml tree
@@ -142,7 +144,7 @@ private:
    * @param tag : (IDMap) search IDMap
    * @param ids : (vector<string>) id vector which filled up
    */
-  void update(pugi::xml_node root, const IDMap &tag, svector &ids);
+  void update(pugi::xml_node root, const IDMap &tag, std::vector<std::string> &ids);
   void update(pugi::xml_node root, const IDMap &tag, map<string, vector<string>> &ids, const regex &);
   /**
    * @brief Map trasnformers to name-value map
@@ -158,7 +160,7 @@ private:
    * @param keys key-value map for each unique IDMap
    * @param sizes size key-value map for name+key values
    */
-  void inline max_key_sizes(map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes);
+  static void max_key_sizes(const map<string, vector<IDMap>> &keys, map<string, u_int32_t> &sizes);
 };
 
 #endif

@@ -1,14 +1,11 @@
 # Prerequisites
 *.d
-parsing/core/tests/csv/output/*
 */.DS_Store
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
-parsing/core/tests/test_data/chanzeaux/
-parsing/core/tests/test_data/
 # Precompiled Headers
 *.gch
 *.pch
@@ -56,7 +53,7 @@ tests/test_data/csv/output/*.csv
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
 
 !.vscode/c_cpp_properties.json
-
+.cache
 docker/.env
 
 parsing/core/usr/
@@ -68,7 +65,10 @@ dist
 parsing/lib.log
 
 __pycache__
-
+interface/py3/parser.cpp
+interface/py3/qparsing.egg-info/
+interface/py3/dist/
+interface/py3/build/
 .idea/
 .vscode/launch.json
 foo.csv
